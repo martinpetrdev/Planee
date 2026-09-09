@@ -1,0 +1,10 @@
+# Turborepo
+.turbo/
+
+# Packages
+node_modules/
+pnpm-lock.yaml
+
+# Environment files
+.env
+.env.*
