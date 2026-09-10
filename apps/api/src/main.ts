@@ -5,6 +5,7 @@ import {
   getServicePort,
 } from './config/http.config.js';
 import { VersioningType } from '@nestjs/common';
+import { ApiVersion } from '@repo/shared';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +16,7 @@ async function bootstrap() {
   });
   app.enableVersioning({
     type: VersioningType.URI,
-    defaultVersion: '1',
+    defaultVersion: ApiVersion.v1,
   });
 
   await app.listen(getServicePort());

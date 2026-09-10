@@ -1,8 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiVersion } from '@repo/shared';
 
 @Controller({
   path: '/health',
-  version: '1',
+  version: ApiVersion.v1,
 })
 export class HealthController {
   constructor() {}
