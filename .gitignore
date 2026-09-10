@@ -3,8 +3,12 @@
 
 # Packages
 node_modules/
-pnpm-lock.yaml
+.pnpm_store/
 
 # Environment files
 .env
 .env.*
+
+# EAS build tool
+/.eas-build/
+/eas-out/
