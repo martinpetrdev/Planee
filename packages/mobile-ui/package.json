@@ -1,0 +1,36 @@
+{
+  "name": "@repo/mobile-ui",
+  "version": "1.0.0",
+  "description": "",
+  "module": "src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@expo/material-symbols": "^0.1.1",
+    "@expo/ui": "~57.0.17",
+    "@types/react": "~19.2.18",
+    "expo-router": "~57.0.20",
+    "expo-symbols": "~57.0.2",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "@expo/material-symbols": "^0.1.1",
+    "@expo/ui": "~57.0.17",
+    "expo-router": "~57.0.20",
+    "expo-symbols": "~57.0.2",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0"
+  }
+}
