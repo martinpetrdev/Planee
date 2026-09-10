@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpCode } from '@nestjs/common';
 import { ApiVersion } from '@repo/shared';
 
 @Controller({
@@ -9,9 +9,9 @@ export class HealthController {
   constructor() {}
 
   @Get('/')
-  async getHealth() {
-    return {
-      healthy: 'ok',
-    };
-  }
+  @HttpCode(200)
+  /**
+   * Endpoint for kubernetes health checks. Returns 200 OK response.
+   */
+  getHealth() {}
 }
