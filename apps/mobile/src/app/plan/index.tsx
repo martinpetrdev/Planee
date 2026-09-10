@@ -1,9 +1,9 @@
 import { ScreenShell, Text } from "@repo/mobile-ui";
 
-export default function Index() {
+export default function Screen() {
   return (
     <ScreenShell>
-      <Text>Home</Text>
+      <Text>Plan</Text>
     </ScreenShell>
   );
 }
