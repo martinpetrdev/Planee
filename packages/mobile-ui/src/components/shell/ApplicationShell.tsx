@@ -3,6 +3,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router";
 import { useColorScheme } from "react-native";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { Icon } from "../../icons/icons";
+import { StatusBar } from "expo-status-bar";
 
 export interface IApplicationTab {
   label: string;
@@ -31,8 +32,11 @@ export function ApplicationShell(props: IApplicationShellProps) {
   );
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <NativeTabs>{tabs}</NativeTabs>
-    </ThemeProvider>
+    <>
+      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <NativeTabs>{tabs}</NativeTabs>
+      </ThemeProvider>
+    </>
   );
 }
