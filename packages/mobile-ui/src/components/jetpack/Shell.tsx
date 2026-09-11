@@ -1,4 +1,4 @@
-import { Column, Host, useMaterialColors } from "@expo/ui/jetpack-compose";
+import { Box, Column, Host, useMaterialColors } from "@expo/ui/jetpack-compose";
 import { PropsWithChildren } from "react";
 import { fillMaxSize } from "@expo/ui/jetpack-compose/modifiers";
 
@@ -14,7 +14,7 @@ export function JetpackShell(props: PropsWithChildren) {
         backgroundColor: materialColors.background,
       }}
     >
-      <Column modifiers={[fillMaxSize()]}>{props.children}</Column>
+      <Box modifiers={[fillMaxSize()]}>{props.children}</Box>
     </Host>
   );
 }
