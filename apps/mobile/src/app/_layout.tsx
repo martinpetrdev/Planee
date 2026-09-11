@@ -11,6 +11,11 @@ const Tabs: IApplicationTab[] = [
     icon: "calendar_today",
     id: "plan",
   },
+  {
+    label: "Settings",
+    icon: "settings",
+    id: "settings",
+  },
 ];
 
 export default function RootLayout() {
