@@ -1,26 +1,18 @@
-import { FAB, Header, ScreenShell, Text } from "@repo/mobile-ui";
-import { Button, Column } from "@expo/ui/jetpack-compose";
-import { useAuth } from "@/hooks/auth/useAuth";
-import { KeycloakAuth } from "@/auth/keycloak";
+import { useAuth } from "@/auth/context";
+import { ScreenShell } from "@repo/mobile-ui";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
 
-export default function Index() {
+export default function Screen() {
   const auth = useAuth();
+  const router = useRouter();
 
-  return (
-    <ScreenShell>
-      <Header />
-      <FAB icon="add" />
-      <Column>
-        <Button onClick={() => auth.login()}>
-          <Text>Login</Text>
-        </Button>
-        <Button onClick={() => KeycloakAuth.getSession().then(console.log)}>
-          <Text>Dump session</Text>
-        </Button>
-        <Button onClick={() => KeycloakAuth.clearSession()}>
-          <Text>Clear session</Text>
-        </Button>
-      </Column>
-    </ScreenShell>
-  );
+  useEffect(() => {
+    if (auth.isLoading) return; // Loading shown by useAuth
+
+    if (auth.isAuthenticated) router.replace("/protected");
+    else router.replace("/onboarding");
+  }, [auth]);
+
+  return <ScreenShell></ScreenShell>; // Return ScreenShell to prevent white flash
 }

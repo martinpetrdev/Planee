@@ -2,7 +2,6 @@ import { PropsWithChildren } from "react";
 import { JetpackShell } from "../jetpack/Shell";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMaterialColors } from "@expo/ui/jetpack-compose";
-import { Stack } from "expo-router";
 
 export function ScreenShell(props: PropsWithChildren) {
   const materialColors = useMaterialColors();
@@ -13,7 +12,6 @@ export function ScreenShell(props: PropsWithChildren) {
       edges={["top", "right", "left"]}
     >
       <JetpackShell>{props.children}</JetpackShell>
-      <Stack />
     </SafeAreaView>
   );
 }

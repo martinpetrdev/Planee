@@ -1,23 +1,29 @@
-import { ApplicationShell, IApplicationTab } from "@repo/mobile-ui";
+import { AuthProvider, useAuth } from "@/auth/context";
+import { LoadingScreenProvider } from "@/components/LoadingScreen";
+import { Stack } from "expo-router";
 
-const Tabs: IApplicationTab[] = [
-  {
-    label: "Home",
-    icon: "home",
-    id: "index",
-  },
-  {
-    label: "Plan",
-    icon: "calendar_today",
-    id: "plan",
-  },
-  {
-    label: "Settings",
-    icon: "settings",
-    id: "settings",
-  },
-];
+function RootNavigator() {
+  const auth = useAuth();
 
-export default function RootLayout() {
-  return <ApplicationShell tabs={Tabs} />;
+  return (
+    <Stack screenOptions={{ headerShown: false, animation: "none" }}>
+      <Stack.Protected guard={auth.isAuthenticated}>
+        <Stack.Screen name="protected" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!auth.isAuthenticated}>
+        <Stack.Screen name="onboarding" />
+      </Stack.Protected>
+    </Stack>
+  );
+}
+
+export default function Layout() {
+  return (
+    <LoadingScreenProvider>
+      <AuthProvider>
+        <RootNavigator />
+      </AuthProvider>
+    </LoadingScreenProvider>
+  );
 }
