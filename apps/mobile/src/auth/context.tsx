@@ -56,6 +56,7 @@ export function AuthProvider(props: PropsWithChildren) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userInfo, setUserInfo] = useState<IOIDCUserInfo | null>(null);
   const fetchingInfo = useRef(false);
+  const exchangedCode = useRef<string | null>(null);
 
   const discovery = useAutoDiscovery(OIDC_ISSUER);
   const [request, response, promptAsync] = useAuthRequest(
@@ -82,17 +83,27 @@ export function AuthProvider(props: PropsWithChildren) {
   const exchange = async () => {
     if (response?.type !== "success" || !request || !discovery) return;
 
+    // Codes are single use, this prevents re-exchanging the same
+    // code multiple times
+    const code = response.params.code;
+    if (exchangedCode.current === code) return;
+    exchangedCode.current = code;
+
     loading.request("auth.exchange");
 
-    const tokens = await exchangeCodeAsync(
-      oidcClient.getExchangeConfig(response.params.code, request.codeVerifier!),
-      discovery,
-    );
+    try {
+      const tokens = await exchangeCodeAsync(
+        oidcClient.getExchangeConfig(code, request.codeVerifier!),
+        discovery,
+      );
 
-    await oidcClient.saveTokens(tokens);
-    await invalidateAndRefetch();
-
-    loading.dismiss("auth.exchange");
+      await oidcClient.saveTokens(tokens);
+      await invalidateAndRefetch();
+    } catch (error) {
+      await invalidateAndRefetch();
+    } finally {
+      loading.dismiss("auth.exchange");
+    }
   };
 
   const logout = async () => {
