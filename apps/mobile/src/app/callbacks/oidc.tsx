@@ -1,19 +1,12 @@
 import { useAuth } from "@/auth/context";
 import { ScreenShell } from "@repo/mobile-ui";
 import { Redirect } from "expo-router";
-import { useEffect, useState } from "react";
 
 export default function Screen() {
-  const [isLoading, setIsLoading] = useState(true);
-
   const auth = useAuth();
 
-  useEffect(() => {
-    // Can be called multiple times, token re-exchange is handled by the function
-    auth.exchange().finally(() => setIsLoading(false));
-  }, [auth]);
-
-  if (isLoading) return <ScreenShell></ScreenShell>;
+  // The exchange is done by auth context, just wait until it finishes
+  if (auth.isLoading) return <ScreenShell></ScreenShell>; // Show screen shell to prevent white flash
 
   return <Redirect href="/" />;
 }

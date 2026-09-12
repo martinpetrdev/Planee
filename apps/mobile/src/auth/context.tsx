@@ -29,7 +29,6 @@ interface IAuthContextValue {
   isAuthenticated: boolean;
   userInfo: IOIDCUserInfo | null;
   promptLogin: () => Promise<void>;
-  exchange: () => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -67,7 +66,11 @@ export function AuthProvider(props: PropsWithChildren) {
   const loading = useLoadingScreen();
 
   const promptLogin = async () => {
-    await promptAsync();
+    // Set loading state to prevent flash of previous screen when the login calls back
+    setIsLoading(true);
+
+    const result = await promptAsync();
+    if (result.type !== "success") setIsLoading(false);
   };
 
   const invalidateAndRefetch = async () => {
@@ -89,8 +92,6 @@ export function AuthProvider(props: PropsWithChildren) {
     if (exchangedCode.current === code) return;
     exchangedCode.current = code;
 
-    loading.request("auth.exchange");
-
     try {
       const tokens = await exchangeCodeAsync(
         oidcClient.getExchangeConfig(code, request.codeVerifier!),
@@ -101,8 +102,6 @@ export function AuthProvider(props: PropsWithChildren) {
       await invalidateAndRefetch();
     } catch (error) {
       await invalidateAndRefetch();
-    } finally {
-      loading.dismiss("auth.exchange");
     }
   };
 
@@ -128,8 +127,20 @@ export function AuthProvider(props: PropsWithChildren) {
     fetchingInfo.current = false;
   };
 
+  // Check if we are the callback of OIDC login
+  const isExchangePending =
+    response?.type === "success" &&
+    exchangedCode.current !== response.params.code;
+
   useEffect(() => {
-    if (fetchingInfo.current || !discovery) return;
+    if (!isExchangePending) return;
+
+    setIsLoading(true);
+    exchange();
+  }, [response, request, discovery]);
+
+  useEffect(() => {
+    if (fetchingInfo.current || !discovery || isExchangePending) return;
 
     fetchInfo();
   }, [discovery]);
@@ -147,7 +158,6 @@ export function AuthProvider(props: PropsWithChildren) {
         isAuthenticated,
         userInfo,
         promptLogin,
-        exchange,
         logout,
       }}
     >
