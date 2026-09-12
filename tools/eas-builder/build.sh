@@ -1,6 +1,22 @@
 #!/bin/bash
 
+profiles=("development" "production")
+
 set -e
+
+PS3="Which build profile do you want to use? "
+select profile in "${profiles[@]}"; do
+  [[ -n $profile ]] && break # Re-prompts on invalid input, continues if valid
+done
+
+case $profile in
+"development")
+  output_name="output.apk"
+  ;;
+"production")
+  output_name="output.aab"
+  ;;
+esac
 
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 OUT="$ROOT/.eas-build"
@@ -21,5 +37,5 @@ docker run \
   eas-build \
   apps/mobile \
   android \
-  development \
-  /eas-out/output.apk
+  $profile \
+  /eas-out/$output_name
