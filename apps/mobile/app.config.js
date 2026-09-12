@@ -1,5 +1,9 @@
 const IS_DEV = process.env.APP_ENV === "development";
 
+const commit = (process.env.EAS_BUILD_GIT_COMMIT_HASH ?? "<local>").slice(0, 7);
+const channel =
+  process.env.EAS_BUILD_PROFILE || (IS_DEV ? "development" : "production");
+
 const packageName = IS_DEV
   ? "dev.martinpetr.planee.devel"
   : "dev.martinpetr.planee";
@@ -52,6 +56,8 @@ export default {
       reactCompiler: true,
     },
     extra: {
+      commit,
+      channel,
       router: {},
       eas: {
         projectId: "650cdf1d-9bd2-44ff-8a06-4e012822d213",

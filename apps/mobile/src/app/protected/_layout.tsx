@@ -6,6 +6,11 @@ const Tabs: IApplicationTab[] = [
     id: "index",
     icon: "home",
   },
+  {
+    label: "Settings",
+    id: "settings",
+    icon: "settings",
+  },
 ];
 
 export default function Layout() {

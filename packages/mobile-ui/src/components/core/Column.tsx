@@ -6,6 +6,7 @@ interface IColumnProps extends PropsWithChildren {
   verticalAlignment?: "top" | "center" | "bottom";
   horizontalAlignment?: "start" | "center" | "end";
   padding?: number;
+  gap?: number;
 }
 
 export function Column(props: IColumnProps) {
@@ -17,6 +18,7 @@ export function Column(props: IColumnProps) {
       ].filter((i) => !!i)}
       verticalAlignment={props.verticalAlignment}
       horizontalAlignment={props.horizontalAlignment}
+      verticalArrangement={props.gap ? { spacedBy: props.gap } : undefined}
     >
       {props.children}
     </JetpackColumn>
