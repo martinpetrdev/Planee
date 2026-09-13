@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { IOIDCUserInfo, OIDCClient } from "./oidc";
+import { IOIDCUserInfo, oidcClient, OIDCClient } from "./oidc";
 import {
   OIDC_CLIENT_ID,
   OIDC_GRACE_PERIOD,
@@ -38,19 +38,6 @@ const AuthContext = createContext<IAuthContextValue | null>(null);
 maybeCompleteAuthSession();
 
 export function AuthProvider(props: PropsWithChildren) {
-  const oidcClient = useMemo(
-    () =>
-      new OIDCClient(
-        {
-          issuer: OIDC_ISSUER,
-          clientId: OIDC_CLIENT_ID,
-          scopes: OIDC_SCOPES,
-          gracePeriod: OIDC_GRACE_PERIOD,
-        },
-        new SessionStore(SESSION_STORE_KEY),
-      ),
-    [],
-  );
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userInfo, setUserInfo] = useState<IOIDCUserInfo | null>(null);
@@ -106,7 +93,7 @@ export function AuthProvider(props: PropsWithChildren) {
   };
 
   const logout = async () => {
-    await oidcClient.logout(discovery!);
+    await oidcClient.logout();
     await invalidateAndRefetch();
   };
 
@@ -114,7 +101,7 @@ export function AuthProvider(props: PropsWithChildren) {
     if (fetchingInfo.current || !discovery) return;
     fetchingInfo.current = true;
 
-    const userInfo = await oidcClient.fetchUser(discovery);
+    const userInfo = await oidcClient.fetchUser();
     if (!userInfo) {
       setIsAuthenticated(false);
       setUserInfo(null);

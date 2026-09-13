@@ -1,5 +1,6 @@
 import {
   DiscoveryDocument,
+  fetchDiscoveryAsync,
   makeRedirectUri,
   refreshAsync,
   revokeAsync,
@@ -9,6 +10,13 @@ import { SessionStore } from "./session";
 import { APP_SCHEME } from "@/configuration/app";
 import axios from "axios";
 import { openAuthSessionAsync } from "expo-web-browser";
+import {
+  OIDC_CLIENT_ID,
+  OIDC_GRACE_PERIOD,
+  OIDC_ISSUER,
+  OIDC_SCOPES,
+  SESSION_STORE_KEY,
+} from "@/configuration/auth";
 
 interface IOIDCCLientOptions {
   issuer: string;
@@ -27,6 +35,7 @@ export class OIDCClient {
   private readonly options: IOIDCCLientOptions;
   private readonly sessionStore: SessionStore;
   private readonly redirectUri: string;
+  private discovery: DiscoveryDocument | null = null;
 
   constructor(options: IOIDCCLientOptions, sessionStore: SessionStore) {
     this.options = Object.freeze(options);
@@ -35,6 +44,13 @@ export class OIDCClient {
       scheme: APP_SCHEME,
       path: "callbacks/oidc",
     });
+  }
+
+  private async getDiscovery() {
+    if (!this.discovery)
+      this.discovery = await fetchDiscoveryAsync(this.options.issuer);
+
+    return this.discovery;
   }
 
   public get requestConfig() {
@@ -57,13 +73,11 @@ export class OIDCClient {
     };
   }
 
-  public async fetchUser(
-    discovery: DiscoveryDocument,
-  ): Promise<IOIDCUserInfo | null> {
+  public async fetchUser(): Promise<IOIDCUserInfo | null> {
     const response = await axios
-      .get(discovery.userInfoEndpoint!, {
+      .get((await this.getDiscovery()).userInfoEndpoint!, {
         headers: {
-          Authorization: `Bearer ${await this.getToken(discovery)}`,
+          Authorization: `Bearer ${await this.getToken()}`,
         },
       })
       .catch(() => null);
@@ -87,7 +101,7 @@ export class OIDCClient {
     });
   }
 
-  public async getToken(discovery: DiscoveryDocument): Promise<string | null> {
+  public async getToken(): Promise<string | null> {
     const session = await this.sessionStore.getSession();
     if (!session) return null;
 
@@ -102,7 +116,7 @@ export class OIDCClient {
         clientId: this.options.clientId,
         refreshToken: session.refreshToken,
       },
-      discovery,
+      await this.getDiscovery(),
     ).catch(() => null);
     if (!fresh) return null;
 
@@ -111,7 +125,7 @@ export class OIDCClient {
     return fresh.accessToken;
   }
 
-  public async logout(discovery: DiscoveryDocument) {
+  public async logout() {
     const session = await this.sessionStore.getSession();
     if (!session) return;
 
@@ -120,14 +134,24 @@ export class OIDCClient {
         clientId: this.options.clientId,
         token: session.refreshToken,
       },
-      discovery,
+      await this.getDiscovery(),
     ).catch(() => null);
 
     await this.sessionStore.clearSession();
 
     await openAuthSessionAsync(
-      `${discovery.endSessionEndpoint}?id_token_hint=${session.idToken}&post_logout_redirect_uri=${encodeURIComponent(this.redirectUri)}`,
+      `${(await this.getDiscovery()).endSessionEndpoint}?id_token_hint=${session.idToken}&post_logout_redirect_uri=${encodeURIComponent(this.redirectUri)}`,
       this.redirectUri,
     );
   }
 }
+
+export const oidcClient = new OIDCClient(
+  {
+    issuer: OIDC_ISSUER,
+    clientId: OIDC_CLIENT_ID,
+    scopes: OIDC_SCOPES,
+    gracePeriod: OIDC_GRACE_PERIOD,
+  },
+  new SessionStore(SESSION_STORE_KEY),
+);

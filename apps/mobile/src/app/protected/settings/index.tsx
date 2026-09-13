@@ -1,3 +1,4 @@
+import { API_BASE } from "@/configuration/api";
 import {
   Column,
   ScreenShell,
