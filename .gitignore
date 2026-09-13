@@ -3,7 +3,7 @@
 
 # Packages
 node_modules/
-.pnpm_store/
+.pnpm-store/
 
 # Environment files
 .env
