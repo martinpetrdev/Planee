@@ -26,9 +26,10 @@
     "@nestjs/config": "^12.0.0",
     "@nestjs/core": "^12.0.1",
     "@nestjs/platform-express": "^12.0.1",
+    "@repo/shared": "workspace:*",
+    "jose": "^6.2.12",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "@repo/shared": "workspace:*"
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^12.0.0",
