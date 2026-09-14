@@ -5,8 +5,10 @@ import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard.js';
 import { RolesGuard } from './infrastructure/guards/roles.guard.js';
+import { UsersModule } from '../../users/users.module.js';
 
 @Module({
+  imports: [UsersModule],
   providers: [
     {
       provide: TokenVerifierPort,

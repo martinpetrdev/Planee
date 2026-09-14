@@ -6,15 +6,14 @@ import {
 } from '@nestjs/common';
 import { TokenVerifierPort } from '../../domain/ports/token-verifier.port.js';
 import { Reflector } from '@nestjs/core';
-import {
-  isPublic,
-  PUBLIC_DECORATOR_KEY,
-} from '../../presentation/decorators/public.decorator.js';
+import { isPublic } from '../../presentation/decorators/public.decorator.js';
+import { UserProvisioningPort } from '../../../../users/domain/ports/user-provisioning.port.js';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
     private readonly verifier: TokenVerifierPort,
+    private readonly provisioning: UserProvisioningPort,
     private readonly reflector: Reflector,
   ) {}
 
@@ -27,6 +26,7 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException();
 
     req.user = await this.verifier.verify(token);
+    await this.provisioning.ensureProvisioned(req.user.id);
 
     return true;
   }
