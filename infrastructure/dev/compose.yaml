@@ -1,0 +1,4 @@
+name: planee-dev
+
+include:
+  - docker/postgres.yaml

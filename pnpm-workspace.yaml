@@ -2,7 +2,9 @@ packages:
   - ./apps/*
   - ./packages/*
 allowBuilds:
+  '@prisma/engines': true
   "@swc/core": true
+  prisma: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - "@expo/cli@57.0.24"

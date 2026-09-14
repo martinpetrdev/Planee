@@ -12,3 +12,6 @@ node_modules/
 # EAS build tool
 /.eas-build/
 /eas-out/
+
+# Prisma client
+**/src/generated/
