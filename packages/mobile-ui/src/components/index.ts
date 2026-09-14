@@ -9,3 +9,4 @@ export * from "./core/Box";
 export * from "./core/Column";
 export * from "./core/Button";
 export * from "./core/SegmentedList";
+export * from "./core/Icon";

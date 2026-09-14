@@ -6,7 +6,7 @@ export default function Onboard() {
 
   return (
     <ScreenShell>
-      <Column padding={32}>
+      <Column fill padding={32}>
         <Box flex align="center">
           <Text typography="headlineLarge">Planee</Text>
         </Box>
