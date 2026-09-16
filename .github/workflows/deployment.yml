@@ -1,7 +1,8 @@
 name: Deployment pipeline
 on:
   push:
-    tags: ["v*"]
+    branches:
+      - production
 
 env:
   REGISTRY: registry.cloud.martinpetr.dev
