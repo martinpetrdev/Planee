@@ -1,0 +1,102 @@
+name: Deployment pipeline
+on:
+  push:
+    tags: ["v*"]
+
+env:
+  REGISTRY: registry.cloud.martinpetr.dev
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            api:
+              - 'apps/api'
+              - 'apps/api/**'
+              - 'packages/database/**'
+              - 'packages/shared/**'
+              - '.github/workflows/deployment.yml'
+
+            db-migration:
+              - 'packages/database'
+              - 'packages/database/**'
+              - '.github/workflows/deployment.yml'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Generate image tag
+        id: tag
+        run: echo "tag=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build & push API
+        if: steps.filter.outputs.api == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/planee/api:${{ steps.tag.outputs.tag }}, ${{ env.REGISTRY }}/planee/api:latest
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+
+      - name: Build & push DB migration job
+        if: steps.filter.outputs.db-migration == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: packages/database/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/planee/db-migration:${{ steps.tag.outputs.tag }}, ${{ env.REGISTRY }}/planee/db-migration:latest
+          cache-from: type=gha,scope=db-migration
+          cache-to: type=gha,mode=max,scope=db-migration
+
+      - name: Update manifests & commit
+        if: steps.filter.outputs.api == 'true' || steps.filter.outputs.db-migration == 'true'
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+
+          # Navigate into the submodule directory to perform git operations inside its repository
+          cd infrastructure/prod
+
+          # Configure Git inside the submodule
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Checkout the target branch
+          git checkout main || git checkout -b main
+
+          # Replace old tags only for components that were built
+          # if [ "${{ steps.filter.outputs.api }}" = "true" ]; then
+          #   sed -i "s|image: ${{ env.REGISTRY }}/planee/api:.*|image: ${{ env.REGISTRY }}/planee/api:${TAG}|g" api.yaml
+          #   git add api.yaml
+          # fi
+          # if [ "${{ steps.filter.outputs.db-migration }}" = "true" ]; then
+          #   sed -i "s|image: ${{ env.REGISTRY }}/planee/db-migration:.*|image: ${{ env.REGISTRY }}/planee/db-migration:${TAG}|g" migration-job.yaml
+          #   git add migration-job.yaml
+          # fi
+
+          # Commit and push
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(gitops): update image tags to ${TAG}"
+            git push origin main
+          fi

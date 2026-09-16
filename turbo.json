@@ -1,21 +1,37 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": [".env"],
-  "globalPassThroughEnv": ["*"],
+  "globalDependencies": [
+    ".env"
+  ],
+  "globalPassThroughEnv": [
+    "*"
+  ],
   "ui": "tui",
   "tasks": {
     "dev": {
       "persistent": true,
       "cache": false,
-      "dependsOn": ["^generate"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "generate": {
       "cache": true,
-      "inputs": ["prisma/schema.prisma"],
-      "outputs": ["src/generated/**"]
+      "inputs": [
+        "prisma/schema.prisma"
+      ],
+      "outputs": [
+        "src/generated/**"
+      ]
     },
     "build": {
-      "dependsOn": ["^generate", "^build"]
+      "dependsOn": [
+        "generate",
+        "^build"
+      ],
+      "outputs": [
+        "dist/**"
+      ]
     }
   }
 }

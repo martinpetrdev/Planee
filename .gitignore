@@ -15,3 +15,6 @@ node_modules/
 
 # Prisma client
 **/src/generated/
+
+# Dist and build outputs
+dist/

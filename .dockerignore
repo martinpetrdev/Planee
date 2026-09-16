@@ -1,0 +1,26 @@
+# Dependencies
+node_modules
+
+# Local caches and outputs
+.eas-build
+.pnpm-store
+.turbo
+dist
+apps/mobile/.expo
+
+# Native
+apps/mobile/android
+apps/mobile/ios
+
+# Prisma client
+**/src/generated
+
+# Secrets
+.env
+.env.*
+
+.git
+.github
+.vscode
+README.md
+LICENSE
