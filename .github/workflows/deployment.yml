@@ -77,15 +77,14 @@ jobs:
         run: |
           TAG="${{ steps.tag.outputs.tag }}"
 
-          # Navigate into the submodule directory to perform git operations inside its repository
           cd infrastructure/prod
 
-          # Configure Git inside the submodule
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Checkout the target branch
-          git checkout main || git checkout -b main
+          # actions/checkout only fetched the pushed ref, so main does not exist locally yet
+          git fetch origin main
+          git checkout -B main origin/main
 
           # Replace old tags only for components that were built
           if [ "${{ steps.filter.outputs.api }}" = "true" ]; then
@@ -100,5 +99,10 @@ jobs:
           # Commit and push
           if ! git diff --staged --quiet; then
             git commit -m "chore(gitops): update image tags to ${TAG}"
-            git push origin main
+
+            # 3 retries in case of concurrent pushes
+            for i in 1 2 3; do
+              git push origin main && break
+              git fetch origin main && git rebase origin/main || exit 1
+            done
           fi
