@@ -34,6 +34,7 @@ docker run \
   -v "$OUT:/eas-out" \
   -v "/app/node_modules" \
   -e TMPDIR=/eas-cache \
+  -e GOOGLE_SERVICES_JSON=/app/apps/mobile/google-services.json \
   eas-build \
   apps/mobile \
   android \
