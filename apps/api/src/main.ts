@@ -4,7 +4,7 @@ import {
   getServiceCorsAllowedOrigins,
   getServicePort,
 } from './config/http.config.js';
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ApiVersion } from '@repo/shared';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
@@ -15,15 +15,6 @@ async function bootstrap() {
 
   app.use(helmet());
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Planee API')
-    .setVersion('1.0')
-    .build();
-
-  const swaggerDocumentFactory = () =>
-    SwaggerModule.createDocument(app, swaggerConfig);
-  if (IS_DEV) SwaggerModule.setup('swagger', app, swaggerDocumentFactory);
-
   app.enableShutdownHooks();
   app.enableCors({
     origin: getServiceCorsAllowedOrigins(),
@@ -32,6 +23,24 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: ApiVersion.v1,
   });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Planee API')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const swaggerDocumentFactory = () =>
+    SwaggerModule.createDocument(app, swaggerConfig);
+  if (IS_DEV) SwaggerModule.setup('swagger', app, swaggerDocumentFactory);
 
   await app.listen(getServicePort());
 }
