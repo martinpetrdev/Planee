@@ -2,7 +2,7 @@ name: Deployment pipeline
 on:
   push:
     branches:
-      - production
+      - main
 
 env:
   REGISTRY: registry.cloud.martinpetr.dev
@@ -82,7 +82,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # actions/checkout only fetched the pushed ref, so main does not exist locally yet
+          # actions/checkout only fetched the pushed ref, so main may not exist locally yet
           git fetch origin main
           git checkout -B main origin/main
 
