@@ -20,6 +20,8 @@ export default {
     userInterfaceStyle: "automatic",
     android: {
       package: packageName,
+      googleServicesFile:
+        process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json",
       adaptiveIcon: {
         backgroundColor: "#FFFFFF",
         foregroundImage: "./assets/images/android-icon-foreground.png",

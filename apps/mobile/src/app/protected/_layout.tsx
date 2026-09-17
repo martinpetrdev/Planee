@@ -1,3 +1,5 @@
+import { SetupNotificationsScreen } from "@/screens/SetupNotificationsScreen";
+import { NotificationsProvider } from "@/services/notifications/context";
 import { ApplicationShell, IApplicationTab } from "@repo/mobile-ui";
 
 const Tabs: IApplicationTab[] = [
@@ -14,5 +16,15 @@ const Tabs: IApplicationTab[] = [
 ];
 
 export default function Layout() {
-  return <ApplicationShell tabs={Tabs} />;
+  return (
+    <NotificationsProvider>
+      <NotificationsProvider.Enabled>
+        <ApplicationShell tabs={Tabs} />
+      </NotificationsProvider.Enabled>
+
+      <NotificationsProvider.Disabled>
+        <SetupNotificationsScreen />
+      </NotificationsProvider.Disabled>
+    </NotificationsProvider>
+  );
 }
