@@ -76,10 +76,17 @@ export class API {
   }
 
   /**
-   * Does a DELETE request to the specified path and returns the response data or rejects.
+   * Does a DELETE request to the specified path with the specified body and returns the response data or rejects.
    */
-  public async delete<T>(version: ApiVersion, path: string): Promise<T> {
-    const res = await this.apiConnector.delete<T>(this.buildUrl(version, path));
+  public async delete<T, B>(
+    version: ApiVersion,
+    path: string,
+    body?: B,
+  ): Promise<T> {
+    const res = await this.apiConnector.delete<T>(
+      this.buildUrl(version, path),
+      { data: body }, // TODO: Rework to be spec-compliant
+    );
     return res.data;
   }
 

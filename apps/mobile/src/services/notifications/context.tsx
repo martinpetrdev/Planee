@@ -33,11 +33,22 @@ export function NotificationsProvider(props: PropsWithChildren) {
     loading.dismiss("notifications.init");
   };
 
+  const provision = async () => {
+    const state = await PushNotifications.getPermissionState();
+    if (!state.isGranted) return;
+
+    loading.request("notifications.provision");
+
+    await PushNotifications.provisionToken();
+
+    loading.dismiss("notifications.provision");
+  };
+
   useEffect(() => {
-    refresh();
+    refresh().then(provision);
 
     const sub = AppState.addEventListener("change", (state) => {
-      if (state === "active") refresh(); // Refresh when app comes to foreground (user returns from settings)
+      if (state === "active") refresh().then(provision); // Refresh when app comes to foreground (user returns from settings)
     });
 
     return () => {

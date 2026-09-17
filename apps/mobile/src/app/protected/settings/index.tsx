@@ -1,6 +1,4 @@
-import { PushNotifications } from "@/api/device/notifications/push";
 import { useAuth } from "@/auth/context";
-import { oidcClient } from "@/auth/oidc";
 import {
   Column,
   Icon,
@@ -53,14 +51,6 @@ export default function Screen() {
             <SegmentedListItem
               title="Commit"
               trailing={<Text>{commit}</Text>}
-            />
-            <SegmentedListItem
-              title="Get notifications token"
-              onClick={() => PushNotifications.getToken().then(console.log)}
-            />
-            <SegmentedListItem
-              title="Get auth token"
-              onClick={() => oidcClient.getToken().then(console.log)}
             />
           </SegmentedList>
         </Column>
