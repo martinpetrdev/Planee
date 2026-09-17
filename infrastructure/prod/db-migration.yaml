@@ -16,7 +16,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: migrate
-          image: registry.cloud.martinpetr.dev/planee/db-migration:sha-db92ab2
+          image: registry.cloud.martinpetr.dev/planee/db-migration:sha-e06d268
           envFrom:
             - configMapRef:
                 name: planee-config

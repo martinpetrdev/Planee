@@ -42,7 +42,7 @@ spec:
               kubectl wait --namespace=planee --for=condition=complete --timeout=300s job/planee-db-migrate
       containers:
         - name: api
-          image: registry.cloud.martinpetr.dev/planee/api:sha-db92ab2
+          image: registry.cloud.martinpetr.dev/planee/api:sha-e06d268
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
