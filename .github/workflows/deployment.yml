@@ -88,14 +88,14 @@ jobs:
           git checkout main || git checkout -b main
 
           # Replace old tags only for components that were built
-          # if [ "${{ steps.filter.outputs.api }}" = "true" ]; then
-          #   sed -i "s|image: ${{ env.REGISTRY }}/planee/api:.*|image: ${{ env.REGISTRY }}/planee/api:${TAG}|g" api.yaml
-          #   git add api.yaml
-          # fi
-          # if [ "${{ steps.filter.outputs.db-migration }}" = "true" ]; then
-          #   sed -i "s|image: ${{ env.REGISTRY }}/planee/db-migration:.*|image: ${{ env.REGISTRY }}/planee/db-migration:${TAG}|g" migration-job.yaml
-          #   git add migration-job.yaml
-          # fi
+          if [ "${{ steps.filter.outputs.api }}" = "true" ]; then
+            sed -i "s|image: ${{ env.REGISTRY }}/planee/api:.*|image: ${{ env.REGISTRY }}/planee/api:${TAG}|g" api.yaml
+            git add api.yaml
+          fi
+          if [ "${{ steps.filter.outputs.db-migration }}" = "true" ]; then
+            sed -i "s|image: ${{ env.REGISTRY }}/planee/db-migration:.*|image: ${{ env.REGISTRY }}/planee/db-migration:${TAG}|g" db-migration.yaml
+            git add db-migration.yaml
+          fi
 
           # Commit and push
           if ! git diff --staged --quiet; then
