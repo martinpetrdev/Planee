@@ -8,6 +8,7 @@ import { VersioningType } from '@nestjs/common';
 import { ApiVersion } from '@repo/shared';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
+import { IS_DEV } from './utils/env.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,7 +22,7 @@ async function bootstrap() {
 
   const swaggerDocumentFactory = () =>
     SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('swagger', app, swaggerDocumentFactory);
+  if (IS_DEV) SwaggerModule.setup('swagger', app, swaggerDocumentFactory);
 
   app.enableShutdownHooks();
   app.enableCors({
