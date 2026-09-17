@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: planee-api-svc
+  namespace: planee
+  labels:
+    app: planee-api
+spec:
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app: planee-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: planee-api
+  namespace: planee
+  labels:
+    app: planee-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: planee-api
+  template:
+    metadata:
+      labels:
+        app: planee-api
+    spec:
+      serviceAccountName: planee-app-sa
+      initContainers:
+        - name: wait-for-migration
+          image: bitnami/kubectl:latest
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for database migration job to complete..."
+              kubectl wait --namespace=planee --for=condition=complete --timeout=300s job/planee-db-migrate
+      containers:
+        - name: api
+          image: registry.cloud.martinpetr.dev/planee/api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: planee-config
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: planee-postgres-cluster-app # CNPG generated
+                  key: uri
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: planee-api-ingress
+  namespace: planee
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`api.planee.martinpetr.dev`)
+      kind: Rule
+      services:
+        - name: planee-api-svc
+          port: 80
+  tls:
+    certResolver: cloudflare

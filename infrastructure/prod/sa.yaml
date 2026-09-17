@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: planee-app-sa
+  namespace: planee
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: job-watcher
+  namespace: planee
+rules:
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: planee-job-watcher-binding
+  namespace: planee
+subjects:
+  - kind: ServiceAccount
+    name: planee-app-sa
+    namespace: planee
+roleRef:
+  kind: Role
+  name: job-watcher
+  apiGroup: rbac.authorization.k8s.io
