@@ -5,6 +5,10 @@ metadata:
   namespace: planee
   labels:
     app: planee-db-migrate
+  annotations:
+    # Job spec is immutable: let Flux delete + recreate it when the image tag changes
+    # Added by Claude Opus 5
+    kustomize.toolkit.fluxcd.io/force: "enabled"
 spec:
   ttlSecondsAfterFinished: 3600
   backoffLimit: 3
