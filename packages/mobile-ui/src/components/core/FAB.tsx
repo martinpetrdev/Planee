@@ -1,16 +1,21 @@
-import { FloatingActionButton, Icon } from "@expo/ui/jetpack-compose";
-import { align, offset } from "@expo/ui/jetpack-compose/modifiers";
+import { FloatingActionButton } from "@expo/ui/jetpack-compose";
 import { Icons, type Icon as IconType } from "../../icons/icons";
+import { ComponentProps } from "react";
+import { Icon } from "./Icon";
 
 interface IFABProps {
   icon: IconType;
+  onClick?: () => void;
+  styles?: {
+    icon?: ComponentProps<typeof Icon>["styles"];
+  };
 }
 
 export function FAB(props: IFABProps) {
   return (
-    <FloatingActionButton modifiers={[align("bottomEnd"), offset(-24, -24)]}>
+    <FloatingActionButton onClick={props.onClick}>
       <FloatingActionButton.Icon>
-        <Icon source={Icons[props.icon]} />
+        <Icon styles={props.styles?.icon} name={props.icon} />
       </FloatingActionButton.Icon>
     </FloatingActionButton>
   );
