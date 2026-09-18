@@ -1,4 +1,6 @@
 import { useAuth } from "@/auth/context";
+import { oidcClient } from "@/auth/oidc";
+import { MMKVKeys } from "@/types/mmkv-keys";
 import {
   Column,
   Icon,
@@ -9,10 +11,15 @@ import {
 } from "@repo/mobile-ui";
 import * as Application from "expo-application";
 import Constants from "expo-constants";
+import { useMMKVBoolean } from "react-native-mmkv";
 
 const { commit, channel } = Constants.expoConfig?.extra ?? {};
 
 export default function Screen() {
+  const [devModeEnabled, setDevModeEnabled] = useMMKVBoolean(
+    MMKVKeys.SettingsDeveloperMode,
+  );
+
   const auth = useAuth();
 
   return (
@@ -54,6 +61,35 @@ export default function Screen() {
             />
           </SegmentedList>
         </Column>
+        {devModeEnabled ? (
+          <Column gap={8}>
+            <Text padding={[16, 0, 0, 0]} typography="labelLarge">
+              Developer settings
+            </Text>
+            <SegmentedList>
+              <SegmentedListItem
+                title="Print access token"
+                onClick={() =>
+                  oidcClient
+                    .getToken()
+                    .then((t) => console.log("Access token:", t))
+                }
+              />
+              <SegmentedListItem
+                title="Disable dev settings"
+                onClick={() => setDevModeEnabled(false)}
+              />
+            </SegmentedList>
+          </Column>
+        ) : (
+          <Text
+            typography="bodySmall"
+            onClick={() => setDevModeEnabled(true)}
+            padding={[16, 0, 0, 0]}
+          >
+            Enable developer settings
+          </Text>
+        )}
       </Column>
     </ScreenShell>
   );
