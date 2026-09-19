@@ -11,3 +11,7 @@ export * from "./core/Button";
 export * from "./core/SegmentedList";
 export * from "./core/Icon";
 export * from "./core/DropdownMenu";
+export * from "./core/BottomSheet";
+export * from "./core/Row";
+export * from "./core/Input";
+export * from "./core/SegmentedButton";

@@ -18,4 +18,4 @@ export const Icons = {
   task_add: AddTask,
 } as const;
 
-export type Icon = keyof typeof Icons;
+export type IconType = keyof typeof Icons;

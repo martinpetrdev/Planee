@@ -1,6 +1,9 @@
 import { AuthProvider, useAuth } from "@/auth/context";
 import { LoadingScreenProvider } from "@/components/LoadingScreen";
 import { Stack } from "expo-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function RootNavigator() {
   const auth = useAuth();
@@ -20,10 +23,12 @@ function RootNavigator() {
 
 export default function Layout() {
   return (
-    <LoadingScreenProvider>
-      <AuthProvider>
-        <RootNavigator />
-      </AuthProvider>
-    </LoadingScreenProvider>
+    <QueryClientProvider client={queryClient}>
+      <LoadingScreenProvider>
+        <AuthProvider>
+          <RootNavigator />
+        </AuthProvider>
+      </LoadingScreenProvider>
+    </QueryClientProvider>
   );
 }
