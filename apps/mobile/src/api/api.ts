@@ -1,15 +1,17 @@
-import { AxiosInstance } from "axios";
+import { AxiosError, AxiosInstance } from "axios";
 import { ApiVersion } from "@repo/shared";
 import { secios, SeciosInstance } from "secios";
 import { apiConnector } from "./connector";
+import { removeNullishValues } from "@/utils/object";
 
 /**
  * API error response, that is emitted from rejection.
  */
 export interface APIError {
   statusCode: number;
-  error: string;
-  message: string;
+  error?: string;
+  message?: string;
+  fields?: Record<string, string>;
 }
 
 /**
@@ -102,6 +104,25 @@ export class API {
    */
   private buildUrl(version: ApiVersion, path: string): string {
     return `/v${version}${path.startsWith("/") ? "" : "/"}${path}`;
+  }
+
+  /**
+   * Adds query parameters to the specified URL.
+   */
+  public addQuery(
+    url: string,
+    query: Record<string, string | undefined | null>,
+  ) {
+    return `${url}?${new URLSearchParams(removeNullishValues(query)).toString()}`;
+  }
+
+  /**
+   * Converts AxiosError to APIError.
+   */
+  public static parseError(error: Error): APIError {
+    if (!(error instanceof AxiosError)) throw error;
+
+    return error.response?.data as APIError;
   }
 }
 

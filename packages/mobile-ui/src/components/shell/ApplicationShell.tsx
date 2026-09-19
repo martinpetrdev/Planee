@@ -2,12 +2,12 @@ import { useMemo } from "react";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router";
 import { useColorScheme } from "react-native";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
-import { Icon } from "../../icons/icons";
+import { IconType } from "../../icons/icons";
 import { StatusBar } from "expo-status-bar";
 
 export interface IApplicationTab {
   label: string;
-  icon: Icon;
+  icon: IconType;
   id: string;
 }
 
@@ -23,7 +23,7 @@ export function ApplicationShell(props: IApplicationShellProps) {
       props.tabs.map((tab) => {
         return (
           <NativeTabs.Trigger key={tab.id} name={tab.id}>
-            <NativeTabs.Trigger.Icon md={tab.icon}></NativeTabs.Trigger.Icon>
+            <NativeTabs.Trigger.Icon md={tab.icon} />
             <NativeTabs.Trigger.Label>{tab.label}</NativeTabs.Trigger.Label>
           </NativeTabs.Trigger>
         );

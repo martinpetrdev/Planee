@@ -1,6 +1,13 @@
-import { View } from "react-native";
-import { Box, LoadingSpinner, ScreenShell } from "@repo/mobile-ui";
-import { createContext, PropsWithChildren, useContext, useState } from "react";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { Box, JetpackShell, LoadingSpinner } from "@repo/mobile-ui";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 interface ILoadingScreenContextValue {
   request: (id: string) => void;
@@ -11,32 +18,49 @@ const LoadingScreenContext = createContext<ILoadingScreenContextValue | null>(
   null,
 );
 
+// Time the screen stays up after the last dismiss, so a handoff between two
+// loaders  doesn't flash the screen behind them.
+const HANDOFF_GRACE_MS = 250;
+const FADE_MS = 200;
+
 export function LoadingScreenProvider(props: PropsWithChildren) {
   const [requests, setRequests] = useState<string[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const value = useMemo(
+    () => ({
+      request: (id: string) =>
+        setRequests((r) => (r.includes(id) ? r : [...r, id])),
+      dismiss: (id: string) => setRequests((r) => r.filter((i) => i !== id)),
+    }),
+    [],
+  );
+
+  useEffect(() => {
+    if (requests.length > 0) {
+      setIsVisible(true);
+      return;
+    }
+
+    const timeout = setTimeout(() => setIsVisible(false), HANDOFF_GRACE_MS);
+
+    return () => clearTimeout(timeout);
+  }, [requests]);
 
   return (
-    <LoadingScreenContext.Provider
-      value={{
-        request: (id: string) =>
-          setRequests((r) => {
-            if (r.includes(id)) return r;
-
-            return [...r, id];
-          }),
-        dismiss: (id: string) => setRequests((r) => r.filter((r) => r !== id)),
-      }}
-    >
+    <LoadingScreenContext.Provider value={value}>
       {props.children}
-      {requests.length > 0 && <LoadingScreen />}
+      {isVisible && <LoadingScreen />}
     </LoadingScreenContext.Provider>
   );
 }
 
 function LoadingScreen() {
   return (
-    <View
+    <Animated.View
+      entering={FadeIn.duration(FADE_MS)}
+      exiting={FadeOut.duration(FADE_MS)}
       style={{
-        flex: 1,
         position: "absolute",
         top: 0,
         left: 0,
@@ -44,12 +68,12 @@ function LoadingScreen() {
         bottom: 0,
       }}
     >
-      <ScreenShell>
-        <Box>
-          <LoadingSpinner size={64} alignment="center" />
+      <JetpackShell>
+        <Box align="center">
+          <LoadingSpinner size={64} />
         </Box>
-      </ScreenShell>
-    </View>
+      </JetpackShell>
+    </Animated.View>
   );
 }
 

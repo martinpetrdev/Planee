@@ -37,6 +37,8 @@ export class OIDCClient {
   private readonly redirectUri: string;
   private discovery: DiscoveryDocument | null = null;
 
+  private refreshPromise: Promise<string | null> | null = null;
+
   constructor(options: IOIDCCLientOptions, sessionStore: SessionStore) {
     this.options = Object.freeze(options);
     this.sessionStore = sessionStore;
@@ -111,18 +113,27 @@ export class OIDCClient {
     // Refresh the access token using the refresh token
     if (!session.refreshToken) return null;
 
-    const fresh = await refreshAsync(
-      {
-        clientId: this.options.clientId,
-        refreshToken: session.refreshToken,
-      },
-      await this.getDiscovery(),
-    ).catch(() => null);
-    if (!fresh) return null;
+    // If a refresh is already in progress, await the existing promise
+    if (this.refreshPromise) return await this.refreshPromise;
 
-    await this.saveTokens(fresh);
+    // Refresh the access token using the refresh token and save the promise
+    this.refreshPromise = new Promise(async (resolve) => {
+      const fresh = await refreshAsync(
+        {
+          clientId: this.options.clientId,
+          refreshToken: session.refreshToken,
+        },
+        await this.getDiscovery(),
+      ).catch(() => null);
+      if (!fresh) return null;
 
-    return fresh.accessToken;
+      await this.saveTokens(fresh);
+
+      resolve(fresh.accessToken);
+      this.refreshPromise = null; // Reset the refresh promise after completion
+    });
+
+    return await this.refreshPromise;
   }
 
   public async logout() {

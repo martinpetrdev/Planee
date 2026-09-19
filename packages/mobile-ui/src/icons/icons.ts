@@ -6,6 +6,7 @@ import Logout from "@expo/material-symbols/logout.xml";
 import NoteAdd from "@expo/material-symbols/note_add.xml";
 import NotificationAdd from "@expo/material-symbols/notification_add.xml";
 import AddTask from "@expo/material-symbols/add_task.xml";
+import TaskAlt from "@expo/material-symbols/task_alt.xml";
 
 export const Icons = {
   home: Home,
@@ -15,7 +16,8 @@ export const Icons = {
   logout: Logout,
   note_add: NoteAdd,
   notification_add: NotificationAdd,
-  task_add: AddTask,
+  add_task: AddTask,
+  task_alt: TaskAlt,
 } as const;
 
-export type Icon = keyof typeof Icons;
+export type IconType = keyof typeof Icons;

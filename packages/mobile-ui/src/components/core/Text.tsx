@@ -4,13 +4,18 @@ import {
   useMaterialColors,
   type TextProps,
 } from "@expo/ui/jetpack-compose";
-import { padding, paddingAll } from "@expo/ui/jetpack-compose/modifiers";
+import {
+  clickable,
+  padding,
+  paddingAll,
+} from "@expo/ui/jetpack-compose/modifiers";
 
 type TypographyStyle = NonNullable<TextProps["style"]>["typography"];
 
 interface ITextProps extends PropsWithChildren {
   typography?: TypographyStyle;
   padding?: number | [number, number, number, number];
+  onClick?: () => void;
 }
 
 export function Text(props: ITextProps) {
@@ -26,6 +31,7 @@ export function Text(props: ITextProps) {
             ? padding(...props.padding)
             : paddingAll(props.padding)
           : null,
+        props.onClick ? clickable(props.onClick) : null,
       ].filter((i) => !!i)}
     >
       {props.children}

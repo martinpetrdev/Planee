@@ -9,6 +9,11 @@ const Tabs: IApplicationTab[] = [
     icon: "home",
   },
   {
+    label: "Tasks",
+    id: "tasks",
+    icon: "task_alt",
+  },
+  {
     label: "Settings",
     id: "settings",
     icon: "settings",

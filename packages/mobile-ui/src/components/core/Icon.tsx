@@ -1,4 +1,4 @@
-import { Icon as TIcon, Icons } from "../../icons/icons";
+import { IconType, Icons } from "../../icons/icons";
 import { Icon as JetpackIcon } from "@expo/ui/jetpack-compose";
 import {
   animated,
@@ -7,7 +7,7 @@ import {
 } from "@expo/ui/jetpack-compose/modifiers";
 
 interface IIconProps {
-  name: TIcon;
+  name: IconType;
   size?: number;
   styles?: {
     rotation?: number;
