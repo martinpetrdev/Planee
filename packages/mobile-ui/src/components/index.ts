@@ -17,3 +17,4 @@ export * from "./core/Input";
 export * from "./core/SegmentedButton";
 export * from "./core/PullToRefresh";
 export * from "./core/Card";
+export * from "./core/ScrollPositionDetector";
