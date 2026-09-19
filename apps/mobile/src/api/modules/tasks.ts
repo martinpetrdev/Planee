@@ -22,3 +22,5 @@ export interface TaskResponseDto {
 
 export const createTask = (dto: CreateTaskDto) =>
   api.post<TaskResponseDto, CreateTaskDto>(ApiVersion.v1, BASE_PATH, dto);
+export const listTasks = () =>
+  api.get<TaskResponseDto[]>(ApiVersion.v1, BASE_PATH);

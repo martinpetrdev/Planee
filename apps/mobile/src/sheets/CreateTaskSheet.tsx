@@ -12,7 +12,7 @@ import {
   useNativeState,
   useSnackbar,
 } from "@repo/mobile-ui";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { RefObject, useState } from "react";
 
 interface ICreateTaskSheetProps {
@@ -30,6 +30,7 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
   const [priority, setPriority] = useState<TaskPriority>("medium");
 
   const snackbar = useSnackbar();
+  const queryClient = useQueryClient();
 
   const { isPending, mutate } = useMutation({
     mutationKey: ["tasks", "create"],
@@ -40,6 +41,10 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
         message: "Task created!",
         duration: "short",
         withDismissAction: true,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["tasks"],
       });
     },
   });

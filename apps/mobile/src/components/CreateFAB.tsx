@@ -16,7 +16,7 @@ export function CreateFAB() {
           },
           {
             label: "Task",
-            icon: "task_add",
+            icon: "add_task",
             onClick: () => createTaskSheetRef.current?.open(),
           },
           {
