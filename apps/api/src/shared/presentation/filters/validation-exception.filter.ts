@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { ValidationError } from '../../domain/validation.error.js';
+import { capitalizeFirstLetter } from '../../../utils/text.js';
 
 @Catch(ValidationError)
 export class ValidationExceptionFilter extends BaseExceptionFilter {
@@ -15,7 +16,12 @@ export class ValidationExceptionFilter extends BaseExceptionFilter {
         {
           message: exception.message,
           statusCode: HttpStatus.BAD_REQUEST,
-          fields: exception.fieldErrors,
+          fields: Object.fromEntries(
+            Object.entries(exception.fieldErrors).map(([k, v]) => [
+              k,
+              capitalizeFirstLetter(v.replace(k, '').trim()),
+            ]),
+          ),
         },
         HttpStatus.BAD_REQUEST,
         {

@@ -1,3 +1,4 @@
+import { API } from "@/api/api";
 import { createTask, CreateTaskDto, TaskPriority } from "@/api/modules/tasks";
 import {
   BottomSheet,
@@ -14,6 +15,7 @@ import {
 } from "@repo/mobile-ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { RefObject, useState } from "react";
+import { ToastAndroid } from "react-native";
 
 interface ICreateTaskSheetProps {
   sheetRef: RefObject<BottomSheetRef | null>;
@@ -29,12 +31,29 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
   const [dueTime, setDueTime] = useState("");
   const [priority, setPriority] = useState<TaskPriority>("medium");
 
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
   const snackbar = useSnackbar();
   const queryClient = useQueryClient();
 
   const { isPending, mutate } = useMutation({
     mutationKey: ["tasks", "create"],
     mutationFn: async (dto: CreateTaskDto) => createTask(dto),
+    onError: (e) => {
+      const error = API.parseError(e);
+
+      if (
+        error &&
+        "fields" in error &&
+        Object.keys(error.fields ?? {}).length > 0
+      )
+        setFieldErrors(error.fields!);
+      else
+        ToastAndroid.show(
+          error?.message ?? "Unknown error",
+          ToastAndroid.SHORT,
+        );
+    },
     onSuccess: () => {
       close();
       snackbar.show({
@@ -56,6 +75,8 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
     setDueDate("");
     setDueTime("");
     setPriority("medium");
+
+    setFieldErrors({});
   };
 
   const close = () => {
@@ -88,6 +109,7 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
             state={nameState}
             label="What needs to be done?"
             disabled={isPending}
+            error={fieldErrors?.name}
           />
           <Column gap={8}>
             <Text typography="labelLarge">Duration</Text>
@@ -105,6 +127,10 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
                 label="Minutes"
                 disabled={isPending}
                 weight={1}
+                error={
+                  fieldErrors?.expectedDurationSeconds ??
+                  fieldErrors?.expectedDuration
+                }
               />
             </Row>
           </Column>
@@ -118,6 +144,7 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
                 type="date"
                 label="Date"
                 disabled={isPending}
+                error={fieldErrors?.dueDate ?? fieldErrors?.dueTime}
               />
               <Input
                 value={dueTime}

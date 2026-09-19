@@ -13,6 +13,7 @@ import {
   TextFieldRef,
   TimePickerDialog,
   Text,
+  TextField,
 } from "@expo/ui/jetpack-compose";
 import { fillMaxWidth, weight } from "@expo/ui/jetpack-compose/modifiers";
 import { useEffect, useRef, useState } from "react";
@@ -26,6 +27,7 @@ interface IInputProps {
   value?: string;
   onChange?: (v: string) => void;
   disabled?: boolean;
+  error?: string;
 }
 
 export function Input(props: IInputProps) {
@@ -72,10 +74,16 @@ export function Input(props: IInputProps) {
           imeAction: "next",
           keyboardType: props.type == "number" ? "number" : "text",
         }}
+        isError={props.error !== undefined}
       >
         <OutlinedTextField.Label>
           <Text>{props.label}</Text>
         </OutlinedTextField.Label>
+        {props.error && (
+          <OutlinedTextField.SupportingText>
+            <Text>{props.error}</Text>
+          </OutlinedTextField.SupportingText>
+        )}
       </OutlinedTextField>
 
       {datePickerShown && (
