@@ -1,4 +1,5 @@
 import { DomainError } from '../../shared/domain/domain.error.js';
+import { ValidationError } from '../../shared/domain/validation.error.js';
 
 export abstract class TaskError extends DomainError {}
 
@@ -8,12 +9,10 @@ export class TaskNotFoundError extends TaskError {
   }
 }
 
-export class TaskInvalidError extends TaskError {
-  constructor(taskId: string | null, message: string, options?: ErrorOptions) {
-    super(
-      'invalid',
-      `Task ${taskId ? `${taskId} ` : ''}is invalid: ${message}`,
-      options,
-    );
+export abstract class TaskValidationError extends ValidationError {}
+
+export class TaskInvalidError extends TaskValidationError {
+  constructor(fieldErrors: Record<string, string>, options?: ErrorOptions) {
+    super(fieldErrors, options);
   }
 }

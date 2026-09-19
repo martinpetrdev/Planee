@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import { AxiosError, AxiosInstance } from "axios";
 import { ApiVersion } from "@repo/shared";
 import { secios, SeciosInstance } from "secios";
 import { apiConnector } from "./connector";
@@ -9,8 +9,9 @@ import { removeNullishValues } from "@/utils/object";
  */
 export interface APIError {
   statusCode: number;
-  error: string;
-  message: string;
+  error?: string;
+  message?: string;
+  fields?: Record<string, string>;
 }
 
 /**
@@ -113,6 +114,15 @@ export class API {
     query: Record<string, string | undefined | null>,
   ) {
     return `${url}?${new URLSearchParams(removeNullishValues(query)).toString()}`;
+  }
+
+  /**
+   * Converts AxiosError to APIError.
+   */
+  public static parseError(error: Error): APIError {
+    if (!(error instanceof AxiosError)) throw error;
+
+    return error.response?.data as APIError;
   }
 }
 

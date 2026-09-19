@@ -4,7 +4,11 @@ import {
   getServiceCorsAllowedOrigins,
   getServicePort,
 } from './config/http.config.js';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import {
+  BadRequestException,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import { ApiVersion } from '@repo/shared';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
@@ -23,14 +27,6 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: ApiVersion.v1,
   });
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Planee API')

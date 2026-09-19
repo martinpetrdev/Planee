@@ -25,9 +25,9 @@ export class Task {
     userId: string,
   ) {
     // Due date not validated - we could not validate past-due tasks
-    TaskValidator.validateName(name, id);
-    TaskValidator.validateExpectedDuration(expectedDuration, id);
-    TaskValidator.validateUserId(userId, id);
+    TaskValidator.validateName(name);
+    TaskValidator.validateExpectedDuration(expectedDuration);
+    TaskValidator.validateUserId(userId);
 
     return new this(
       id,
