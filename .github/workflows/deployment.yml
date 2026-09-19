@@ -31,6 +31,12 @@ jobs:
               - 'packages/shared/**'
               - '.github/workflows/deployment.yml'
 
+            web:
+              - 'apps/web'
+              - 'apps/web/**'
+              - 'packages/shared/**'
+              - '.github/workflows/deployment.yml'
+
             db-migration:
               - 'packages/database'
               - 'packages/database/**'
@@ -61,6 +67,17 @@ jobs:
           cache-from: type=gha,scope=api
           cache-to: type=gha,mode=max,scope=api
 
+      - name: Build & push web
+        if: steps.filter.outputs.web == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/planee/web:${{ steps.tag.outputs.tag }}, ${{ env.REGISTRY }}/planee/web:latest
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
+
       - name: Build & push DB migration job
         if: steps.filter.outputs.db-migration == 'true'
         uses: docker/build-push-action@v5
@@ -90,6 +107,10 @@ jobs:
           if [ "${{ steps.filter.outputs.api }}" = "true" ]; then
             sed -i "s|image: ${{ env.REGISTRY }}/planee/api:.*|image: ${{ env.REGISTRY }}/planee/api:${TAG}|g" api.yaml
             git add api.yaml
+          fi
+          if [ "${{ steps.filter.outputs.web }}" = "true" ]; then
+            sed -i "s|image: ${{ env.REGISTRY }}/planee/web:.*|image: ${{ env.REGISTRY }}/planee/web:${TAG}|g" web.yaml
+            git add web.yaml
           fi
           if [ "${{ steps.filter.outputs.db-migration }}" = "true" ]; then
             sed -i "s|image: ${{ env.REGISTRY }}/planee/db-migration:.*|image: ${{ env.REGISTRY }}/planee/db-migration:${TAG}|g" db-migration.yaml
