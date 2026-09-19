@@ -8,3 +8,4 @@ resources:
   - config.yaml
   - db-migration.yaml
   - sa.yaml
+  - web.yaml
