@@ -1,5 +1,12 @@
 import { TaskResponseDto } from "@/api/modules/tasks";
-import { Box, Card, Text } from "@repo/mobile-ui";
+import {
+  Card,
+  Column,
+  formatDuration,
+  formatISOTime,
+  Text,
+  toISOTime,
+} from "@repo/mobile-ui";
 
 interface ITaskProps {
   task: TaskResponseDto;
@@ -8,7 +15,9 @@ interface ITaskProps {
 export function Task(props: ITaskProps) {
   return (
     <Card fillWidth padding={16}>
-      <Text>{props.task.name}</Text>
+      <Column gap={4}>
+        <Text typography="bodyLarge">{props.task.name}</Text>
+      </Column>
     </Card>
   );
 }

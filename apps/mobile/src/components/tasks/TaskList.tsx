@@ -1,9 +1,10 @@
 import { listTasks } from "@/api/modules/tasks";
+import { PAGE_SIZE } from "@repo/shared";
 import {
-  Box,
   formatISODate,
   LoadingSpinner,
   PullToRefresh,
+  Row,
   ScrollPositionDetector,
   Text,
 } from "@repo/mobile-ui";
@@ -11,7 +12,28 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { Task } from "./Task";
 import { groupTasksByDay } from "@/utils/tasks/list";
 
+interface ISectionHeaderProps {
+  title: string;
+}
+
+function SectionHeader(props: ISectionHeaderProps) {
+  return (
+    <Text typography="titleSmall" padding={[0, 8, 0, 4]}>
+      {props.title}
+    </Text>
+  );
+}
+
 export function TaskList() {
+  const {
+    isFetching: isFetchingOverdue,
+    data: overdueTasks,
+    refetch: refetchOverdue,
+  } = useQuery({
+    queryKey: ["tasks", "overdue"],
+    queryFn: async () => await listTasks({ scope: "overdue" }),
+  });
+
   const {
     isFetching: isFetchingToday,
     data: todayTasks,
@@ -33,33 +55,47 @@ export function TaskList() {
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
       await listTasks({ scope: "upcoming", cursorId: pageParam }),
     initialPageParam: undefined,
-    getNextPageParam: (lastPage) => lastPage[lastPage.length - 1]?.id,
+    // Short page is the last
+    getNextPageParam: (lastPage) =>
+      lastPage.length < PAGE_SIZE
+        ? undefined
+        : lastPage[lastPage.length - 1].id,
   });
 
   return (
     <PullToRefresh
-      isRefreshing={(isFetching && !isFetchingNextPage) || isFetchingToday}
+      isRefreshing={
+        (isFetching && !isFetchingNextPage) ||
+        isFetchingToday ||
+        isFetchingOverdue
+      }
       onRefresh={() => {
         refetch();
         refetchToday();
+        refetchOverdue();
       }}
       gap={8}
     >
-      <Text typography="titleMedium">Today</Text>
-      {todayTasks &&
-        todayTasks.map((task) => <Task key={task.id} task={task} />)}
+      {!!overdueTasks?.length && [
+        <SectionHeader key="overdue" title="Overdue" />,
+        ...overdueTasks.map((task) => <Task key={task.id} task={task} />),
+      ]}
+      <SectionHeader title="Today" />
+      {todayTasks?.length ? (
+        todayTasks.map((task) => <Task key={task.id} task={task} />)
+      ) : (
+        <Text typography="bodySmall">Nothing due today.</Text>
+      )}
       {data &&
         groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
-          <Text key={day} typography="titleMedium">
-            {formatISODate(day)}
-          </Text>,
+          <SectionHeader key={day} title={formatISODate(day)} />,
           ...tasks.map((task) => <Task key={task.id} task={task} />),
         ])}
       <ScrollPositionDetector onAppear={() => fetchNextPage()} />
       {hasNextPage && (
-        <Box align="center" flex>
+        <Row horizontalAlignment="center" padding={12}>
           <LoadingSpinner />
-        </Box>
+        </Row>
       )}
     </PullToRefresh>
   );

@@ -6,6 +6,7 @@ import { TaskPriority as DomainTaskPriority } from '../../domain/task-priority.j
 import { NewTask as NewDomainTask } from '../../domain/new-task.js';
 import { Duration } from '../../domain/value-objects/duration.vo.js';
 import { DAY_IN_MILISECONDS } from '../../../shared/constants/time.js';
+import { PAGE_SIZE } from '@repo/shared';
 
 const PRIORITY_TO_PRISMA: Record<DomainTaskPriority, TaskPriority> = {
   [DomainTaskPriority.Low]: TaskPriority.LOW,
@@ -53,7 +54,7 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
     const entities = await this.db.task.findMany({
       where: { userId, dueDate: due },
       orderBy: [{ dueDate: 'asc' }, { id: 'asc' }],
-      take: 30,
+      take: PAGE_SIZE,
       ...(filters.cursorId && { cursor: { id: filters.cursorId }, skip: 1 }),
     });
 

@@ -5,7 +5,7 @@ import { Column, ScreenShell, Text } from "@repo/mobile-ui";
 export default function Screen() {
   return (
     <ScreenShell>
-      <Column padding={24} fill gap={16}>
+      <Column padding={16} fill gap={12}>
         <Text typography="headlineMedium">Tasks</Text>
         <TaskList />
       </Column>
