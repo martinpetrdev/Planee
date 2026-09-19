@@ -1,3 +1,4 @@
+import { API } from "@/api/api";
 import {
   TaskPriority,
   TaskResponseDto,
@@ -20,6 +21,7 @@ import {
 } from "@repo/mobile-ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
+import { ToastAndroid } from "react-native";
 
 interface IUpdateTaskSheetProps {
   task: TaskResponseDto;
@@ -41,6 +43,8 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
   const [dueTime, setDueTime] = useState(initialTime);
   const [priority, setPriority] = useState<TaskPriority>(props.task.priority);
 
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
   // Mounted only while a task is selected - opens itself.
   useEffect(() => {
     sheetRef.current?.open();
@@ -52,6 +56,22 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
   const { isPending, mutate } = useMutation({
     mutationKey: ["tasks", props.task.id, "update"],
     mutationFn: async (dto: UpdateTaskDto) => updateTask(props.task.id, dto),
+    onError: (e) => {
+      const error = API.parseError(e);
+
+      if (
+        error &&
+        "fields" in error &&
+        Object.keys(error.fields ?? {}).length > 0
+      )
+        setFieldErrors(error.fields!);
+      else
+        ToastAndroid.show(
+          error?.message ?? "Unknown error",
+          ToastAndroid.SHORT,
+        );
+    },
+
     onSuccess: () => {
       close();
       snackbar.show({
@@ -95,6 +115,7 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
             state={nameState}
             label="What needs to be done?"
             disabled={isPending}
+            error={fieldErrors.name}
           />
           <Column gap={8}>
             <Text typography="labelLarge">Duration</Text>
@@ -112,6 +133,10 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
                 label="Minutes"
                 disabled={isPending}
                 weight={1}
+                error={
+                  fieldErrors.expectedDurationSeconds ??
+                  fieldErrors.expectedDuration
+                }
               />
             </Row>
           </Column>
@@ -125,6 +150,7 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
                 type="date"
                 label="Date"
                 disabled={isPending}
+                error={fieldErrors.dueDate ?? fieldErrors.dueTime}
               />
               <Input
                 value={dueTime}
