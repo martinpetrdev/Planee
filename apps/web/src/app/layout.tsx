@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Figtree, Lora } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
+import "@repo/web-ui/styles";
+import { cn } from "@repo/web-ui";
 
 const loraHeading = Lora({ subsets: ["latin"], variable: "--font-heading" });
 
