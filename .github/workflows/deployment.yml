@@ -30,17 +30,44 @@ jobs:
               - 'packages/database/**'
               - 'packages/shared/**'
               - '.github/workflows/deployment.yml'
+              - 'pnpm-lock.yaml'
 
             web:
               - 'apps/web'
               - 'apps/web/**'
               - 'packages/shared/**'
               - '.github/workflows/deployment.yml'
+              - 'pnpm-lock.yaml'
 
             db-migration:
               - 'packages/database'
               - 'packages/database/**'
               - '.github/workflows/deployment.yml'
+              - 'pnpm-lock.yaml'
+
+      # Commit-message overrides: "force:web" builds it even if unchanged,
+      # "skip:web" never builds it. Components: api, web, db-migration.
+      # Added by Claude Code (Claude Opus 5)
+      - name: Resolve build targets
+        id: build
+        env:
+          # via env, not inline ${{ }} - a commit message is attacker-controlled
+          MSG: ${{ github.event.head_commit.message }}
+        run: |
+          api="${{ steps.filter.outputs.api }}"
+          web="${{ steps.filter.outputs.web }}"
+          dbm="${{ steps.filter.outputs.db-migration }}"
+          for c in api web db-migration; do
+            case "$c" in
+              api) v="$api" ;;
+              web) v="$web" ;;
+              db-migration) v="$dbm" ;;
+            esac
+            case "$MSG" in *"force:$c"*) v=true ;; esac
+            case "$MSG" in *"skip:$c"*) v=false ;; esac
+            echo "$c=$v" >> "$GITHUB_OUTPUT"
+            echo "$c -> $v"
+          done
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -57,7 +84,7 @@ jobs:
         run: echo "tag=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Build & push API
-        if: steps.filter.outputs.api == 'true'
+        if: steps.build.outputs.api == 'true'
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -68,7 +95,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=api
 
       - name: Build & push web
-        if: steps.filter.outputs.web == 'true'
+        if: steps.build.outputs.web == 'true'
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -79,7 +106,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=web
 
       - name: Build & push DB migration job
-        if: steps.filter.outputs.db-migration == 'true'
+        if: steps.build.outputs.db-migration == 'true'
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -90,7 +117,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=db-migration
 
       - name: Update manifests & commit
-        if: steps.filter.outputs.api == 'true' || steps.filter.outputs.db-migration == 'true'
+        if: steps.build.outputs.api == 'true' || steps.build.outputs.web == 'true' || steps.build.outputs.db-migration == 'true'
         run: |
           TAG="${{ steps.tag.outputs.tag }}"
 
@@ -104,15 +131,15 @@ jobs:
           git checkout -B main origin/main
 
           # Replace old tags only for components that were built
-          if [ "${{ steps.filter.outputs.api }}" = "true" ]; then
+          if [ "${{ steps.build.outputs.api }}" = "true" ]; then
             sed -i "s|image: ${{ env.REGISTRY }}/planee/api:.*|image: ${{ env.REGISTRY }}/planee/api:${TAG}|g" api.yaml
             git add api.yaml
           fi
-          if [ "${{ steps.filter.outputs.web }}" = "true" ]; then
+          if [ "${{ steps.build.outputs.web }}" = "true" ]; then
             sed -i "s|image: ${{ env.REGISTRY }}/planee/web:.*|image: ${{ env.REGISTRY }}/planee/web:${TAG}|g" web.yaml
             git add web.yaml
           fi
-          if [ "${{ steps.filter.outputs.db-migration }}" = "true" ]; then
+          if [ "${{ steps.build.outputs.db-migration }}" = "true" ]; then
             sed -i "s|image: ${{ env.REGISTRY }}/planee/db-migration:.*|image: ${{ env.REGISTRY }}/planee/db-migration:${TAG}|g" db-migration.yaml
             git add db-migration.yaml
           fi
