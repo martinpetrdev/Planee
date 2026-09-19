@@ -1,4 +1,4 @@
-import { listTasks } from "@/api/modules/tasks";
+import { listTasks, TaskResponseDto } from "@/api/modules/tasks";
 import { PAGE_SIZE } from "@repo/shared";
 import {
   formatISODate,
@@ -9,6 +9,8 @@ import {
   Text,
 } from "@repo/mobile-ui";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { UpdateTaskSheet } from "@/sheets/UpdateTaskSheet";
 import { Task } from "./Task";
 import { groupTasksByDay } from "@/utils/tasks/list";
 
@@ -25,6 +27,8 @@ function SectionHeader(props: ISectionHeaderProps) {
 }
 
 export function TaskList() {
+  const [selected, setSelected] = useState<TaskResponseDto | null>(null);
+
   const {
     isFetching: isFetchingOverdue,
     data: overdueTasks,
@@ -63,40 +67,56 @@ export function TaskList() {
   });
 
   return (
-    <PullToRefresh
-      isRefreshing={
-        (isFetching && !isFetchingNextPage) ||
-        isFetchingToday ||
-        isFetchingOverdue
-      }
-      onRefresh={() => {
-        refetch();
-        refetchToday();
-        refetchOverdue();
-      }}
-      gap={8}
-    >
-      {!!overdueTasks?.length && [
-        <SectionHeader key="overdue" title="Overdue" />,
-        ...overdueTasks.map((task) => <Task key={task.id} task={task} />),
-      ]}
-      <SectionHeader title="Today" />
-      {todayTasks?.length ? (
-        todayTasks.map((task) => <Task key={task.id} task={task} />)
-      ) : (
-        <Text typography="bodySmall">Nothing due today.</Text>
+    <>
+      <PullToRefresh
+        isRefreshing={
+          (isFetching && !isFetchingNextPage) ||
+          isFetchingToday ||
+          isFetchingOverdue
+        }
+        onRefresh={() => {
+          refetch();
+          refetchToday();
+          refetchOverdue();
+        }}
+        gap={8}
+      >
+        {!!overdueTasks?.length && [
+          <SectionHeader key="overdue" title="Overdue" />,
+          ...overdueTasks.map((task) => (
+            <Task key={task.id} task={task} onClick={() => setSelected(task)} />
+          )),
+        ]}
+        <SectionHeader title="Today" />
+        {todayTasks?.length ? (
+          todayTasks.map((task) => (
+            <Task key={task.id} task={task} onClick={() => setSelected(task)} />
+          ))
+        ) : (
+          <Text typography="bodySmall">Nothing due today.</Text>
+        )}
+        {data &&
+          groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
+            <SectionHeader key={day} title={formatISODate(day)} />,
+            ...tasks.map((task) => (
+              <Task
+                key={task.id}
+                task={task}
+                onClick={() => setSelected(task)}
+              />
+            )),
+          ])}
+        <ScrollPositionDetector onAppear={() => fetchNextPage()} />
+        {hasNextPage && (
+          <Row horizontalAlignment="center" padding={12}>
+            <LoadingSpinner />
+          </Row>
+        )}
+      </PullToRefresh>
+
+      {selected && (
+        <UpdateTaskSheet task={selected} onClose={() => setSelected(null)} />
       )}
-      {data &&
-        groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
-          <SectionHeader key={day} title={formatISODate(day)} />,
-          ...tasks.map((task) => <Task key={task.id} task={task} />),
-        ])}
-      <ScrollPositionDetector onAppear={() => fetchNextPage()} />
-      {hasNextPage && (
-        <Row horizontalAlignment="center" padding={12}>
-          <LoadingSpinner />
-        </Row>
-      )}
-    </PullToRefresh>
+    </>
   );
 }

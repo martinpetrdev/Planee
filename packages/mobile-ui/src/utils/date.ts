@@ -71,3 +71,9 @@ export function formatDuration(seconds: number) {
   const m = Math.floor(seconds / 60) % 60;
   return [h && `${h}h`, m && `${m}min`].filter(Boolean).join(" ") || "0min";
 }
+
+/** A UTC instant -> local ["2026-09-19", "14:30"] for the pickers. Inverse of `toInstant`; splitting the ISO string on "T" would show UTC wall clock. */
+export function fromInstant(instant: string): [string, string] {
+  const d = new Date(instant);
+  return [toISODate(d), toISOTime(d)];
+}

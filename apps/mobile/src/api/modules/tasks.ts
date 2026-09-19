@@ -13,6 +13,8 @@ export interface CreateTaskDto {
   priority: TaskPriority;
 }
 
+export interface UpdateTaskDto extends CreateTaskDto {}
+
 export interface ListTasksDto {
   scope: "today" | "upcoming" | "overdue";
   cursorId?: string;
@@ -28,6 +30,12 @@ export interface TaskResponseDto {
 
 export const createTask = (dto: CreateTaskDto) =>
   api.post<TaskResponseDto, CreateTaskDto>(ApiVersion.v1, BASE_PATH, dto);
+export const updateTask = (taskId: string, dto: UpdateTaskDto) =>
+  api.put<TaskResponseDto, UpdateTaskDto>(
+    ApiVersion.v1,
+    `${BASE_PATH}/${taskId}`,
+    dto,
+  );
 export const listTasks = (dto: ListTasksDto) =>
   api.get<TaskResponseDto[]>(
     ApiVersion.v1,
