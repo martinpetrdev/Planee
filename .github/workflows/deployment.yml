@@ -39,6 +39,13 @@ jobs:
               - '.github/workflows/deployment.yml'
               - 'pnpm-lock.yaml'
 
+            marketing-web:
+              - 'apps/marketing-web'
+              - 'apps/marketing-web/**'
+              - 'packages/shared/**'
+              - '.github/workflows/deployment.yml'
+              - 'pnpm-lock.yaml'
+
             db-migration:
               - 'packages/database'
               - 'packages/database/**'
@@ -57,11 +64,13 @@ jobs:
           api="${{ steps.filter.outputs.api }}"
           web="${{ steps.filter.outputs.web }}"
           dbm="${{ steps.filter.outputs.db-migration }}"
-          for c in api web db-migration; do
+          marketing_web="${{ steps.filter.outputs.marketing-web }}"
+          for c in api web db-migration marketing-web; do
             case "$c" in
               api) v="$api" ;;
               web) v="$web" ;;
               db-migration) v="$dbm" ;;
+              marketing-web) v="$marketing_web" ;;
             esac
             case "$MSG" in *"force:$c"*) v=true ;; esac
             case "$MSG" in *"skip:$c"*) v=false ;; esac
@@ -105,6 +114,17 @@ jobs:
           cache-from: type=gha,scope=web
           cache-to: type=gha,mode=max,scope=web
 
+      - name: Build & push marketing web
+        if: steps.build.outputs.marketing-web == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/marketing-web/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/planee/marketing-web:${{ steps.tag.outputs.tag }}, ${{ env.REGISTRY }}/planee/marketing-web:latest
+          cache-from: type=gha,scope=marketing-web
+          cache-to: type=gha,mode=max,scope=marketing-web
+
       - name: Build & push DB migration job
         if: steps.build.outputs.db-migration == 'true'
         uses: docker/build-push-action@v5
@@ -117,7 +137,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=db-migration
 
       - name: Update manifests & commit
-        if: steps.build.outputs.api == 'true' || steps.build.outputs.web == 'true' || steps.build.outputs.db-migration == 'true'
+        if: steps.build.outputs.api == 'true' || steps.build.outputs.web == 'true' || steps.build.outputs.marketing-web == 'true' || steps.build.outputs.db-migration == 'true'
         run: |
           TAG="${{ steps.tag.outputs.tag }}"
 
@@ -138,6 +158,10 @@ jobs:
           if [ "${{ steps.build.outputs.web }}" = "true" ]; then
             sed -i "s|image: ${{ env.REGISTRY }}/planee/web:.*|image: ${{ env.REGISTRY }}/planee/web:${TAG}|g" web.yaml
             git add web.yaml
+          fi
+          if [ "${{ steps.build.outputs.marketing-web }}" = "true" ]; then
+            sed -i "s|image: ${{ env.REGISTRY }}/planee/marketing-web:.*|image: ${{ env.REGISTRY }}/planee/marketing-web:${TAG}|g" marketing-web.yaml
+            git add marketing-web.yaml
           fi
           if [ "${{ steps.build.outputs.db-migration }}" = "true" ]; then
             sed -i "s|image: ${{ env.REGISTRY }}/planee/db-migration:.*|image: ${{ env.REGISTRY }}/planee/db-migration:${TAG}|g" db-migration.yaml

@@ -9,3 +9,4 @@ resources:
   - db-migration.yaml
   - sa.yaml
   - web.yaml
+  - marketing-web.yaml
