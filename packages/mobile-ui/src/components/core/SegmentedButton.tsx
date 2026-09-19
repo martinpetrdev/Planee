@@ -24,7 +24,7 @@ export function SegmentedButton<T extends string>(
   props: ISegmentedButtonProps<T>,
 ) {
   return (
-    <Column>
+    <Column gap={8}>
       <Text typography="labelLarge">{props.label}</Text>
       <SingleChoiceSegmentedButtonRow modifiers={[fillMaxWidth()]}>
         {props.items.map((i) => (

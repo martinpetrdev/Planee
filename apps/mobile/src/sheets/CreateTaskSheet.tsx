@@ -68,44 +68,54 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
       dismissBlocked={isPending}
       onClose={clear}
     >
-      <Column padding={24} gap={12}>
-        <Text typography="titleLarge">New task</Text>
-        <Column gap={8}>
-          <Input state={nameState} label="Name" disabled={isPending} />
-          <Row gap={8}>
-            <Input
-              state={hoursState}
-              type="number"
-              label="Hours"
-              disabled={isPending}
-              weight={1}
-            />
-            <Input
-              state={minutesState}
-              type="number"
-              label="Minutes"
-              disabled={isPending}
-              weight={1}
-            />
-          </Row>
-          <Row gap={8}>
-            <Input
-              value={dueDate}
-              onChange={setDueDate}
-              weight={2}
-              type="date"
-              label="Due date"
-              disabled={isPending}
-            />
-            <Input
-              value={dueTime}
-              onChange={setDueTime}
-              weight={1}
-              type="time"
-              label="Due time"
-              disabled={isPending}
-            />
-          </Row>
+      <Column padding={24} gap={24}>
+        <Text typography="headlineSmall">New task</Text>
+        <Column gap={16}>
+          <Input
+            state={nameState}
+            label="What needs to be done?"
+            disabled={isPending}
+          />
+          <Column gap={8}>
+            <Text typography="labelLarge">Duration</Text>
+            <Row gap={12}>
+              <Input
+                state={hoursState}
+                type="number"
+                label="Hours"
+                disabled={isPending}
+                weight={1}
+              />
+              <Input
+                state={minutesState}
+                type="number"
+                label="Minutes"
+                disabled={isPending}
+                weight={1}
+              />
+            </Row>
+          </Column>
+          <Column gap={8}>
+            <Text typography="labelLarge">Due</Text>
+            <Row gap={12}>
+              <Input
+                value={dueDate}
+                onChange={setDueDate}
+                weight={2}
+                type="date"
+                label="Date"
+                disabled={isPending}
+              />
+              <Input
+                value={dueTime}
+                onChange={setDueTime}
+                weight={1}
+                type="time"
+                label="Time"
+                disabled={isPending}
+              />
+            </Row>
+          </Column>
           <SegmentedButton
             value={priority}
             onChange={setPriority}
@@ -127,7 +137,7 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
             disabled={isPending}
           />
         </Column>
-        <Row gap={8} horizontalAlignment="end">
+        <Row gap={12} horizontalAlignment="end">
           <Button
             variant="outlined"
             onClick={() => close()}
@@ -136,7 +146,7 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
             Cancel
           </Button>
           <Button onClick={() => submit()} loading={isPending}>
-            Create
+            Create task
           </Button>
         </Row>
       </Column>
