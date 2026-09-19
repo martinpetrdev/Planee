@@ -10,6 +10,7 @@ import {
   Text,
   toInstant,
   useNativeState,
+  useSnackbar,
 } from "@repo/mobile-ui";
 import { useMutation } from "@tanstack/react-query";
 import { RefObject, useState } from "react";
@@ -28,11 +29,18 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
   const [dueTime, setDueTime] = useState("");
   const [priority, setPriority] = useState<TaskPriority>("medium");
 
+  const snackbar = useSnackbar();
+
   const { isPending, mutate } = useMutation({
     mutationKey: ["tasks", "create"],
     mutationFn: async (dto: CreateTaskDto) => createTask(dto),
     onSuccess: () => {
       close();
+      snackbar.show({
+        message: "Task created!",
+        duration: "short",
+        withDismissAction: true,
+      });
     },
   });
 
