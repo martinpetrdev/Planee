@@ -5,6 +5,7 @@ import { Task as DomainTask } from '../../domain/task.js';
 import { TaskPriority as DomainTaskPriority } from '../../domain/task-priority.js';
 import { NewTask as NewDomainTask } from '../../domain/new-task.js';
 import { Duration } from '../../domain/value-objects/duration.vo.js';
+import { DAY_IN_MILISECONDS } from '../../../shared/constants/time.js';
 
 const PRIORITY_TO_PRISMA: Record<DomainTaskPriority, TaskPriority> = {
   [DomainTaskPriority.Low]: TaskPriority.LOW,
@@ -33,10 +34,27 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
     return this.prismaToDomain(entity);
   }
 
-  async findAllByUserId(userId: string): Promise<DomainTask[]> {
+  async findAllByUserId(
+    userId: string,
+    filters: {
+      scope: 'overdue' | 'today' | 'upcoming';
+      dayStart: Date;
+      cursorId: string | null;
+    },
+  ): Promise<DomainTask[]> {
+    const start = filters.dayStart;
+    const end = new Date(start.getTime() + DAY_IN_MILISECONDS);
+    let due;
+
+    if (filters.scope === 'overdue') due = { lt: start };
+    else if (filters.scope === 'today') due = { gte: start, lt: end };
+    else if (filters.scope === 'upcoming') due = { gte: end };
+
     const entities = await this.db.task.findMany({
-      where: { userId },
-      orderBy: { dueDate: 'asc' },
+      where: { userId, dueDate: due },
+      orderBy: [{ dueDate: 'asc' }, { id: 'asc' }],
+      take: 30,
+      ...(filters.cursorId && { cursor: { id: filters.cursorId }, skip: 1 }),
     });
 
     return entities.map((entity) => this.prismaToDomain(entity));

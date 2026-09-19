@@ -7,6 +7,7 @@ import { TaskManagementPort } from './ports/task-management.port.js';
 import { TaskNotFoundError } from '../domain/task.errors.js';
 import { NewTask } from '../domain/new-task.js';
 import { Duration } from '../domain/value-objects/duration.vo.js';
+import { ListTasksCommand } from './list-tasks.command.js';
 
 @Injectable()
 export class TasksService extends TaskManagementPort {
@@ -14,8 +15,12 @@ export class TasksService extends TaskManagementPort {
     super();
   }
 
-  async listTasks(userId: string) {
-    return await this.tasks.findAllByUserId(userId);
+  async listTasks(command: ListTasksCommand): Promise<Task[]> {
+    return await this.tasks.findAllByUserId(command.userId, {
+      scope: command.scope,
+      dayStart: command.dayStart,
+      cursorId: command.cursorId,
+    });
   }
 
   async getTask(userId: string, taskId: string) {

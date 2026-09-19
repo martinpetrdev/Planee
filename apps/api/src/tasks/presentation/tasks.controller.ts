@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { ApiVersion } from '@repo/shared';
@@ -18,6 +19,8 @@ import { TaskResponseDto } from './dto/task-response.dto.js';
 import { CreateTaskCommand } from '../application/create-task.command.js';
 import { UpdateTaskCommand } from '../application/update-task.command.js';
 import { TaskManagementPort } from '../application/ports/task-management.port.js';
+import { ListTasksDto } from './dto/list-tasks.dto.js';
+import { ListTasksCommand } from '../application/list-tasks.command.js';
 
 @Controller({
   path: '/tasks',
@@ -28,8 +31,18 @@ export class TasksController {
   constructor(private readonly tasks: TaskManagementPort) {}
 
   @Get('/')
-  async listTasks(@User('id') userId: string): Promise<TaskResponseDto[]> {
-    const tasks = await this.tasks.listTasks(userId);
+  async listTasks(
+    @User('id') userId: string,
+    @Query() dto: ListTasksDto,
+  ): Promise<TaskResponseDto[]> {
+    const tasks = await this.tasks.listTasks(
+      new ListTasksCommand(
+        userId,
+        dto.scope,
+        new Date(dto.dayStart),
+        dto.cursorId ?? null,
+      ),
+    );
 
     return tasks.map((task) => TaskResponseDto.fromDomain(task));
   }

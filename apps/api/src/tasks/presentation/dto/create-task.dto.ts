@@ -1,6 +1,7 @@
 import {
   IsDateString,
   IsEnum,
+  IsISO8601,
   IsNumber,
   IsString,
   Length,
@@ -20,7 +21,7 @@ export class CreateTaskDto {
   @ApiProperty()
   expectedDurationSeconds: number;
 
-  @IsDateString()
+  @IsISO8601()
   @ApiProperty()
   dueDate: string;
 
