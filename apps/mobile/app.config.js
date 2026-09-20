@@ -48,6 +48,12 @@ export default {
       "expo-image",
       "expo-web-browser",
       "expo-secure-store",
+      [
+        "react-native-android-widget",
+        {
+          widgets: [],
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,
