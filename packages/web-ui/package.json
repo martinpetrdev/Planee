@@ -8,14 +8,8 @@
       "import": "./src/index.ts",
       "require": "./src/index.ts"
     },
-    "./styles": {
-      "import": "./src/styles/globals.css",
-      "require": "./src/styles/globals.css"
-    },
-    "./components/*": {
-      "import": "./src/components/*",
-      "require": "./src/components/*"
-    }
+    "./styles": "./src/styles/globals.css",
+    "./components/*": "./src/components/*.tsx"
   },
   "keywords": [],
   "author": "",

@@ -1,7 +1,12 @@
 export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-4xl animate-pulse font-heading">Welcome to Planee</h1>
+    <div className="p-4 pt-0 w-full h-full">
+      <div
+        className="w-full rounded-lg bg-amber-400"
+        style={{
+          height: "calc(100vh - (22 + 4 + 32) * 0.25rem)",
+        }}
+      ></div>
     </div>
   );
 }
