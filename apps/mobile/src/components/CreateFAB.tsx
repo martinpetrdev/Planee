@@ -9,21 +9,21 @@ export function CreateFAB() {
     <>
       <DropdownMenu
         items={[
-          {
+          /*{
             label: "Quick note",
             icon: "note_add",
             onClick: () => {},
-          },
+          },*/
           {
             label: "Task",
             icon: "add_task",
             onClick: () => createTaskSheetRef.current?.open(),
           },
-          {
+          /*{
             label: "Reminder",
             icon: "notification_add",
             onClick: () => {},
-          },
+          },*/
         ]}
         trigger={(expanded, setExpanded) => (
           <FAB
