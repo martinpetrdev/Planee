@@ -1,6 +1,4 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import "@repo/web-ui/styles";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
+@source "../../";
+@source "../../../../packages/web-ui/src";
