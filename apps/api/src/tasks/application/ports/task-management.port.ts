@@ -9,4 +9,5 @@ export abstract class TaskManagementPort {
   abstract createTask(command: CreateTaskCommand): Promise<Task>;
   abstract updateTask(command: UpdateTaskCommand): Promise<Task>;
   abstract deleteTask(userId: string, taskId: string): Promise<void>;
+  abstract completeTask(userId: string, taskId: string): Promise<Task>;
 }

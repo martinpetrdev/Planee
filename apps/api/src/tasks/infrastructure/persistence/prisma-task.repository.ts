@@ -84,6 +84,7 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
           expectedDuration: task.expectedDuration.toPersistence(),
           dueDate: task.dueDate,
           priority: PRIORITY_TO_PRISMA[task.priority],
+          completedAt: task.completedAt,
         },
       })
       .catch((e) => {
