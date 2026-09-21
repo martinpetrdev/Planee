@@ -14,6 +14,7 @@ type TypographyStyle = NonNullable<TextProps["style"]>["typography"];
 
 interface ITextProps extends PropsWithChildren {
   typography?: TypographyStyle;
+  color?: string;
   padding?: number | [number, number, number, number];
   onClick?: () => void;
 }
@@ -23,7 +24,7 @@ export function Text(props: ITextProps) {
 
   return (
     <JetpackText
-      color={materialColors.onBackground}
+      color={props.color ?? materialColors.onBackground}
       style={{ typography: props.typography ?? "bodyMedium" }}
       modifiers={[
         props.padding

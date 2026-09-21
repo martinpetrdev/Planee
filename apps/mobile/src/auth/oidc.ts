@@ -125,7 +125,12 @@ export class OIDCClient {
         },
         await this.getDiscovery(),
       ).catch(() => null);
-      if (!fresh) return null;
+      if (!fresh) {
+        // Refresh failed, clear the session and resolve with null
+        await this.sessionStore.clearSession();
+
+        return null;
+      }
 
       await this.saveTokens(fresh);
 
@@ -140,20 +145,31 @@ export class OIDCClient {
     const session = await this.sessionStore.getSession();
     if (!session) return;
 
-    await revokeAsync(
-      {
-        clientId: this.options.clientId,
-        token: session.refreshToken,
-      },
-      await this.getDiscovery(),
-    ).catch(() => null);
-
-    await this.sessionStore.clearSession();
+    await this.destroySession();
 
     await openAuthSessionAsync(
       `${(await this.getDiscovery()).endSessionEndpoint}?id_token_hint=${session.idToken}&post_logout_redirect_uri=${encodeURIComponent(this.redirectUri)}`,
       this.redirectUri,
     );
+  }
+
+  public async destroySession() {
+    const session = await this.sessionStore.getSession();
+    if (!session) return;
+
+    try {
+      await revokeAsync(
+        {
+          clientId: this.options.clientId,
+          token: session.refreshToken,
+        },
+        await this.getDiscovery(),
+      );
+    } catch (_) {}
+
+    await this.sessionStore.clearSession();
+
+    // TODO: Add events and update auth guard/hook to redirect to login
   }
 }
 
