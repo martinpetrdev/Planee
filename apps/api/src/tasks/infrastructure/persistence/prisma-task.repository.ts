@@ -38,7 +38,7 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
   async findAllByUserId(
     userId: string,
     filters: {
-      scope: 'overdue' | 'today' | 'upcoming';
+      scope: 'overdue' | 'today' | 'upcoming' | 'completed';
       dayStart: Date;
       cursorId: string | null;
     },
@@ -46,13 +46,15 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
     const start = filters.dayStart;
     const end = new Date(start.getTime() + DAY_IN_MILISECONDS);
     let due;
+    let completedAt = null;
 
     if (filters.scope === 'overdue') due = { lt: start };
     else if (filters.scope === 'today') due = { gte: start, lt: end };
     else if (filters.scope === 'upcoming') due = { gte: end };
+    else if (filters.scope === 'completed') completedAt = { not: null };
 
     const entities = await this.db.task.findMany({
-      where: { userId, dueDate: due },
+      where: { userId, dueDate: due, completedAt: completedAt },
       orderBy: [{ dueDate: 'asc' }, { id: 'asc' }],
       take: PAGE_SIZE,
       ...(filters.cursorId && { cursor: { id: filters.cursorId }, skip: 1 }),

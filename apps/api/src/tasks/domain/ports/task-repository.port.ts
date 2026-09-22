@@ -9,7 +9,7 @@ export abstract class TaskRepositoryPort {
   abstract findAllByUserId(
     userId: string,
     filters: {
-      scope: 'overdue' | 'today' | 'upcoming';
+      scope: 'overdue' | 'today' | 'upcoming' | 'completed';
       dayStart: Date;
       cursorId: string | null;
     },
