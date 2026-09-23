@@ -43,19 +43,39 @@ export class TasksService extends TaskManagementPort {
   }
 
   async updateTask(command: UpdateTaskCommand) {
+    const existingTask = await this.getTask(command.userId, command.id);
+
     const task = await this.tasks.update(
-      Task.create(
-        command.id,
-        command.name,
-        Duration.fromSeconds(command.expectedDuration),
-        command.dueDate,
-        command.priority,
-        command.userId,
-      ),
+      existingTask.edit({
+        name: command.name,
+        expectedDuration: Duration.fromSeconds(command.expectedDuration),
+        dueDate: command.dueDate,
+        priority: command.priority,
+      }),
     );
     if (!task) throw new TaskNotFoundError(command.id);
 
     return task;
+  }
+
+  async markTaskAsCompleted(userId: string, taskId: string): Promise<Task> {
+    const task = await this.getTask(userId, taskId);
+    task.markAsCompleted();
+
+    const updated = await this.tasks.update(task);
+    if (!updated) throw new TaskNotFoundError(taskId);
+
+    return updated;
+  }
+
+  async markTaskAsNotCompleted(userId: string, taskId: string): Promise<Task> {
+    const task = await this.getTask(userId, taskId);
+    task.markAsNotCompleted();
+
+    const updated = await this.tasks.update(task);
+    if (!updated) throw new TaskNotFoundError(taskId);
+
+    return updated;
   }
 
   async deleteTask(userId: string, taskId: string) {

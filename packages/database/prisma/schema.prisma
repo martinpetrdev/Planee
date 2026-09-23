@@ -43,6 +43,7 @@ model Task {
   dueDate          DateTime
   priority         TaskPriority
   userId           String
+  completedAt      DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

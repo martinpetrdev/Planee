@@ -20,3 +20,4 @@ export * from "./core/Card";
 export * from "./core/ScrollPositionDetector";
 export * from "./core/Badge";
 export * from "./core/Checkbox";
+export * from "./core/Spacer";

@@ -16,7 +16,7 @@ export interface CreateTaskDto {
 export interface UpdateTaskDto extends CreateTaskDto {}
 
 export interface ListTasksDto {
-  scope: "today" | "upcoming" | "overdue";
+  scope: "today" | "upcoming" | "overdue" | "completed";
   cursorId?: string;
 }
 
@@ -26,6 +26,7 @@ export interface TaskResponseDto {
   expectedDurationSeconds: number;
   dueDate: string;
   priority: TaskPriority;
+  completedAt: string | null;
 }
 
 export const createTask = (dto: CreateTaskDto) =>
@@ -43,4 +44,15 @@ export const listTasks = (dto: ListTasksDto) =>
       ...dto,
       dayStart: getTodayStartISO(),
     }),
+  );
+export const markTaskAsCompleted = (taskId: string) =>
+  api.post<TaskResponseDto, {}>(
+    ApiVersion.v1,
+    `${BASE_PATH}/${taskId}/complete`,
+    {},
+  );
+export const markTaskAsNotCompleted = (taskId: string) =>
+  api.delete<TaskResponseDto, {}>(
+    ApiVersion.v1,
+    `${BASE_PATH}/${taskId}/complete`,
   );

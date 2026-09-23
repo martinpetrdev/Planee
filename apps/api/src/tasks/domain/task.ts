@@ -10,33 +10,15 @@ export class Task {
     private readonly _dueDate: Date,
     public readonly priority: TaskPriority,
     public readonly userId: string,
+    private _completedAt: Date | null = null,
   ) {}
 
   public get dueDate(): Date {
     return new Date(this._dueDate); // Create a new Date object to prevent external mutation
   }
 
-  public static create(
-    id: string,
-    name: string,
-    expectedDuration: Duration,
-    dueDate: Date,
-    priority: TaskPriority,
-    userId: string,
-  ) {
-    // Due date not validated - we could not validate past-due tasks
-    TaskValidator.validateName(name);
-    TaskValidator.validateExpectedDuration(expectedDuration);
-    TaskValidator.validateUserId(userId);
-
-    return new this(
-      id,
-      name.trim(),
-      expectedDuration,
-      dueDate,
-      priority,
-      userId.trim(),
-    );
+  public get completedAt(): Date | null {
+    return this._completedAt ? new Date(this._completedAt) : null; // Create a new Date object to prevent external mutation
   }
 
   public static fromPersistence(props: {
@@ -46,6 +28,7 @@ export class Task {
     dueDate: Date;
     priority: TaskPriority;
     userId: string;
+    completedAt?: Date | null;
   }) {
     return new this(
       props.id,
@@ -54,6 +37,38 @@ export class Task {
       props.dueDate,
       props.priority,
       props.userId,
+      props.completedAt || null,
+    );
+  }
+
+  public markAsCompleted() {
+    if (this._completedAt) return;
+    this._completedAt = new Date();
+  }
+
+  public markAsNotCompleted() {
+    if (!this._completedAt) return;
+    this._completedAt = null;
+  }
+
+  public edit(props: {
+    name: string;
+    expectedDuration: Duration;
+    dueDate: Date;
+    priority: TaskPriority;
+  }) {
+    // Don't validate due date - we could not validate past-due tasks
+    TaskValidator.validateName(props.name);
+    TaskValidator.validateExpectedDuration(props.expectedDuration);
+
+    return new Task(
+      this.id,
+      props.name.trim(),
+      props.expectedDuration,
+      props.dueDate,
+      props.priority,
+      this.userId,
+      this._completedAt,
     );
   }
 }

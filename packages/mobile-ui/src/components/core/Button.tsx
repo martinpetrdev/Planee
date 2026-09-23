@@ -4,11 +4,12 @@ import {
   CircularProgressIndicator,
   Button as JetpackButton,
   OutlinedButton as JetpackOutlinedButton,
+  IconButton as JetpackIconButton,
   Text,
 } from "@expo/ui/jetpack-compose";
 import { alpha, fillMaxWidth, size } from "@expo/ui/jetpack-compose/modifiers";
 
-type ButtonVariant = "filled" | "outlined";
+type ButtonVariant = "filled" | "outlined" | "icon";
 
 interface IButtonProps extends PropsWithChildren {
   onClick: () => void;
@@ -22,6 +23,7 @@ export function Button(props: IButtonProps) {
   const Component = {
     filled: JetpackButton,
     outlined: JetpackOutlinedButton,
+    icon: JetpackIconButton,
   }[props.variant ?? "filled"];
 
   return (
@@ -31,7 +33,11 @@ export function Button(props: IButtonProps) {
       enabled={!props.loading && !props.disabled}
     >
       <Box contentAlignment="center">
-        <Text modifiers={[alpha(props.loading ? 0 : 1)]}>{props.children}</Text>
+        {props.variant === "icon" ? (
+          <Box modifiers={[alpha(props.loading ? 0 : 1)]}>{props.children}</Box>
+        ) : (
+          <Text modifiers={[alpha(props.loading ? 0 : 1)]}>{props.children}</Text>
+        )}
         {props.loading && (
           <CircularProgressIndicator
             modifiers={[size(18, 18)]}

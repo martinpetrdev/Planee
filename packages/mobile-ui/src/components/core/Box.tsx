@@ -3,9 +3,10 @@ import { PropsWithChildren } from "react";
 import {
   fillMaxSize,
   fillMaxWidth,
+  height,
   padding,
-  paddingAll,
   weight,
+  width,
 } from "@expo/ui/jetpack-compose/modifiers";
 
 interface IBoxProps extends PropsWithChildren {
@@ -16,6 +17,8 @@ interface IBoxProps extends PropsWithChildren {
   paddingBottom?: number;
   flex?: boolean;
   align?: BoxProps["contentAlignment"];
+  width?: number;
+  height?: number;
 }
 
 export function Box(props: IBoxProps) {
@@ -23,7 +26,14 @@ export function Box(props: IBoxProps) {
     <JetpackBox
       contentAlignment={props.align}
       modifiers={[
-        ...(props.flex ? [weight(1), fillMaxWidth()] : [fillMaxSize()]),
+        ...(props.width || props.height
+          ? [
+              props.width ? width(props.width) : null,
+              props.height ? height(props.height) : null,
+            ]
+          : props.flex
+            ? [weight(1), fillMaxWidth()]
+            : [fillMaxSize()]),
         props.padding ||
         props.paddingLeft ||
         props.paddingRight ||

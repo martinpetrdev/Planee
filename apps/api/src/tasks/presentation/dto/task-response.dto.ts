@@ -7,6 +7,7 @@ export class TaskResponseDto {
   expectedDurationSeconds: number;
   dueDate: string;
   priority: TaskPriority;
+  completedAt?: string | null;
 
   constructor(data: TaskResponseDto) {
     Object.assign(this, data);
@@ -19,6 +20,7 @@ export class TaskResponseDto {
       expectedDurationSeconds: task.expectedDuration.toSeconds(),
       dueDate: task.dueDate.toISOString(),
       priority: task.priority,
+      completedAt: task.completedAt ? task.completedAt.toISOString() : null,
     });
   }
 }
