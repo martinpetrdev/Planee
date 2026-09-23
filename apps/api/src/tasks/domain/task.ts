@@ -46,6 +46,11 @@ export class Task {
     this._completedAt = new Date();
   }
 
+  public markAsNotCompleted() {
+    if (!this._completedAt) return;
+    this._completedAt = null;
+  }
+
   public edit(props: {
     name: string;
     expectedDuration: Duration;

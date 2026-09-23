@@ -58,9 +58,19 @@ export class TasksService extends TaskManagementPort {
     return task;
   }
 
-  async completeTask(userId: string, taskId: string): Promise<Task> {
+  async markTaskAsCompleted(userId: string, taskId: string): Promise<Task> {
     const task = await this.getTask(userId, taskId);
     task.markAsCompleted();
+
+    const updated = await this.tasks.update(task);
+    if (!updated) throw new TaskNotFoundError(taskId);
+
+    return updated;
+  }
+
+  async markTaskAsNotCompleted(userId: string, taskId: string): Promise<Task> {
+    const task = await this.getTask(userId, taskId);
+    task.markAsNotCompleted();
 
     const updated = await this.tasks.update(task);
     if (!updated) throw new TaskNotFoundError(taskId);

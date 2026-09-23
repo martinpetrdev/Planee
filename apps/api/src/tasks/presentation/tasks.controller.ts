@@ -97,11 +97,22 @@ export class TasksController {
 
   @Post('/:id/complete')
   @HttpCode(HttpStatus.OK)
-  async completeTask(
+  async markTaskAsCompleted(
     @User('id') userId: string,
     @Param('id') taskId: string,
   ): Promise<TaskResponseDto> {
-    const task = await this.tasks.completeTask(userId, taskId);
+    const task = await this.tasks.markTaskAsCompleted(userId, taskId);
+
+    return TaskResponseDto.fromDomain(task);
+  }
+
+  @Delete('/:id/complete')
+  @HttpCode(HttpStatus.OK)
+  async markTaskAsNotCompleted(
+    @User('id') userId: string,
+    @Param('id') taskId: string,
+  ) {
+    const task = await this.tasks.markTaskAsNotCompleted(userId, taskId);
 
     return TaskResponseDto.fromDomain(task);
   }
