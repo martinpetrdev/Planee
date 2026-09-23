@@ -120,3 +120,60 @@ export function TaskList() {
     </>
   );
 }
+
+export function CompletedTaskList() {
+  const [selected, setSelected] = useState<TaskResponseDto | null>(null);
+
+  const {
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    data,
+    refetch,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["tasks", "completed"],
+    queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
+      await listTasks({ scope: "completed", cursorId: pageParam }),
+    initialPageParam: undefined,
+    // Short page is the last
+    getNextPageParam: (lastPage) =>
+      lastPage.length < PAGE_SIZE
+        ? undefined
+        : lastPage[lastPage.length - 1].id,
+  });
+
+  return (
+    <>
+      <PullToRefresh
+        isRefreshing={isFetching && !isFetchingNextPage}
+        onRefresh={() => {
+          refetch();
+        }}
+        gap={8}
+      >
+        {data &&
+          groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
+            <SectionHeader key={day} title={formatISODate(day)} />,
+            ...tasks.map((task) => (
+              <Task
+                key={task.id}
+                task={task}
+                onClick={() => setSelected(task)}
+              />
+            )),
+          ])}
+        <ScrollPositionDetector onAppear={() => fetchNextPage()} />
+        {hasNextPage && (
+          <Row horizontalAlignment="center" padding={12}>
+            <LoadingSpinner />
+          </Row>
+        )}
+      </PullToRefresh>
+
+      {selected && (
+        <UpdateTaskSheet task={selected} onClose={() => setSelected(null)} />
+      )}
+    </>
+  );
+}

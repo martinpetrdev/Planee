@@ -16,7 +16,7 @@ export interface CreateTaskDto {
 export interface UpdateTaskDto extends CreateTaskDto {}
 
 export interface ListTasksDto {
-  scope: "today" | "upcoming" | "overdue";
+  scope: "today" | "upcoming" | "overdue" | "completed";
   cursorId?: string;
 }
 
