@@ -1,5 +1,9 @@
 import { API } from "@/api/api";
-import { completeTask, TaskResponseDto } from "@/api/modules/tasks";
+import {
+  markTaskAsCompleted,
+  markTaskAsNotCompleted,
+  TaskResponseDto,
+} from "@/api/modules/tasks";
 import { useMaterialColors } from "@expo/ui/jetpack-compose";
 import {
   Badge,
@@ -11,11 +15,7 @@ import {
   Row,
   Text,
 } from "@repo/mobile-ui";
-import {
-  InfiniteData,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DateTime, Duration } from "luxon";
 import { ToastAndroid } from "react-native";
 
@@ -38,7 +38,10 @@ export function Task(props: ITaskProps) {
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["tasks", props.task.id, "completed"],
-    mutationFn: async () => await completeTask(props.task.id),
+    mutationFn: async () =>
+      props.task.completedAt === null
+        ? await markTaskAsCompleted(props.task.id)
+        : await markTaskAsNotCompleted(props.task.id),
     onError: (e) => {
       const error = API.parseError(e);
 
@@ -47,24 +50,9 @@ export function Task(props: ITaskProps) {
         ToastAndroid.LONG,
       );
     },
-    onSuccess: (updated) => {
-      // Update the existing fetched tasks in the cache with updated task data,
-      // so that we don't have to refetch the entire list again.
-
-      queryClient.setQueriesData<
-        TaskResponseDto[] | InfiniteData<TaskResponseDto[]>
-      >({ queryKey: ["tasks"] }, (old) => {
-        if (!old) return old;
-
-        const patch = (list: TaskResponseDto[]) =>
-          list.map((t) => (t.id === updated.id ? updated : t));
-
-        return Array.isArray(old)
-          ? patch(old)
-          : {
-              ...old,
-              pages: old.pages.map(patch),
-            };
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["tasks"],
       });
     },
   });

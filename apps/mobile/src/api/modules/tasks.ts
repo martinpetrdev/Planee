@@ -45,9 +45,14 @@ export const listTasks = (dto: ListTasksDto) =>
       dayStart: getTodayStartISO(),
     }),
   );
-export const completeTask = (taskId: string) =>
+export const markTaskAsCompleted = (taskId: string) =>
   api.post<TaskResponseDto, {}>(
     ApiVersion.v1,
     `${BASE_PATH}/${taskId}/complete`,
     {},
+  );
+export const markTaskAsNotCompleted = (taskId: string) =>
+  api.delete<TaskResponseDto, {}>(
+    ApiVersion.v1,
+    `${BASE_PATH}/${taskId}/complete`,
   );
