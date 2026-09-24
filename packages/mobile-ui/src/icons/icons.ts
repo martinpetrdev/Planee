@@ -9,6 +9,7 @@ import AddTask from "@expo/material-symbols/add_task.xml";
 import TaskAlt from "@expo/material-symbols/task_alt.xml";
 import Check from "@expo/material-symbols/check.xml";
 import ArrowBack from "@expo/material-symbols/arrow_back.xml";
+import Delete from "@expo/material-symbols/delete.xml";
 
 export const Icons = {
   home: Home,
@@ -22,6 +23,7 @@ export const Icons = {
   task_alt: TaskAlt,
   check: Check,
   arrow_back: ArrowBack,
+  delete: Delete,
 } as const;
 
 export type IconType = keyof typeof Icons;

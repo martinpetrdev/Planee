@@ -56,3 +56,5 @@ export const markTaskAsNotCompleted = (taskId: string) =>
     ApiVersion.v1,
     `${BASE_PATH}/${taskId}/complete`,
   );
+export const deleteTask = (taskId: string) =>
+  api.delete<{}, {}>(ApiVersion.v1, `${BASE_PATH}/${taskId}`);
