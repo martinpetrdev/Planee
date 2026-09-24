@@ -1,29 +1,16 @@
-import Home from "@expo/material-symbols/home.xml";
-import CalendarToday from "@expo/material-symbols/calendar_today.xml";
-import Settings from "@expo/material-symbols/settings.xml";
-import Add from "@expo/material-symbols/add.xml";
-import Logout from "@expo/material-symbols/logout.xml";
-import NoteAdd from "@expo/material-symbols/note_add.xml";
-import NotificationAdd from "@expo/material-symbols/notification_add.xml";
-import AddTask from "@expo/material-symbols/add_task.xml";
-import TaskAlt from "@expo/material-symbols/task_alt.xml";
-import Check from "@expo/material-symbols/check.xml";
-import ArrowBack from "@expo/material-symbols/arrow_back.xml";
-import Delete from "@expo/material-symbols/delete.xml";
-
 export const Icons = {
-  home: Home,
-  calendar_today: CalendarToday,
-  settings: Settings,
-  add: Add,
-  logout: Logout,
-  note_add: NoteAdd,
-  notification_add: NotificationAdd,
-  add_task: AddTask,
-  task_alt: TaskAlt,
-  check: Check,
-  arrow_back: ArrowBack,
-  delete: Delete,
+  home: require("@expo/material-symbols/home.xml"),
+  calendar_today: require("@expo/material-symbols/calendar_today.xml"),
+  settings: require("@expo/material-symbols/settings.xml"),
+  add: require("@expo/material-symbols/add.xml"),
+  logout: require("@expo/material-symbols/logout.xml"),
+  note_add: require("@expo/material-symbols/note_add.xml"),
+  notification_add: require("@expo/material-symbols/notification_add.xml"),
+  add_task: require("@expo/material-symbols/add_task.xml"),
+  task_alt: require("@expo/material-symbols/task_alt.xml"),
+  check: require("@expo/material-symbols/check.xml"),
+  arrow_back: require("@expo/material-symbols/arrow_back.xml"),
+  delete: require("@expo/material-symbols/delete.xml"),
   event_list: require("@expo/material-symbols/event_list.xml"),
 } as const;
 
