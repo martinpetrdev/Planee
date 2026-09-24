@@ -24,6 +24,7 @@ export const Icons = {
   check: Check,
   arrow_back: ArrowBack,
   delete: Delete,
+  event_list: require("@expo/material-symbols/event_list.xml"),
 } as const;
 
 export type IconType = keyof typeof Icons;

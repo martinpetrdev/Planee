@@ -13,6 +13,7 @@ import { useState } from "react";
 import { UpdateTaskSheet } from "@/sheets/UpdateTaskSheet";
 import { Task } from "./Task";
 import { groupTasksByDay } from "@/utils/tasks/list";
+import { NoCompletedTasks, NoTasksToday } from "./NoTasks";
 
 interface ISectionHeaderProps {
   title: string;
@@ -93,7 +94,7 @@ export function TaskList() {
             <Task key={task.id} task={task} onClick={() => setSelected(task)} />
           ))
         ) : (
-          <Text typography="bodySmall">Nothing due today.</Text>
+          <NoTasksToday />
         )}
         {data &&
           groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
@@ -152,22 +153,28 @@ export function CompletedTaskList() {
         }}
         gap={8}
       >
-        {data &&
-          groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
-            <SectionHeader key={day} title={formatISODate(day)} />,
-            ...tasks.map((task) => (
-              <Task
-                key={task.id}
-                task={task}
-                onClick={() => setSelected(task)}
-              />
-            )),
-          ])}
-        <ScrollPositionDetector onAppear={() => fetchNextPage()} />
-        {hasNextPage && (
-          <Row horizontalAlignment="center" padding={12}>
-            <LoadingSpinner />
-          </Row>
+        {data?.pages?.flat().length == 0 ? (
+          <NoCompletedTasks />
+        ) : (
+          <>
+            {data &&
+              groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
+                <SectionHeader key={day} title={formatISODate(day)} />,
+                ...tasks.map((task) => (
+                  <Task
+                    key={task.id}
+                    task={task}
+                    onClick={() => setSelected(task)}
+                  />
+                )),
+              ])}
+            <ScrollPositionDetector onAppear={() => fetchNextPage()} />
+            {hasNextPage && (
+              <Row horizontalAlignment="center" padding={12}>
+                <LoadingSpinner />
+              </Row>
+            )}
+          </>
         )}
       </PullToRefresh>
 

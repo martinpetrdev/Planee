@@ -9,6 +9,7 @@ import {
 interface IIconProps {
   name: IconType;
   size?: number;
+  color?: string;
   styles?: {
     rotation?: number;
   };
@@ -24,6 +25,7 @@ export function Icon(props: IIconProps) {
       ]}
       source={Icons[props.name]}
       size={props.size}
+      tint={props.color}
     />
   );
 }

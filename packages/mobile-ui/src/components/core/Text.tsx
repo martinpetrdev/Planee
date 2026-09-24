@@ -19,6 +19,7 @@ interface ITextProps extends PropsWithChildren {
   onClick?: () => void;
   default?: boolean;
   bold?: boolean;
+  align?: NonNullable<TextProps["style"]>["textAlign"];
 }
 
 export function Text(props: ITextProps) {
@@ -35,6 +36,7 @@ export function Text(props: ITextProps) {
           : {
               typography: props.typography ?? "bodyMedium",
               fontWeight: props.bold ? "bold" : "normal",
+              textAlign: props.align,
             }
       }
       modifiers={[
