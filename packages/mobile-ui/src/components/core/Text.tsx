@@ -17,6 +17,8 @@ interface ITextProps extends PropsWithChildren {
   color?: string;
   padding?: number | [number, number, number, number];
   onClick?: () => void;
+  default?: boolean;
+  bold?: boolean;
 }
 
 export function Text(props: ITextProps) {
@@ -24,8 +26,17 @@ export function Text(props: ITextProps) {
 
   return (
     <JetpackText
-      color={props.color ?? materialColors.onBackground}
-      style={{ typography: props.typography ?? "bodyMedium" }}
+      color={
+        props.default ? undefined : (props.color ?? materialColors.onBackground)
+      }
+      style={
+        props.default
+          ? undefined
+          : {
+              typography: props.typography ?? "bodyMedium",
+              fontWeight: props.bold ? "bold" : "normal",
+            }
+      }
       modifiers={[
         props.padding
           ? Array.isArray(props.padding)
