@@ -8,3 +8,5 @@ data:
   CONF_API_HTTP_CORS_ORIGINS: https://planee.martinpetr.dev
   CONF_API_OIDC_ISSUER: "https://kc.cloud.martinpetr.dev/realms/dev.martinpetr.planee"
   CONF_API_OIDC_AUDIENCE: "api"
+  CONF_API_FLAGS_URL: "http://planee-flipt-svc"
+  CONF_API_FLAGS_NAMESPACE: "planee"
