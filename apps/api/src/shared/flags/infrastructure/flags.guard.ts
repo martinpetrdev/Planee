@@ -9,6 +9,7 @@ import { AuthenticatedUser } from '../../auth/domain/authenticated-user.entity.j
 import { FLAGS_DECORATOR_KEY } from '../presentation/decorators/flags.decorator.js';
 import { FlagEvaluatorPort } from '../domain/ports/flag-evaluator.port.js';
 import { FeatureFlag } from '../domain/flag.js';
+import { flattenObject } from '../../../utils/object.js';
 
 @Injectable()
 export class FlagsGuard implements CanActivate {
@@ -36,7 +37,12 @@ export class FlagsGuard implements CanActivate {
 
     const flagResults = await Promise.all(
       requiredFlags.map(
-        async (flag) => await this.flagEvaluator.isEnabled(flag),
+        async (flag) =>
+          await this.flagEvaluator.isEnabled(flag, {
+            attributes: flattenObject({
+              user: user.toObject(),
+            }),
+          }),
       ),
     );
     if (!flagResults.every((res) => res === true))

@@ -1,6 +1,6 @@
 export interface FlagContext {
   userId?: string;
-  attributes?: Record<string, string>;
+  attributes?: Record<string, any>;
 }
 
 export abstract class FlagEvaluatorPort {

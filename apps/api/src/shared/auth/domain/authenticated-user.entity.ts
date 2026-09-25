@@ -1,3 +1,4 @@
+import { Tenant } from './tenant.js';
 import { UserRole } from './user-role.js';
 
 export class AuthenticatedUser {
@@ -5,7 +6,7 @@ export class AuthenticatedUser {
     private readonly _id: string,
     private readonly _email: string | null,
     private readonly _roles: ReadonlySet<UserRole>,
-    private readonly _organizations: ReadonlyMap<string, Record<string, any>>,
+    private readonly _tenant: Tenant | null,
   ) {}
 
   public get id(): string {
@@ -17,8 +18,8 @@ export class AuthenticatedUser {
   public get roles(): ReadonlySet<UserRole> {
     return this._roles;
   }
-  public get organizations(): ReadonlyMap<string, Record<string, any>> {
-    return this._organizations;
+  public get tenant(): Tenant | null {
+    return this._tenant;
   }
 
   // Validates data and creates a new instance
@@ -26,19 +27,23 @@ export class AuthenticatedUser {
     id: string,
     email: string | null,
     roles: UserRole[],
-    organizations: Record<string, Record<string, any>>,
+    tenant: Tenant | null = null,
   ) {
     if (!id) throw new Error('AuthenticatedUser must have an id');
-    return new this(
-      id,
-      email,
-      new Set(roles),
-      new Map(Object.entries(organizations)),
-    );
+    return new this(id, email, new Set(roles), tenant);
   }
 
   // Checks if the user has a specific role
   public hasRole(role: UserRole): boolean {
     return this._roles.has(role);
+  }
+
+  public toObject() {
+    return {
+      id: this._id,
+      email: this._email,
+      roles: Array.from(this._roles),
+      tenant: this._tenant ? this._tenant.toObject() : null,
+    };
   }
 }

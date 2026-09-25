@@ -1,8 +1,13 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { TokenVerifierPort } from '../domain/ports/token-verifier.port.js';
 import { createRemoteJWKSet, JWTPayload, jwtVerify, RemoteJWKSet } from 'jose';
 import { AuthenticatedUser } from '../domain/authenticated-user.entity.js';
 import { isUserRole } from '../domain/user-role.js';
+import { Tenant } from '../domain/tenant.js';
 
 interface KeycloakTokenPayload extends JWTPayload {
   email?: string;
@@ -48,11 +53,25 @@ export class KeycloakTokenVerifier extends TokenVerifierPort {
       );
       if (payload.typ !== 'Bearer') throw new UnauthorizedException();
 
+      const orgs = Object.entries(payload.organization ?? {}).map(([k, v]) => ({
+        key: k,
+        id: v.id,
+        attributes: Object.fromEntries(
+          Object.entries(v)
+            .map(([k, v]) => [k, v[0]])
+            .filter(([k]) => k !== 'id'),
+        ),
+      }));
+      if (orgs.length > 1)
+        throw new BadRequestException(
+          'User is assigned into multiple tenants, only one is allowed!',
+        );
+
       return AuthenticatedUser.create(
         payload.sub!,
         payload.email ?? null,
         (payload.realm_access?.roles ?? []).filter(isUserRole),
-        payload.organization ?? {},
+        orgs.length > 0 ? Tenant.create(orgs[0].id, orgs[0].attributes) : null,
       );
     } catch {
       throw new UnauthorizedException('Invalid token');
