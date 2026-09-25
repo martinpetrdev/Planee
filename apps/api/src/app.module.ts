@@ -9,11 +9,18 @@ import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { DomainExceptionFilter } from './shared/presentation/filters/domain-exception.filter.js';
 import { ValidationError } from './shared/domain/validation.error.js';
 import { ValidationExceptionFilter } from './shared/presentation/filters/validation-exception.filter.js';
+import { FlagsModule } from './shared/flags/flags.module.js';
 
 const DomainModules = [HealthModule, NotificationsModule, TasksModule];
 
 @Module({
-  imports: [ConfigModule, PrismaModule, AuthModule, ...DomainModules],
+  imports: [
+    ConfigModule,
+    PrismaModule,
+    AuthModule,
+    FlagsModule,
+    ...DomainModules,
+  ],
   providers: [
     {
       provide: APP_PIPE,
