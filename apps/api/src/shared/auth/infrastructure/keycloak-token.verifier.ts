@@ -7,6 +7,12 @@ import { isUserRole } from '../domain/user-role.js';
 interface KeycloakTokenPayload extends JWTPayload {
   email?: string;
   realm_access?: { roles: string[] };
+  organization?: {
+    [key: string]: {
+      id: string;
+      [key: string]: any;
+    };
+  };
 }
 
 @Injectable()
@@ -46,6 +52,7 @@ export class KeycloakTokenVerifier extends TokenVerifierPort {
         payload.sub!,
         payload.email ?? null,
         (payload.realm_access?.roles ?? []).filter(isUserRole),
+        payload.organization ?? {},
       );
     } catch {
       throw new UnauthorizedException('Invalid token');

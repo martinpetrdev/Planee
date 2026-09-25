@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import {
   FlagContext,
   FlagEvaluatorPort,
@@ -29,6 +30,8 @@ export class FliptFlagEvaluator extends FlagEvaluatorPort {
 
       return res.enabled;
     } catch (e) {
+      Logger.error(`Failed to evaluate flag ${flagName}: ${e}`);
+
       return false; // Off by default
     }
   }

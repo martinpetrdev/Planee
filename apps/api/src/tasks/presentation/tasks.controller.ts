@@ -21,12 +21,15 @@ import { UpdateTaskCommand } from '../application/update-task.command.js';
 import { TaskManagementPort } from '../application/ports/task-management.port.js';
 import { ListTasksDto } from './dto/list-tasks.dto.js';
 import { ListTasksCommand } from '../application/list-tasks.command.js';
+import { Flags } from '../../shared/flags/presentation/decorators/flags.decorator.js';
+import { FeatureFlag } from '../../shared/flags/domain/flag.js';
 
 @Controller({
   path: '/tasks',
   version: ApiVersion.v1,
 })
 @ApiBearerAuth()
+@Flags(FeatureFlag.AccessEnabled)
 export class TasksController {
   constructor(private readonly tasks: TaskManagementPort) {}
 
