@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: planee-flipt-data
+  namespace: planee
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: planee-flipt-svc
+  namespace: planee
+  labels:
+    app: planee-flipt
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: planee-flipt
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: planee-flipt
+  namespace: planee
+  labels:
+    app: planee-flipt
+spec:
+  replicas: 1 # RWO volume, single writer
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: planee-flipt
+  template:
+    metadata:
+      labels:
+        app: planee-flipt
+    spec:
+      containers:
+        - name: flipt
+          image: docker.flipt.io/flipt/flipt:v2
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts:
+            - name: data
+              mountPath: /var/opt/flipt
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: planee-flipt-data
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: planee-flipt-ingress
+  namespace: planee
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`flags.planee.martinpetr.dev`)
+      kind: Rule
+      services:
+        - name: planee-flipt-svc
+          port: 80
+  tls:
+    certResolver: cloudflare

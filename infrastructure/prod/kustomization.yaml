@@ -10,3 +10,4 @@ resources:
   - sa.yaml
   - web.yaml
   - marketing-web.yaml
+  - flipt.yaml
