@@ -3,6 +3,7 @@ import { LoadingScreenProvider } from "@/components/LoadingScreen";
 import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SnackbarProvider } from "@repo/mobile-ui";
+import { FlagsProvider } from "@/services/flags/context";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +29,9 @@ export default function Layout() {
       <SnackbarProvider>
         <LoadingScreenProvider>
           <AuthProvider>
-            <RootNavigator />
+            <FlagsProvider>
+              <RootNavigator />
+            </FlagsProvider>
           </AuthProvider>
         </LoadingScreenProvider>
       </SnackbarProvider>

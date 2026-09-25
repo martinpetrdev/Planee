@@ -1,5 +1,6 @@
 import { useAuth } from "@/auth/context";
 import { oidcClient } from "@/auth/oidc";
+import { useFlags } from "@/services/flags/context";
 import { MMKVKeys } from "@/types/mmkv-keys";
 import {
   Column,
@@ -21,6 +22,7 @@ export default function Screen() {
   );
 
   const auth = useAuth();
+  const { flags } = useFlags();
 
   return (
     <ScreenShell>
@@ -74,6 +76,10 @@ export default function Screen() {
                     .getToken()
                     .then((t) => console.log("Access token:", t))
                 }
+              />
+              <SegmentedListItem
+                title="Print feature flags"
+                onClick={() => console.log(flags)}
               />
               <SegmentedListItem
                 title="Disable dev settings"
