@@ -1,4 +1,5 @@
 import { CreateFAB } from "@/components/CreateFAB";
+import { ScreenHeader } from "@/components/ScreenHeader";
 import { TaskList } from "@/components/tasks/TaskList";
 import {
   Button,
@@ -17,18 +18,15 @@ export default function Screen() {
   return (
     <ScreenShell>
       <Column fill>
-        <Row verticalAlignment="center" padding={4}>
-          <Text typography="titleLarge" padding={[12, 0, 0, 0]}>
-            Tasks
-          </Text>
-          <Spacer />
-          <Button
-            variant="icon"
-            onClick={() => router.push("/protected/tasks/completed")}
-          >
-            <Icon name="check" />
-          </Button>
-        </Row>
+        <ScreenHeader
+          title="Tasks"
+          trailingIcons={[
+            {
+              icon: "check",
+              onClick: () => router.push("/protected/tasks/completed"),
+            },
+          ]}
+        />
         <Column flex padding={16}>
           <TaskList />
         </Column>
