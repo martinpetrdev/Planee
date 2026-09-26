@@ -7,7 +7,9 @@ export default function Screen() {
 
   return (
     <ScreenShell>
-      <Text>{flags["test-flag"] ? "Flag enabled" : "Flag disabled"}</Text>
+      <Text>
+        {flags && flags["test-flag"] ? "Flag enabled" : "Flag disabled"}
+      </Text>
       <CreateFAB />
     </ScreenShell>
   );
