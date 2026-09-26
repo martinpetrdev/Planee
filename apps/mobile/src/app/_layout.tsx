@@ -4,6 +4,7 @@ import { Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SnackbarProvider } from "@repo/mobile-ui";
 import { FlagsProvider } from "@/services/flags/context";
+import { InAppUpdatesProvider } from "@/services/InAppUpdatesProvider";
 
 const queryClient = new QueryClient();
 
@@ -28,11 +29,13 @@ export default function Layout() {
     <QueryClientProvider client={queryClient}>
       <SnackbarProvider>
         <LoadingScreenProvider>
-          <AuthProvider>
-            <FlagsProvider>
-              <RootNavigator />
-            </FlagsProvider>
-          </AuthProvider>
+          <InAppUpdatesProvider>
+            <AuthProvider>
+              <FlagsProvider>
+                <RootNavigator />
+              </FlagsProvider>
+            </AuthProvider>
+          </InAppUpdatesProvider>
         </LoadingScreenProvider>
       </SnackbarProvider>
     </QueryClientProvider>
