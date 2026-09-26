@@ -22,7 +22,10 @@ export class EventsController {
       this.bus.listen((event) => {
         if (event.userId !== userId) return;
 
-        sub.next({ type: event.type, data: event.data });
+        sub.next({
+          type: event.type,
+          data: event.data as Record<string, unknown>,
+        });
       }),
     );
 

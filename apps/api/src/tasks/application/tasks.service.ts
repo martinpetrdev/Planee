@@ -8,10 +8,15 @@ import { TaskNotFoundError } from '../domain/task.errors.js';
 import { NewTask } from '../domain/new-task.js';
 import { Duration } from '../domain/value-objects/duration.vo.js';
 import { ListTasksCommand } from './list-tasks.command.js';
+import { EventBusPort } from '../../shared/events/domain/ports/event-bus.port.js';
+import { taskUpdated } from '../domain/events/task.events.js';
 
 @Injectable()
 export class TasksService extends TaskManagementPort {
-  constructor(private readonly tasks: TaskRepositoryPort) {
+  constructor(
+    private readonly tasks: TaskRepositoryPort,
+    private readonly events: EventBusPort,
+  ) {
     super();
   }
 
@@ -55,6 +60,8 @@ export class TasksService extends TaskManagementPort {
     );
     if (!task) throw new TaskNotFoundError(command.id);
 
+    await this.events.publish(taskUpdated(task));
+
     return task;
   }
 
@@ -65,6 +72,8 @@ export class TasksService extends TaskManagementPort {
     const updated = await this.tasks.update(task);
     if (!updated) throw new TaskNotFoundError(taskId);
 
+    await this.events.publish(taskUpdated(task));
+
     return updated;
   }
 
@@ -74,6 +83,8 @@ export class TasksService extends TaskManagementPort {
 
     const updated = await this.tasks.update(task);
     if (!updated) throw new TaskNotFoundError(taskId);
+
+    await this.events.publish(taskUpdated(task));
 
     return updated;
   }

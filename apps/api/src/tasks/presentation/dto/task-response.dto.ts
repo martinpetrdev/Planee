@@ -14,13 +14,6 @@ export class TaskResponseDto {
   }
 
   static fromDomain(task: Task): TaskResponseDto {
-    return new this({
-      id: task.id,
-      name: task.name,
-      expectedDurationSeconds: task.expectedDuration.toSeconds(),
-      dueDate: task.dueDate.toISOString(),
-      priority: task.priority,
-      completedAt: task.completedAt ? task.completedAt.toISOString() : null,
-    });
+    return new this(task.toObject());
   }
 }
