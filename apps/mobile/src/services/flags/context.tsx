@@ -24,6 +24,8 @@ export function FlagsProvider(props: PropsWithChildren) {
   const [isLoading, setIsLoading] = useState(true);
   const [flags, setFlags] = useState<Record<FlagKey, boolean> | null>(null);
 
+  const auth = useAuth();
+
   const fetchFlags = async () => {
     setIsLoading(true);
 
@@ -34,8 +36,10 @@ export function FlagsProvider(props: PropsWithChildren) {
   };
 
   useEffect(() => {
+    if (!auth.isAuthenticated) return;
+
     fetchFlags();
-  }, []);
+  }, [auth]);
 
   useEffect(() => {
     if (isLoading) loading.request("flags");

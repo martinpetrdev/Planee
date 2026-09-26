@@ -12,6 +12,7 @@ export const Icons = {
   arrow_back: require("@expo/material-symbols/arrow_back.xml"),
   delete: require("@expo/material-symbols/delete.xml"),
   event_list: require("@expo/material-symbols/event_list.xml"),
+  cancel: require("@expo/material-symbols/cancel.xml"),
 } as const;
 
 export type IconType = keyof typeof Icons;
