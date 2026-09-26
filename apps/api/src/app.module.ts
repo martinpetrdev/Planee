@@ -10,6 +10,7 @@ import { DomainExceptionFilter } from './shared/presentation/filters/domain-exce
 import { ValidationError } from './shared/domain/validation.error.js';
 import { ValidationExceptionFilter } from './shared/presentation/filters/validation-exception.filter.js';
 import { FlagsModule } from './shared/flags/flags.module.js';
+import { EventsModule } from './shared/events/events.module.js';
 
 const DomainModules = [HealthModule, NotificationsModule, TasksModule];
 
@@ -17,6 +18,7 @@ const DomainModules = [HealthModule, NotificationsModule, TasksModule];
   imports: [
     ConfigModule,
     PrismaModule,
+    EventsModule,
     AuthModule,
     FlagsModule,
     ...DomainModules,
