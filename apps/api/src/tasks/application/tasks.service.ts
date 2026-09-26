@@ -9,7 +9,11 @@ import { NewTask } from '../domain/new-task.js';
 import { Duration } from '../domain/value-objects/duration.vo.js';
 import { ListTasksCommand } from './list-tasks.command.js';
 import { EventBusPort } from '../../shared/events/domain/ports/event-bus.port.js';
-import { taskUpdated } from '../domain/events/task.events.js';
+import {
+  taskCreated,
+  taskDeleted,
+  taskUpdated,
+} from '../domain/events/task.events.js';
 
 @Injectable()
 export class TasksService extends TaskManagementPort {
@@ -36,7 +40,7 @@ export class TasksService extends TaskManagementPort {
   }
 
   async createTask(command: CreateTaskCommand) {
-    return await this.tasks.insert(
+    const task = await this.tasks.insert(
       NewTask.create(
         command.name,
         Duration.fromSeconds(command.expectedDuration),
@@ -45,6 +49,10 @@ export class TasksService extends TaskManagementPort {
         command.userId,
       ),
     );
+
+    await this.events.publish(taskCreated(task));
+
+    return task;
   }
 
   async updateTask(command: UpdateTaskCommand) {
@@ -92,5 +100,7 @@ export class TasksService extends TaskManagementPort {
   async deleteTask(userId: string, taskId: string) {
     const result = await this.tasks.delete(taskId, userId);
     if (!result) throw new TaskNotFoundError(taskId);
+
+    await this.events.publish(taskDeleted(taskId, userId));
   }
 }
