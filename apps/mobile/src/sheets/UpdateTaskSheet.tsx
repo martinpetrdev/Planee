@@ -7,6 +7,7 @@ import {
   UpdateTaskDto,
 } from "@/api/modules/tasks";
 import { mutateTaskQueries, refetchTaskQueries } from "@/helpers/task";
+import { useSseSubscription } from "@/services/sse/context";
 import {
   AlertDialog,
   BottomSheet,
@@ -25,6 +26,7 @@ import {
   useNativeState,
   useSnackbar,
 } from "@repo/mobile-ui";
+import { AppEvent, AppEventType } from "@repo/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
@@ -128,6 +130,17 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
       priority: priority,
     });
   };
+
+  useSseSubscription(
+    AppEventType.TaskDeleted,
+    (e: AppEvent<{ id: string }>) => {
+      if (e.data.id != props.task.id) return;
+
+      // Close the bottom sheet when the task was deleted from another client.
+      close();
+      ToastAndroid.show("This task was deleted!", ToastAndroid.SHORT);
+    },
+  );
 
   return (
     <>

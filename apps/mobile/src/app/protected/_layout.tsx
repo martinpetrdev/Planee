@@ -41,6 +41,8 @@ export default function Layout() {
         <GlobalSseHandlers
           handlers={{
             [AppEventType.TaskUpdated]: () => refetchTaskQueries(queryClient),
+            [AppEventType.TaskCreated]: () => refetchTaskQueries(queryClient),
+            [AppEventType.TaskDeleted]: () => refetchTaskQueries(queryClient),
           }}
         />
         <NotificationsProvider.Enabled>
