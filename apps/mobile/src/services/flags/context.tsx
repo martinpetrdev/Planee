@@ -3,73 +3,43 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react";
-import { FliptClient } from "@flipt-io/flipt";
-import { ALL_FLAGS, FLAGS_NAMESPACE, FLAGS_URL } from "@/configuration/flags";
+import { ALL_FLAGS } from "@/configuration/flags";
 import { useLoadingScreen } from "@/components/LoadingScreen";
 import { useAuth } from "@/auth/context";
+import { getFeatureFlags } from "@/api/modules/flags";
 
 export type FlagKey = (typeof ALL_FLAGS)[number];
 
 interface IFlagsContextValue {
-  flags: Record<FlagKey, boolean>;
+  flags: Record<FlagKey, boolean> | null;
 }
-
-const allOff = () =>
-  Object.fromEntries(ALL_FLAGS.map((k) => [k, false])) as Record<
-    FlagKey,
-    boolean
-  >;
 
 const FlagsContext = createContext<IFlagsContextValue | null>(null);
 
 export function FlagsProvider(props: PropsWithChildren) {
-  const fliptClient = useMemo(
-    () =>
-      new FliptClient({
-        url: FLAGS_URL,
-      }),
-    [],
-  );
-
   const loading = useLoadingScreen();
-  const auth = useAuth();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [flags, setFlags] = useState<Record<FlagKey, boolean>>(allOff);
+  const [flags, setFlags] = useState<Record<FlagKey, boolean> | null>(null);
+
+  const auth = useAuth();
 
   const fetchFlags = async () => {
     setIsLoading(true);
 
-    const res = await fliptClient.evaluation.batch({
-      requests: ALL_FLAGS.map((flag) => ({
-        namespaceKey: FLAGS_NAMESPACE,
-        flagKey: flag,
-        entityId: auth.userInfo?.id ?? "anonymous",
-        context: {},
-      })),
-    });
+    const flags = await getFeatureFlags();
 
     setIsLoading(false);
-
-    const flags = allOff();
-    for (const r of res.responses) {
-      if (r.type === "BOOLEAN_EVALUATION_RESPONSE_TYPE") {
-        if (!r.booleanResponse!.flagKey) continue;
-
-        flags[r.booleanResponse!.flagKey as FlagKey] =
-          r.booleanResponse!.enabled;
-      }
-    }
-
     setFlags(flags);
   };
 
   useEffect(() => {
+    if (!auth.isAuthenticated) return;
+
     fetchFlags();
-  }, [fliptClient]);
+  }, [auth]);
 
   useEffect(() => {
     if (isLoading) loading.request("flags");
