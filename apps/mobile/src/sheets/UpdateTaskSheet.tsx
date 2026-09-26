@@ -6,6 +6,7 @@ import {
   updateTask,
   UpdateTaskDto,
 } from "@/api/modules/tasks";
+import { mutateTaskQueries, refetchTaskQueries } from "@/helpers/task";
 import {
   AlertDialog,
   BottomSheet,
@@ -79,7 +80,7 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
         );
     },
 
-    onSuccess: () => {
+    onSuccess: (response) => {
       close();
       snackbar.show({
         message: "Task updated!",
@@ -87,13 +88,12 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
         withDismissAction: true,
       });
 
-      queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
+      mutateTaskQueries(queryClient, response);
+      refetchTaskQueries(queryClient);
     },
   });
 
-  const { isPending: isDeleting, mutate: delTask } = useMutation({
+  const { mutate: delTask } = useMutation({
     mutationKey: ["tasks", props.task.id, "delete"],
     mutationFn: async () => deleteTask(props.task.id),
     onError: (e) => {
@@ -109,9 +109,7 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
         withDismissAction: true,
       });
 
-      queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
+      refetchTaskQueries(queryClient);
     },
   });
 

@@ -4,6 +4,8 @@ import {
   markTaskAsNotCompleted,
   TaskResponseDto,
 } from "@/api/modules/tasks";
+import { mutateTaskQueries, refetchTaskQueries } from "@/helpers/task";
+import { useSseSubscription } from "@/services/sse/context";
 import { useMaterialColors } from "@expo/ui/jetpack-compose";
 import {
   Badge,
@@ -15,11 +17,7 @@ import {
   Row,
   Text,
 } from "@repo/mobile-ui";
-import {
-  InfiniteData,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DateTime, Duration } from "luxon";
 import { ToastAndroid } from "react-native";
 
@@ -55,18 +53,8 @@ export function Task(props: ITaskProps) {
       );
     },
     onSuccess: (response) => {
-      const replace = (tasks: TaskResponseDto[]) =>
-        tasks.map((t) => (t.id == props.task.id ? response : t));
-
-      // Update the existing date instead of refetching the entire list
-      queryClient.setQueriesData<
-        TaskResponseDto[] | InfiniteData<TaskResponseDto[]>
-      >({ queryKey: ["tasks"] }, (data) => {
-        if (!data) return data;
-        if (Array.isArray(data)) return replace(data);
-
-        return { ...data, pages: data.pages.map(replace) };
-      });
+      mutateTaskQueries(queryClient, response);
+      refetchTaskQueries(queryClient);
     },
   });
 
