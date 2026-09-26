@@ -23,38 +23,31 @@ export function NotificationsProvider(props: PropsWithChildren) {
 
   const [isEnabled, setIsEnabled] = useState<boolean | null>(null);
 
-  const refresh = async () => {
-    loading.request("notifications.init");
+  const refresh = async (silent: boolean = false) => {
+    if (!silent) loading.request("notifications.init");
 
     setIsEnabled(
       await PushNotifications.getPermissionState().then((s) => s.isGranted),
     );
 
-    loading.dismiss("notifications.init");
-  };
-
-  const provision = async () => {
-    const state = await PushNotifications.getPermissionState();
-    if (!state.isGranted) return;
-
-    loading.request("notifications.provision");
-
-    await PushNotifications.provisionToken();
-
-    loading.dismiss("notifications.provision");
+    if (!silent) loading.dismiss("notifications.init");
   };
 
   useEffect(() => {
-    refresh().then(provision);
+    refresh();
 
     const sub = AppState.addEventListener("change", (state) => {
-      if (state === "active") refresh().then(provision); // Refresh when app comes to foreground (user returns from settings)
+      if (state === "active") refresh(true); // Refresh when app comes to foreground (user returns from settings)
     });
 
     return () => {
       sub.remove();
     };
   }, []);
+
+  useEffect(() => {
+    if (isEnabled) PushNotifications.provisionToken();
+  }, [isEnabled]);
 
   if (isEnabled === null) return null;
 
