@@ -36,7 +36,12 @@ export function FlagsProvider(props: PropsWithChildren) {
   };
 
   useEffect(() => {
-    if (!auth.isAuthenticated) return;
+    if (!auth.isAuthenticated) {
+      setFlags(null);
+      setIsLoading(false);
+
+      return;
+    }
 
     fetchFlags();
   }, [auth]);
