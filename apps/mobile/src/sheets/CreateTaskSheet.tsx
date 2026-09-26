@@ -1,5 +1,6 @@
 import { API } from "@/api/api";
 import { createTask, CreateTaskDto, TaskPriority } from "@/api/modules/tasks";
+import { refetchTaskQueries } from "@/helpers/task";
 import {
   BottomSheet,
   BottomSheetRef,
@@ -62,9 +63,7 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
         withDismissAction: true,
       });
 
-      queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
+      refetchTaskQueries(queryClient);
     },
   });
 

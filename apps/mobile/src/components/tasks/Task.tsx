@@ -4,6 +4,8 @@ import {
   markTaskAsNotCompleted,
   TaskResponseDto,
 } from "@/api/modules/tasks";
+import { mutateTaskQueries, refetchTaskQueries } from "@/helpers/task";
+import { useSseSubscription } from "@/services/sse/context";
 import { useMaterialColors } from "@expo/ui/jetpack-compose";
 import {
   Badge,
@@ -50,10 +52,9 @@ export function Task(props: ITaskProps) {
         ToastAndroid.LONG,
       );
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
+    onSuccess: (response) => {
+      mutateTaskQueries(queryClient, response);
+      refetchTaskQueries(queryClient);
     },
   });
 

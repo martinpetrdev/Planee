@@ -29,6 +29,7 @@ function SectionHeader(props: ISectionHeaderProps) {
 
 export function TaskList() {
   const [selected, setSelected] = useState<TaskResponseDto | null>(null);
+  const [refreshedManually, setRefreshedManually] = useState(false);
 
   const {
     isFetching: isFetchingOverdue,
@@ -71,14 +72,16 @@ export function TaskList() {
     <>
       <PullToRefresh
         isRefreshing={
-          (isFetching && !isFetchingNextPage) ||
-          isFetchingToday ||
-          isFetchingOverdue
+          refreshedManually &&
+          ((isFetching && !isFetchingNextPage) ||
+            isFetchingToday ||
+            isFetchingOverdue)
         }
         onRefresh={() => {
-          refetch();
-          refetchToday();
-          refetchOverdue();
+          setRefreshedManually(true);
+          Promise.all([refetch(), refetchToday(), refetchOverdue()]).finally(
+            () => setRefreshedManually(false),
+          );
         }}
         gap={8}
       >
@@ -124,6 +127,7 @@ export function TaskList() {
 
 export function CompletedTaskList() {
   const [selected, setSelected] = useState<TaskResponseDto | null>(null);
+  const [refreshedManually, setRefreshedManually] = useState(false);
 
   const {
     isFetching,
@@ -147,9 +151,10 @@ export function CompletedTaskList() {
   return (
     <>
       <PullToRefresh
-        isRefreshing={isFetching && !isFetchingNextPage}
+        isRefreshing={refreshedManually && isFetching && !isFetchingNextPage}
         onRefresh={() => {
-          refetch();
+          setRefreshedManually(true);
+          refetch().finally(() => setRefreshedManually(false));
         }}
         gap={8}
       >

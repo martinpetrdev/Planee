@@ -71,4 +71,15 @@ export class Task {
       this._completedAt,
     );
   }
+
+  public toObject() {
+    return {
+      id: this.id,
+      name: this.name,
+      expectedDurationSeconds: this.expectedDuration.toSeconds(),
+      dueDate: this._dueDate.toISOString(),
+      priority: this.priority,
+      completedAt: this._completedAt ? this._completedAt.toISOString() : null,
+    };
+  }
 }

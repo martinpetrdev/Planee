@@ -64,8 +64,6 @@ export class FliptFlagEvaluator extends FlagEvaluatorPort {
           response.booleanResponse?.enabled;
       }
 
-      console.log(flags);
-
       return flags;
     } catch (e) {
       Logger.error(
