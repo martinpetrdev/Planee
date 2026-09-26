@@ -35,4 +35,44 @@ export class FliptFlagEvaluator extends FlagEvaluatorPort {
       return false; // Off by default
     }
   }
+
+  async batchIsEnabled(
+    flagNames: string[],
+    ctx?: FlagContext,
+  ): Promise<Record<string, boolean>> {
+    try {
+      const res = await this.client.evaluation.batch({
+        requests: flagNames.map((flagName) => ({
+          namespaceKey: this.namespaceKey,
+          flagKey: flagName,
+          entityId: ctx?.userId ?? 'anonymous',
+          context: ctx?.attributes ?? {},
+        })),
+      });
+
+      const flags = Object.fromEntries(
+        flagNames.map((flagName) => [flagName, false]),
+      ); // Off by default
+      for (const response of res.responses) {
+        if (
+          response.type != 'BOOLEAN_EVALUATION_RESPONSE_TYPE' ||
+          !response.booleanResponse?.flagKey
+        )
+          continue;
+
+        flags[response.booleanResponse?.flagKey] =
+          response.booleanResponse?.enabled;
+      }
+
+      console.log(flags);
+
+      return flags;
+    } catch (e) {
+      Logger.error(
+        `Failed to batch evaluate flags ${flagNames.join(', ')}: ${e}`,
+      );
+
+      return Object.fromEntries(flagNames.map((flagName) => [flagName, false])); // Off by default
+    }
+  }
 }
