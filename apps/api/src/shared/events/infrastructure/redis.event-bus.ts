@@ -15,8 +15,8 @@ export class RedisEventBus
   private readonly pub;
   private readonly sub; // Separate, because pub/sub cannot be combined in one connection
 
-  private readonly listeners = new Set<EventHandler<any>>();
-  private readonly handlers = new Set<EventHandler<any>>();
+  private readonly listeners = new Set<EventHandler<unknown>>();
+  private readonly handlers = new Set<EventHandler<unknown>>();
 
   constructor(url: string) {
     super();
@@ -32,7 +32,7 @@ export class RedisEventBus
     await Promise.all([this.pub.connect(), this.sub.connect()]);
 
     await this.sub.subscribe(CHANNEL, (message) => {
-      const event = JSON.parse(message) as DomainEvent<any>;
+      const event = JSON.parse(message) as DomainEvent<unknown>;
 
       for (const listener of this.listeners) this.runHandler(listener, event);
     });
@@ -56,13 +56,13 @@ export class RedisEventBus
   }
 
   listen<T>(handler: EventHandler<T>) {
-    this.listeners.add(handler);
-    return () => void this.listeners.delete(handler);
+    this.listeners.add(handler as EventHandler<unknown>);
+    return () => void this.listeners.delete(handler as EventHandler<unknown>);
   }
 
   handle<T>(handler: EventHandler<T>) {
-    this.handlers.add(handler);
-    return () => void this.handlers.delete(handler);
+    this.handlers.add(handler as EventHandler<unknown>);
+    return () => void this.handlers.delete(handler as EventHandler<unknown>);
   }
 
   private runHandler<T>(handler: EventHandler<T>, event: DomainEvent<T>) {

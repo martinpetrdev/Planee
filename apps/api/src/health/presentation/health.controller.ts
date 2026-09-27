@@ -9,8 +9,6 @@ import { Public } from '../../shared/auth/presentation/decorators/public.decorat
   version: ApiVersion.v1,
 })
 export class HealthController {
-  constructor() {}
-
   @Get('/')
   @Public()
   @HttpCode(200)

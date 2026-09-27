@@ -47,7 +47,7 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
   ): Promise<DomainTask[]> {
     const start = filters.dayStart;
     const end = new Date(start.getTime() + DAY_IN_MILISECONDS);
-    let due;
+    let due: Prisma.DateTimeFilter | undefined;
     let completedAt = null;
 
     if (filters.scope === 'overdue') due = { lt: start };

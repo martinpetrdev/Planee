@@ -20,7 +20,7 @@ export class FliptFlagEvaluator extends FlagEvaluatorPort {
     });
   }
 
-  async isEnabled(flagName: string, ctx?: FlagContext): Promise<boolean> {
+  async isEnabled<T>(flagName: string, ctx?: FlagContext<T>): Promise<boolean> {
     try {
       const res = await this.client.evaluation.boolean({
         namespaceKey: this.namespaceKey,
@@ -37,9 +37,9 @@ export class FliptFlagEvaluator extends FlagEvaluatorPort {
     }
   }
 
-  async batchIsEnabled(
+  async batchIsEnabled<T>(
     flagNames: string[],
-    ctx?: FlagContext,
+    ctx?: FlagContext<T>,
   ): Promise<Record<string, boolean>> {
     try {
       const res = await this.client.evaluation.batch({
@@ -56,7 +56,7 @@ export class FliptFlagEvaluator extends FlagEvaluatorPort {
       ); // Off by default
       for (const response of res.responses) {
         if (
-          response.type != 'BOOLEAN_EVALUATION_RESPONSE_TYPE' ||
+          response.type !== 'BOOLEAN_EVALUATION_RESPONSE_TYPE' ||
           !response.booleanResponse?.flagKey
         )
           continue;

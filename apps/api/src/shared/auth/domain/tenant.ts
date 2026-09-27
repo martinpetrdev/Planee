@@ -1,17 +1,20 @@
 export class Tenant {
   private constructor(
     private readonly _id: string,
-    private readonly _attributes: Record<string, any>,
+    private readonly _attributes: Record<string, unknown>,
   ) {}
 
   public get id(): string {
     return this._id;
   }
-  public get attributes(): Record<string, any> {
+  public get attributes(): Record<string, unknown> {
     return this._attributes;
   }
 
-  public static create(id: string, attributes: Record<string, any>): Tenant {
+  public static create(
+    id: string,
+    attributes: Record<string, unknown>,
+  ): Tenant {
     return new Tenant(id, attributes);
   }
 

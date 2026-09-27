@@ -22,10 +22,6 @@ type ExpoPushTicket = ExpoPushOkTicket | ExpoPushErrorTicket;
 
 @Injectable()
 export class ExpoPushSender extends PushSenderPort {
-  constructor() {
-    super();
-  }
-
   async send(tokens: string[], notification: Notification): Promise<string[]> {
     const { data } = await axios
       .post<{ data: ExpoPushTicket[] }>(
@@ -45,7 +41,7 @@ export class ExpoPushSender extends PushSenderPort {
     return data.data
       .filter(
         (ticket): ticket is ExpoPushErrorTicket =>
-          ticket.status == 'error' &&
+          ticket.status === 'error' &&
           ticket.details.error === 'DeviceNotRegistered',
       )
       .map((ticket) => ticket.details.expoPushToken);

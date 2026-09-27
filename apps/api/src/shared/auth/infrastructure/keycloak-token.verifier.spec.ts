@@ -9,10 +9,10 @@
  */
 
 import { UnauthorizedException } from '@nestjs/common';
-import { createServer, Server } from 'http';
 import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 
 import { KeycloakTokenVerifier } from './keycloak-token.verifier.ts';
+import { createServer, Server } from 'node:http';
 
 const AUDIENCE = 'api';
 let server: Server;

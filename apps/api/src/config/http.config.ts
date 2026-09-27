@@ -11,7 +11,7 @@ export function getServicePort(): number {
 
   // Validation (number, valid port range)
   if (
-    typeof port != 'number' ||
+    typeof port !== 'number' ||
     !Number.isInteger(port) ||
     port < 0 ||
     port > 65535

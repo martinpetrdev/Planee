@@ -16,7 +16,7 @@ interface KeycloakTokenPayload extends JWTPayload {
   organization?: {
     [key: string]: {
       id: string;
-      [key: string]: any;
+      [key: string]: unknown;
     };
   };
 }
@@ -59,7 +59,7 @@ export class KeycloakTokenVerifier extends TokenVerifierPort {
         id: v.id,
         attributes: Object.fromEntries(
           Object.entries(v)
-            .map(([k, v]) => [k, v[0]])
+            .map(([k, v]) => [k, (v as unknown[])[0]])
             .filter(([k]) => k !== 'id'),
         ),
       }));
