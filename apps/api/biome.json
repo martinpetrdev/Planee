@@ -7,6 +7,9 @@
     "clientKind": "git",
     "useIgnoreFile": true
   },
+  "files": {
+    "includes": ["**", "!dist"]
+  },
   "formatter": {
     "indentStyle": "space",
     "indentWidth": 2
@@ -29,8 +32,12 @@
           "fix": "safe"
         }
       },
+      "complexity": {
+        "noStaticOnlyClass": "off"
+      },
       "style": {
-        "useImportType": "off"
+        "useImportType": "off",
+        "noNonNullAssertion": "off"
       }
     }
   },

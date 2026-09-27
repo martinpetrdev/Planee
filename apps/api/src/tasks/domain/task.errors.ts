@@ -11,8 +11,4 @@ export class TaskNotFoundError extends TaskError {
 
 export abstract class TaskValidationError extends ValidationError {}
 
-export class TaskInvalidError extends TaskValidationError {
-  constructor(fieldErrors: Record<string, string>, options?: ErrorOptions) {
-    super(fieldErrors, options);
-  }
-}
+export class TaskInvalidError extends TaskValidationError {}

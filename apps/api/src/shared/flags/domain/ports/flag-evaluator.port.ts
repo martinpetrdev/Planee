@@ -1,12 +1,15 @@
-export interface FlagContext {
+export interface FlagContext<T> {
   userId?: string;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, T>;
 }
 
 export abstract class FlagEvaluatorPort {
-  abstract isEnabled(flagName: string, ctx?: FlagContext): Promise<boolean>;
-  abstract batchIsEnabled(
+  abstract isEnabled<T>(
+    flagName: string,
+    ctx?: FlagContext<T>,
+  ): Promise<boolean>;
+  abstract batchIsEnabled<T>(
     flagNames: string[],
-    ctx?: FlagContext,
+    ctx?: FlagContext<T>,
   ): Promise<Record<string, boolean>>;
 }
