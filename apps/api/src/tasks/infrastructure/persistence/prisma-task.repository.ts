@@ -58,7 +58,7 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
     const entities = await this.db.task.findMany({
       where: { userId, dueDate: due, completedAt: completedAt },
       orderBy: [{ dueDate: 'asc' }, { id: 'asc' }],
-      take: PAGE_SIZE,
+      take: filters.scope === 'today' ? undefined : PAGE_SIZE,
       ...(filters.cursorId && { cursor: { id: filters.cursorId }, skip: 1 }),
     });
 
