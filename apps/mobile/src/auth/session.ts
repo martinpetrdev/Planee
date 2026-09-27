@@ -1,4 +1,4 @@
-import { deleteItemAsync, getItemAsync, setItemAsync } from "expo-secure-store";
+import { deleteItemAsync, getItemAsync, setItemAsync } from 'expo-secure-store';
 
 interface ISession {
   accessToken: string;
@@ -23,7 +23,7 @@ export class SessionStore {
   async getSession(): Promise<ISession | null> {
     const stringified = await getItemAsync(this.key);
 
-    return JSON.parse(stringified ?? "null") as ISession | null;
+    return JSON.parse(stringified ?? 'null') as ISession | null;
   }
 
   async clearSession(): Promise<void> {

@@ -1,5 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsDateString,
   IsEnum,
   IsISO8601,
   IsNumber,
@@ -7,8 +7,8 @@ import {
   Length,
   Min,
 } from 'class-validator';
+
 import { TaskPriority } from '../../domain/task-priority.js';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTaskDto {
   @IsString()

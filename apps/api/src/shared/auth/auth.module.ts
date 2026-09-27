@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TokenVerifierPort } from './domain/ports/token-verifier.port.js';
-import { KeycloakTokenVerifier } from './infrastructure/keycloak-token.verifier.js';
 import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+
+import { UsersModule } from '../../users/users.module.js';
+import { TokenVerifierPort } from './domain/ports/token-verifier.port.js';
 import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard.js';
 import { RolesGuard } from './infrastructure/guards/roles.guard.js';
-import { UsersModule } from '../../users/users.module.js';
+import { KeycloakTokenVerifier } from './infrastructure/keycloak-token.verifier.js';
 
 @Module({
   imports: [UsersModule],

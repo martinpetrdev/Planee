@@ -1,9 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiVersion } from '@repo/shared';
-import { FlagsService } from '../application/flags.service.js';
-import { User } from '../../auth/presentation/decorators/user.decorator.js';
-import { AuthenticatedUser } from '../../auth/domain/authenticated-user.entity.js';
 import { ApiBearerAuth } from '@nestjs/swagger';
+
+import { ApiVersion } from '@repo/shared';
+
+import { AuthenticatedUser } from '../../auth/domain/authenticated-user.entity.js';
+import { User } from '../../auth/presentation/decorators/user.decorator.js';
+import { FlagsService } from '../application/flags.service.js';
 
 @Controller({
   path: '/flags',

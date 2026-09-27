@@ -1,17 +1,15 @@
+import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
+
+import { ApiVersion } from '@repo/shared';
+
 import { AppModule } from './app.module.js';
 import {
   getServiceCorsAllowedOrigins,
   getServicePort,
 } from './config/http.config.js';
-import {
-  BadRequestException,
-  ValidationPipe,
-  VersioningType,
-} from '@nestjs/common';
-import { ApiVersion } from '@repo/shared';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import helmet from 'helmet';
 import { IS_DEV } from './utils/env.js';
 
 async function bootstrap() {

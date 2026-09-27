@@ -1,5 +1,5 @@
-import { TaskPriority } from './task-priority.js';
 import { TaskValidator } from './task.validator.js';
+import { TaskPriority } from './task-priority.js';
 import { Duration } from './value-objects/duration.vo.js';
 
 export class NewTask {
@@ -27,7 +27,7 @@ export class NewTask {
     TaskValidator.validateExpectedDuration(expectedDuration);
     TaskValidator.validateUserId(userId);
 
-    return new this(
+    return new NewTask(
       name.trim(),
       expectedDuration,
       dueDate,

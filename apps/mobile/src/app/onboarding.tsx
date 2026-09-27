@@ -1,5 +1,6 @@
-import { useAuth } from "@/auth/context";
-import { Box, Button, Column, ScreenShell, Text } from "@repo/mobile-ui";
+import { Box, Button, Column, ScreenShell, Text } from '@repo/mobile-ui';
+
+import { useAuth } from '@/auth/context';
 
 export default function Onboard() {
   const auth = useAuth();

@@ -1,5 +1,5 @@
-import { TaskPriority } from '../../domain/task-priority.js';
 import { Task } from '../../domain/task.js';
+import { TaskPriority } from '../../domain/task-priority.js';
 
 export class TaskResponseDto {
   id: string;
@@ -14,6 +14,6 @@ export class TaskResponseDto {
   }
 
   static fromDomain(task: Task): TaskResponseDto {
-    return new this(task.toObject());
+    return new TaskResponseDto(task.toObject());
   }
 }

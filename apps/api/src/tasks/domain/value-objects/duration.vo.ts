@@ -9,11 +9,11 @@ export class Duration {
         'expected to be a non-negative integer in seconds',
       );
 
-    return new this(seconds);
+    return new Duration(seconds);
   }
 
   public static fromPersistence(seconds: number) {
-    return new this(seconds);
+    return new Duration(seconds);
   }
 
   public toSeconds(): number {

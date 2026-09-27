@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { FlagEvaluatorPort } from '../domain/ports/flag-evaluator.port.js';
+
+import { flattenObject } from '../../../utils/object.js';
 import { AuthenticatedUser } from '../../auth/domain/authenticated-user.entity.js';
 import { AllFeatureFlags, FeatureFlag } from '../domain/flag.js';
-import { flattenObject } from '../../../utils/object.js';
+import { FlagEvaluatorPort } from '../domain/ports/flag-evaluator.port.js';
 
 @Injectable()
 export class FlagsService {

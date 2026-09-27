@@ -1,5 +1,7 @@
 import { Controller, Get, HttpCode } from '@nestjs/common';
+
 import { ApiVersion } from '@repo/shared';
+
 import { Public } from '../../shared/auth/presentation/decorators/public.decorator.js';
 
 @Controller({

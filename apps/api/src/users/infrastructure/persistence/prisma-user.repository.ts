@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { UserProvisioningPort } from '../../domain/ports/user-provisioning.port.js';
+
 import { PrismaClient } from '@repo/database';
+
+import { UserProvisioningPort } from '../../domain/ports/user-provisioning.port.js';
 
 @Injectable()
 export class PrismaUserRepository extends UserProvisioningPort {

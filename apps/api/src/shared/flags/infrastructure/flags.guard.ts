@@ -5,10 +5,11 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+
 import { AuthenticatedUser } from '../../auth/domain/authenticated-user.entity.js';
-import { FLAGS_DECORATOR_KEY } from '../presentation/decorators/flags.decorator.js';
-import { FeatureFlag } from '../domain/flag.js';
 import { FlagsService } from '../application/flags.service.js';
+import { FeatureFlag } from '../domain/flag.js';
+import { FLAGS_DECORATOR_KEY } from '../presentation/decorators/flags.decorator.js';
 
 @Injectable()
 export class FlagsGuard implements CanActivate {

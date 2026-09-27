@@ -1,21 +1,15 @@
-import { API } from "@/api/api";
-import {
-  deleteTask,
-  TaskPriority,
-  TaskResponseDto,
-  updateTask,
-  UpdateTaskDto,
-} from "@/api/modules/tasks";
-import { mutateTaskQueries, refetchTaskQueries } from "@/helpers/task";
-import { useSseSubscription } from "@/services/sse/context";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef, useState } from 'react';
+import { ToastAndroid } from 'react-native';
+
 import {
   AlertDialog,
   BottomSheet,
-  BottomSheetRef,
+  type BottomSheetRef,
   Button,
   Column,
   fromInstant,
-  IAlertDialogRef,
+  type IAlertDialogRef,
   Icon,
   Input,
   Row,
@@ -25,11 +19,19 @@ import {
   toInstant,
   useNativeState,
   useSnackbar,
-} from "@repo/mobile-ui";
-import { AppEvent, AppEventType } from "@repo/shared";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
-import { ToastAndroid } from "react-native";
+} from '@repo/mobile-ui';
+import { type AppEvent, AppEventType } from '@repo/shared';
+
+import { API } from '@/api/api';
+import {
+  deleteTask,
+  type TaskPriority,
+  type TaskResponseDto,
+  type UpdateTaskDto,
+  updateTask,
+} from '@/api/modules/tasks';
+import { mutateTaskQueries, refetchTaskQueries } from '@/helpers/task';
+import { useSseSubscription } from '@/services/sse/context';
 
 interface IUpdateTaskSheetProps {
   task: TaskResponseDto;
@@ -64,20 +66,20 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
   const queryClient = useQueryClient();
 
   const { isPending, mutate } = useMutation({
-    mutationKey: ["tasks", props.task.id, "update"],
+    mutationKey: ['tasks', props.task.id, 'update'],
     mutationFn: async (dto: UpdateTaskDto) => updateTask(props.task.id, dto),
     onError: (e) => {
       const error = API.parseError(e);
 
       if (
         error &&
-        "fields" in error &&
+        'fields' in error &&
         Object.keys(error.fields ?? {}).length > 0
       )
         setFieldErrors(error.fields!);
       else
         ToastAndroid.show(
-          error?.message ?? "Unknown error",
+          error?.message ?? 'Unknown error',
           ToastAndroid.SHORT,
         );
     },
@@ -85,8 +87,8 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
     onSuccess: (response) => {
       close();
       snackbar.show({
-        message: "Task updated!",
-        duration: "short",
+        message: 'Task updated!',
+        duration: 'short',
         withDismissAction: true,
       });
 
@@ -96,18 +98,18 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
   });
 
   const { mutate: delTask } = useMutation({
-    mutationKey: ["tasks", props.task.id, "delete"],
+    mutationKey: ['tasks', props.task.id, 'delete'],
     mutationFn: async () => deleteTask(props.task.id),
     onError: (e) => {
       const error = API.parseError(e);
 
-      ToastAndroid.show(error?.message ?? "Unknown error", ToastAndroid.SHORT);
+      ToastAndroid.show(error?.message ?? 'Unknown error', ToastAndroid.SHORT);
     },
     onSuccess: () => {
       close();
       snackbar.show({
-        message: "Task deleted!",
-        duration: "short",
+        message: 'Task deleted!',
+        duration: 'short',
         withDismissAction: true,
       });
 
@@ -126,7 +128,7 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
       expectedDurationSeconds:
         (parseInt(hoursState.value) || 0) * 3600 +
         (parseInt(minutesState.value) || 0) * 60,
-      dueDate: toInstant(dueDate, dueTime || "00:00"),
+      dueDate: toInstant(dueDate, dueTime || '00:00'),
       priority: priority,
     });
   };
@@ -138,7 +140,7 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
 
       // Close the bottom sheet when the task was deleted from another client.
       close();
-      ToastAndroid.show("This task was deleted!", ToastAndroid.SHORT);
+      ToastAndroid.show('This task was deleted!', ToastAndroid.SHORT);
     },
   );
 
@@ -208,16 +210,16 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
               onChange={setPriority}
               items={[
                 {
-                  label: "Low",
-                  value: "low",
+                  label: 'Low',
+                  value: 'low',
                 },
                 {
-                  label: "Medium",
-                  value: "medium",
+                  label: 'Medium',
+                  value: 'medium',
                 },
                 {
-                  label: "High",
-                  value: "high",
+                  label: 'High',
+                  value: 'high',
                 },
               ]}
               label="Priority"

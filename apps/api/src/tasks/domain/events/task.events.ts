@@ -1,6 +1,7 @@
+import { AppEventType } from '@repo/shared';
+
 import { DomainEvent } from '../../../shared/events/domain/domain-event.js';
 import { Task } from '../task.js';
-import { AppEventType } from '@repo/shared';
 
 export const taskUpdated = (
   task: Task,

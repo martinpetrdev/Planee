@@ -4,8 +4,9 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { DomainError, DomainErrorKind } from '../../domain/domain.error.js';
 import { BaseExceptionFilter } from '@nestjs/core';
+
+import { DomainError, DomainErrorKind } from '../../domain/domain.error.js';
 
 const STATUS_CODES: Record<DomainErrorKind, HttpStatus> = {
   'not-found': HttpStatus.NOT_FOUND,

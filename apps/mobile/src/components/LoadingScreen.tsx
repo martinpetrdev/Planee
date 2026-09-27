@@ -1,13 +1,14 @@
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { Box, JetpackShell, LoadingSpinner } from "@repo/mobile-ui";
 import {
   createContext,
-  PropsWithChildren,
+  type PropsWithChildren,
   useContext,
   useEffect,
   useMemo,
   useState,
-} from "react";
+} from 'react';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+
+import { Box, JetpackShell, LoadingSpinner } from '@repo/mobile-ui';
 
 interface ILoadingScreenContextValue {
   request: (id: string) => void;
@@ -61,7 +62,7 @@ function LoadingScreen() {
       entering={FadeIn.duration(FADE_MS)}
       exiting={FadeOut.duration(FADE_MS)}
       style={{
-        position: "absolute",
+        position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
@@ -81,7 +82,7 @@ export function useLoadingScreen() {
   const ctx = useContext(LoadingScreenContext);
   if (!ctx)
     throw new Error(
-      "useLoadingScreen must be used within a LoadingScreenProvider",
+      'useLoadingScreen must be used within a LoadingScreenProvider',
     );
 
   return ctx;

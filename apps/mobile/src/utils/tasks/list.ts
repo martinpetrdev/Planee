@@ -1,5 +1,6 @@
-import { TaskResponseDto } from "@/api/modules/tasks";
-import { toISODate } from "@repo/mobile-ui";
+import { toISODate } from '@repo/mobile-ui';
+
+import type { TaskResponseDto } from '@/api/modules/tasks';
 
 export function groupTasksByDay(tasks: TaskResponseDto[]) {
   return Object.entries(

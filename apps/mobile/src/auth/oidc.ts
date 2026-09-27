@@ -1,22 +1,23 @@
+import axios from 'axios';
 import {
-  DiscoveryDocument,
+  type DiscoveryDocument,
   fetchDiscoveryAsync,
   makeRedirectUri,
   refreshAsync,
   revokeAsync,
-  TokenResponse,
-} from "expo-auth-session";
-import { SessionStore } from "./session";
-import { APP_SCHEME } from "@/configuration/app";
-import axios from "axios";
-import { openAuthSessionAsync } from "expo-web-browser";
+  type TokenResponse,
+} from 'expo-auth-session';
+import { openAuthSessionAsync } from 'expo-web-browser';
+
+import { APP_SCHEME } from '@/configuration/app';
 import {
   OIDC_CLIENT_ID,
   OIDC_GRACE_PERIOD,
   OIDC_ISSUER,
   OIDC_SCOPES,
   SESSION_STORE_KEY,
-} from "@/configuration/auth";
+} from '@/configuration/auth';
+import { SessionStore } from './session';
 
 interface IOIDCCLientOptions {
   issuer: string;
@@ -44,7 +45,7 @@ export class OIDCClient {
     this.sessionStore = sessionStore;
     this.redirectUri = makeRedirectUri({
       scheme: APP_SCHEME,
-      path: "callbacks/oidc",
+      path: 'callbacks/oidc',
     });
   }
 

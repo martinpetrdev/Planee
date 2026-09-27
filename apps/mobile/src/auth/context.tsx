@@ -1,28 +1,21 @@
-import { useLoadingScreen } from "@/components/LoadingScreen";
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { IOIDCUserInfo, oidcClient, OIDCClient } from "./oidc";
-import {
-  OIDC_CLIENT_ID,
-  OIDC_GRACE_PERIOD,
-  OIDC_ISSUER,
-  OIDC_SCOPES,
-  SESSION_STORE_KEY,
-} from "@/configuration/auth";
-import { SessionStore } from "./session";
 import {
   exchangeCodeAsync,
   useAuthRequest,
   useAutoDiscovery,
-} from "expo-auth-session";
-import { maybeCompleteAuthSession } from "expo-web-browser";
+} from 'expo-auth-session';
+import { maybeCompleteAuthSession } from 'expo-web-browser';
+import {
+  createContext,
+  type PropsWithChildren,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
+import { useLoadingScreen } from '@/components/LoadingScreen';
+import { OIDC_ISSUER } from '@/configuration/auth';
+import { type IOIDCUserInfo, oidcClient } from './oidc';
 
 interface IAuthContextValue {
   isLoading: boolean;
@@ -57,7 +50,7 @@ export function AuthProvider(props: PropsWithChildren) {
     setIsLoading(true);
 
     const result = await promptAsync();
-    if (result.type !== "success") setIsLoading(false);
+    if (result.type !== 'success') setIsLoading(false);
   };
 
   const invalidateAndRefetch = async () => {
@@ -71,7 +64,7 @@ export function AuthProvider(props: PropsWithChildren) {
   };
 
   const exchange = async () => {
-    if (response?.type !== "success" || !request || !discovery) return;
+    if (response?.type !== 'success' || !request || !discovery) return;
 
     // Codes are single use, this prevents re-exchanging the same
     // code multiple times
@@ -116,7 +109,7 @@ export function AuthProvider(props: PropsWithChildren) {
 
   // Check if we are the callback of OIDC login
   const isExchangePending =
-    response?.type === "success" &&
+    response?.type === 'success' &&
     exchangedCode.current !== response.params.code;
 
   useEffect(() => {
@@ -134,8 +127,8 @@ export function AuthProvider(props: PropsWithChildren) {
 
   useEffect(() => {
     // Request/dismiss loading screen based on isLoading state
-    if (isLoading) loading.request("auth");
-    else loading.dismiss("auth");
+    if (isLoading) loading.request('auth');
+    else loading.dismiss('auth');
   }, [loading, isLoading]);
 
   return (
@@ -155,7 +148,7 @@ export function AuthProvider(props: PropsWithChildren) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
+  if (!ctx) throw new Error('useAuth must be used within an AuthProvider');
 
   return ctx;
 }

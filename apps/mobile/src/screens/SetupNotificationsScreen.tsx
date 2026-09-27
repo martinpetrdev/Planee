@@ -1,5 +1,6 @@
-import { useNotifications } from "../services/notifications/context";
-import { Box, Button, Column, ScreenShell, Text } from "@repo/mobile-ui";
+import { Box, Button, Column, ScreenShell, Text } from '@repo/mobile-ui';
+
+import { useNotifications } from '../services/notifications/context';
 
 // TODO: Make notifications optional?
 export function SetupNotificationsScreen() {

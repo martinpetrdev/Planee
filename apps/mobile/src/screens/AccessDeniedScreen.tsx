@@ -1,5 +1,5 @@
-import { useAuth } from "@/auth/context";
-import { useMaterialColors } from "@expo/ui/jetpack-compose";
+import { useMaterialColors } from '@expo/ui/jetpack-compose';
+
 import {
   Button,
   Column,
@@ -7,7 +7,9 @@ import {
   ScreenShell,
   Spacer,
   Text,
-} from "@repo/mobile-ui";
+} from '@repo/mobile-ui';
+
+import { useAuth } from '@/auth/context';
 
 export function AccessDeniedScreen() {
   const auth = useAuth();

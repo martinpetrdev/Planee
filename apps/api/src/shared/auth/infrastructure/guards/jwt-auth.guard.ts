@@ -4,10 +4,11 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { TokenVerifierPort } from '../../domain/ports/token-verifier.port.js';
 import { Reflector } from '@nestjs/core';
-import { isPublic } from '../../presentation/decorators/public.decorator.js';
+
 import { UserProvisioningPort } from '../../../../users/domain/ports/user-provisioning.port.js';
+import { TokenVerifierPort } from '../../domain/ports/token-verifier.port.js';
+import { isPublic } from '../../presentation/decorators/public.decorator.js';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {

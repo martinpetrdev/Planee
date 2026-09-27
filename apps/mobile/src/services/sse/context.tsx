@@ -1,16 +1,18 @@
-import { eventsStream } from "@/api/modules/events";
-import { useAuth } from "@/auth/context";
-import { useLoadingScreen } from "@/components/LoadingScreen";
-import { AppEvent, AppEventType } from "@repo/shared";
 import {
   createContext,
-  PropsWithChildren,
+  type PropsWithChildren,
   useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
-} from "react";
+} from 'react';
+
+import { type AppEvent, AppEventType } from '@repo/shared';
+
+import { eventsStream } from '@/api/modules/events';
+import { useAuth } from '@/auth/context';
+import { useLoadingScreen } from '@/components/LoadingScreen';
 
 export type EventHandler = (e: AppEvent<any>) => void;
 type Unsubscribe = () => void;
@@ -50,7 +52,7 @@ export function SseProvider(props: PropsWithChildren) {
           handlers.current.get(type)?.forEach((h) => h(event));
         });
       }
-      c.onError((err) => console.error("[sse]", err));
+      c.onError((err) => console.error('[sse]', err));
 
       return c;
     });
@@ -60,8 +62,8 @@ export function SseProvider(props: PropsWithChildren) {
   }, [auth.isAuthenticated, auth.userInfo]);
 
   useEffect(() => {
-    if (connecting) loading.request("sse");
-    else loading.dismiss("sse");
+    if (connecting) loading.request('sse');
+    else loading.dismiss('sse');
   }, [connecting]);
 
   const value = useMemo<ISseContextValue>(
@@ -85,7 +87,7 @@ export function SseProvider(props: PropsWithChildren) {
 
 export function useSse() {
   const ctx = useContext(SseContext);
-  if (!ctx) throw new Error("useSse must be used within SseProvider");
+  if (!ctx) throw new Error('useSse must be used within SseProvider');
 
   return ctx;
 }
