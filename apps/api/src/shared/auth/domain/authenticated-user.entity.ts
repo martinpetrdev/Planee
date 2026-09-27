@@ -30,7 +30,7 @@ export class AuthenticatedUser {
     tenant: Tenant | null = null,
   ) {
     if (!id) throw new Error('AuthenticatedUser must have an id');
-    return new this(id, email, new Set(roles), tenant);
+    return new AuthenticatedUser(id, email, new Set(roles), tenant);
   }
 
   // Checks if the user has a specific role

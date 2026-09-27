@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
-import { EventBusPort } from './domain/ports/event-bus.port.js';
 import { ConfigService } from '@nestjs/config';
+
+import { EventBusPort } from './domain/ports/event-bus.port.js';
 import { RedisEventBus } from './infrastructure/redis.event-bus.js';
 import { EventsController } from './presentation/events.controller.js';
 

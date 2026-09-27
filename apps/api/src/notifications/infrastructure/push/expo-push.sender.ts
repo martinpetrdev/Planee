@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PushSenderPort } from '../../domain/ports/push-sender.port.js';
-import { Notification } from '../../domain/notification.js';
 import axios from 'axios';
+
+import { Notification } from '../../domain/notification.js';
+import { PushSenderPort } from '../../domain/ports/push-sender.port.js';
 
 interface ExpoPushOkTicket {
   status: 'ok';

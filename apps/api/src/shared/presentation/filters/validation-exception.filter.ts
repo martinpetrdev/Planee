@@ -5,8 +5,9 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
-import { ValidationError } from '../../domain/validation.error.js';
+
 import { capitalizeFirstLetter } from '../../../utils/text.js';
+import { ValidationError } from '../../domain/validation.error.js';
 
 @Catch(ValidationError)
 export class ValidationExceptionFilter extends BaseExceptionFilter {

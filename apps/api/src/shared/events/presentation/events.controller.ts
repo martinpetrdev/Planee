@@ -1,11 +1,13 @@
 import { Controller, MessageEvent, Sse } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { ApiVersion } from '@repo/shared';
-import { Flags } from '../../flags/presentation/decorators/flags.decorator.js';
-import { FeatureFlag } from '../../flags/domain/flag.js';
-import { EventBusPort } from '../domain/ports/event-bus.port.js';
-import { User } from '../../auth/presentation/decorators/user.decorator.js';
 import { interval, map, merge, Observable } from 'rxjs';
+
+import { ApiVersion } from '@repo/shared';
+
+import { User } from '../../auth/presentation/decorators/user.decorator.js';
+import { FeatureFlag } from '../../flags/domain/flag.js';
+import { Flags } from '../../flags/presentation/decorators/flags.decorator.js';
+import { EventBusPort } from '../domain/ports/event-bus.port.js';
 
 @Controller({
   path: '/events',

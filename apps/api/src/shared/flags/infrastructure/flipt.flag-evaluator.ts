@@ -1,9 +1,10 @@
+import { FliptClient } from '@flipt-io/flipt';
 import { Logger } from '@nestjs/common';
+
 import {
   FlagContext,
   FlagEvaluatorPort,
 } from '../domain/ports/flag-evaluator.port.js';
-import { FliptClient } from '@flipt-io/flipt';
 
 export class FliptFlagEvaluator extends FlagEvaluatorPort {
   private readonly client;

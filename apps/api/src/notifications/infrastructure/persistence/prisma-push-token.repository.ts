@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PushTokenRepositoryPort } from '../../domain/ports/push-token-repository.port.js';
+
 import { PrismaClient } from '@repo/database';
+
+import { PushTokenRepositoryPort } from '../../domain/ports/push-token-repository.port.js';
 
 @Injectable()
 export class PrismaPushTokenRepository extends PushTokenRepositoryPort {

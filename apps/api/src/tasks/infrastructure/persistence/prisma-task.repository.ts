@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { TaskRepositoryPort } from '../../domain/ports/task-repository.port.js';
+
 import { Prisma, PrismaClient, Task, TaskPriority } from '@repo/database';
+import { PAGE_SIZE } from '@repo/shared';
+
+import { DAY_IN_MILISECONDS } from '../../../shared/constants/time.js';
+import { NewTask as NewDomainTask } from '../../domain/new-task.js';
+import { TaskRepositoryPort } from '../../domain/ports/task-repository.port.js';
 import { Task as DomainTask } from '../../domain/task.js';
 import { TaskPriority as DomainTaskPriority } from '../../domain/task-priority.js';
-import { NewTask as NewDomainTask } from '../../domain/new-task.js';
 import { Duration } from '../../domain/value-objects/duration.vo.js';
-import { DAY_IN_MILISECONDS } from '../../../shared/constants/time.js';
-import { PAGE_SIZE } from '@repo/shared';
 
 const PRIORITY_TO_PRISMA: Record<DomainTaskPriority, TaskPriority> = {
   [DomainTaskPriority.Low]: TaskPriority.LOW,

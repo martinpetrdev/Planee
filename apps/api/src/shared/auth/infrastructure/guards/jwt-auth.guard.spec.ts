@@ -11,9 +11,10 @@
  */
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtAuthGuard } from './jwt-auth.guard.ts';
-import { Public } from '../../presentation/decorators/public.decorator.ts';
+
 import { AuthenticatedUser } from '../../domain/authenticated-user.entity.ts';
+import { Public } from '../../presentation/decorators/public.decorator.ts';
+import { JwtAuthGuard } from './jwt-auth.guard.ts';
 
 class Routes {
   @Public() open() {}

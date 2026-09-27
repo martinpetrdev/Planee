@@ -6,13 +6,11 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
-import {
-  isPublic,
-  PUBLIC_DECORATOR_KEY,
-} from '../../presentation/decorators/public.decorator.js';
-import { ROLES_DECORATOR_KEY } from '../../presentation/decorators/roles.decorator.js';
+
 import { AuthenticatedUser } from '../../domain/authenticated-user.entity.js';
 import { UserRole } from '../../domain/user-role.js';
+import { isPublic } from '../../presentation/decorators/public.decorator.js';
+import { ROLES_DECORATOR_KEY } from '../../presentation/decorators/roles.decorator.js';
 
 @Injectable()
 export class RolesGuard implements CanActivate {

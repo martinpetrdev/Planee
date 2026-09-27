@@ -3,11 +3,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { TokenVerifierPort } from '../domain/ports/token-verifier.port.js';
 import { createRemoteJWKSet, JWTPayload, jwtVerify, RemoteJWKSet } from 'jose';
+
 import { AuthenticatedUser } from '../domain/authenticated-user.entity.js';
-import { isUserRole } from '../domain/user-role.js';
+import { TokenVerifierPort } from '../domain/ports/token-verifier.port.js';
 import { Tenant } from '../domain/tenant.js';
+import { isUserRole } from '../domain/user-role.js';
 
 interface KeycloakTokenPayload extends JWTPayload {
   email?: string;

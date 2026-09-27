@@ -1,7 +1,8 @@
 import { Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { EventBusPort, EventHandler } from '../domain/ports/event-bus.port.js';
 import { createClient } from 'redis';
+
 import { DomainEvent } from '../domain/domain-event.js';
+import { EventBusPort, EventHandler } from '../domain/ports/event-bus.port.js';
 
 // TODO: Separate for each event type, user
 const CHANNEL = 'planee:events';

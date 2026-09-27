@@ -1,5 +1,5 @@
-import { TaskPriority } from './task-priority.js';
 import { TaskValidator } from './task.validator.js';
+import { TaskPriority } from './task-priority.js';
 import { Duration } from './value-objects/duration.vo.js';
 
 export class Task {
@@ -30,7 +30,7 @@ export class Task {
     userId: string;
     completedAt?: Date | null;
   }) {
-    return new this(
+    return new Task(
       props.id,
       props.name,
       props.expectedDuration,

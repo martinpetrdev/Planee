@@ -1,10 +1,11 @@
 import { Global, Module } from '@nestjs/common';
-import { FlagEvaluatorPort } from './domain/ports/flag-evaluator.port.js';
 import { ConfigService } from '@nestjs/config';
-import { FliptFlagEvaluator } from './infrastructure/flipt.flag-evaluator.js';
 import { APP_GUARD } from '@nestjs/core';
-import { FlagsGuard } from './infrastructure/flags.guard.js';
+
 import { FlagsService } from './application/flags.service.js';
+import { FlagEvaluatorPort } from './domain/ports/flag-evaluator.port.js';
+import { FlagsGuard } from './infrastructure/flags.guard.js';
+import { FliptFlagEvaluator } from './infrastructure/flipt.flag-evaluator.js';
 import { FlagsController } from './presentation/flags.controller.js';
 
 @Global()

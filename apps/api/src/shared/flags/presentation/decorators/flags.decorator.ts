@@ -1,4 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
+
 import { FeatureFlag } from '../../domain/flag.js';
 
 export const FLAGS_DECORATOR_KEY = 'flags';

@@ -47,5 +47,7 @@ it('never reads before writing', async () => {
 it('propagates a database failure', async () => {
   db.user.upsert.mockRejectedValue(new Error('db down'));
 
-  await expect(repository.ensureProvisioned('sub-1')).rejects.toThrow('db down');
+  await expect(repository.ensureProvisioned('sub-1')).rejects.toThrow(
+    'db down',
+  );
 });

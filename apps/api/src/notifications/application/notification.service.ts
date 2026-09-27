@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PushSenderPort } from '../domain/ports/push-sender.port.js';
-import { PushTokenRepositoryPort } from '../domain/ports/push-token-repository.port.js';
+
 import { Notification } from '../domain/notification.js';
 import { NotificationSenderPort } from '../domain/ports/notification-sender.port.js';
+import { PushSenderPort } from '../domain/ports/push-sender.port.js';
+import { PushTokenRepositoryPort } from '../domain/ports/push-token-repository.port.js';
 
 @Injectable()
 export class NotificationService extends NotificationSenderPort {
