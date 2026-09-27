@@ -1,15 +1,13 @@
 import { CreateFAB } from "@/components/CreateFAB";
-import { useFlags } from "@/services/flags/context";
-import { ScreenShell, Text } from "@repo/mobile-ui";
+import { ScreenHeader } from "@/components/ScreenHeader";
+import { Column, ScreenShell, Text } from "@repo/mobile-ui";
 
 export default function Screen() {
-  const { flags } = useFlags();
-
   return (
     <ScreenShell>
-      <Text>
-        {flags && flags["test-flag"] ? "Flag enabled" : "Flag disabled"}
-      </Text>
+      <Column fill>
+        <ScreenHeader title="Home" />
+      </Column>
       <CreateFAB />
     </ScreenShell>
   );
