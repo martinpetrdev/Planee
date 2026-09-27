@@ -56,6 +56,13 @@ spec:
                 secretKeyRef:
                   name: planee-postgres-cluster-app # CNPG generated
                   key: uri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: planee-redis
+                  key: password
+            - name: REDIS_URL
+              value: redis://:$(REDIS_PASSWORD)@planee-redis-svc:6379
             - name: POD_NAME
               valueFrom:
                 fieldRef:

@@ -11,3 +11,4 @@ resources:
   - web.yaml
   - marketing-web.yaml
   - flipt.yaml
+  - redis.yaml
