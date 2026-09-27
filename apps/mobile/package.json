@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "dependencies": {
     "@expo/ui": "~57.0.18",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@repo/mobile-ui": "workspace:*",
     "@repo/shared": "workspace:*",
     "@tanstack/react-query": "^5.103.1",
@@ -43,6 +44,7 @@
     "secios": "^1.2.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.2",
     "@types/luxon": "^3.7.5",
     "@types/react": "~19.2.2",
     "eslint": "^9.39.5",
@@ -55,7 +57,9 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "format": "biome format --write",
+    "check": "biome check --write"
   },
   "private": true
 }

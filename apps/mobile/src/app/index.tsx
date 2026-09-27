@@ -1,7 +1,9 @@
-import { useAuth } from "@/auth/context";
-import { ScreenShell } from "@repo/mobile-ui";
-import { useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
+
+import { ScreenShell } from '@repo/mobile-ui';
+
+import { useAuth } from '@/auth/context';
 
 export default function Screen() {
   const auth = useAuth();
@@ -10,8 +12,8 @@ export default function Screen() {
   useEffect(() => {
     if (auth.isLoading) return; // Loading shown by useAuth
 
-    if (auth.isAuthenticated) router.replace("/protected");
-    else router.replace("/onboarding");
+    if (auth.isAuthenticated) router.replace('/protected');
+    else router.replace('/onboarding');
   }, [auth]);
 
   return <ScreenShell></ScreenShell>; // Return ScreenShell to prevent white flash

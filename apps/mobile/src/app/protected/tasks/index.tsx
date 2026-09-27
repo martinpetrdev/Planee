@@ -1,16 +1,10 @@
-import { CreateFAB } from "@/components/CreateFAB";
-import { ScreenHeader } from "@/components/ScreenHeader";
-import { TaskList } from "@/components/tasks/TaskList";
-import {
-  Button,
-  Column,
-  Icon,
-  Row,
-  ScreenShell,
-  Spacer,
-  Text,
-} from "@repo/mobile-ui";
-import { useRouter } from "expo-router";
+import { useRouter } from 'expo-router';
+
+import { Column, ScreenShell } from '@repo/mobile-ui';
+
+import { CreateFAB } from '@/components/CreateFAB';
+import { ScreenHeader } from '@/components/ScreenHeader';
+import { TaskList } from '@/components/tasks/TaskList';
 
 export default function Screen() {
   const router = useRouter();
@@ -22,8 +16,8 @@ export default function Screen() {
           title="Tasks"
           trailingIcons={[
             {
-              icon: "check",
-              onClick: () => router.push("/protected/tasks/completed"),
+              icon: 'check',
+              onClick: () => router.push('/protected/tasks/completed'),
             },
           ]}
         />

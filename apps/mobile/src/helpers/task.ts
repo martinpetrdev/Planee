@@ -1,5 +1,6 @@
-import { TaskResponseDto } from "@/api/modules/tasks";
-import { InfiniteData, QueryClient } from "@tanstack/react-query";
+import type { InfiniteData, QueryClient } from '@tanstack/react-query';
+
+import type { TaskResponseDto } from '@/api/modules/tasks';
 
 export function mutateTaskQueries(
   queryClient: QueryClient,
@@ -11,7 +12,7 @@ export function mutateTaskQueries(
   // Update the existing data instead of refetching the entire list
   queryClient.setQueriesData<
     TaskResponseDto[] | InfiniteData<TaskResponseDto[]>
-  >({ queryKey: ["tasks"] }, (data) => {
+  >({ queryKey: ['tasks'] }, (data) => {
     if (!data) return data;
     if (Array.isArray(data)) return replace(data);
 
@@ -20,5 +21,5 @@ export function mutateTaskQueries(
 }
 
 export function refetchTaskQueries(queryClient: QueryClient) {
-  queryClient.invalidateQueries({ queryKey: ["tasks"] });
+  queryClient.invalidateQueries({ queryKey: ['tasks'] });
 }

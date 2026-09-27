@@ -1,10 +1,11 @@
-import { ApiVersion } from "@repo/shared";
-import { api } from "../api";
-import { getTodayStartISO } from "@/utils/time";
+import { ApiVersion } from '@repo/shared';
 
-const BASE_PATH = "/tasks";
+import { getTodayStartISO } from '@/utils/time';
+import { api } from '../api';
 
-export type TaskPriority = "low" | "medium" | "high";
+const BASE_PATH = '/tasks';
+
+export type TaskPriority = 'low' | 'medium' | 'high';
 
 export interface CreateTaskDto {
   name: string;
@@ -16,7 +17,7 @@ export interface CreateTaskDto {
 export interface UpdateTaskDto extends CreateTaskDto {}
 
 export interface ListTasksDto {
-  scope: "today" | "upcoming" | "overdue" | "completed";
+  scope: 'today' | 'upcoming' | 'overdue' | 'completed';
   cursorId?: string;
 }
 

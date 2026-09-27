@@ -1,8 +1,10 @@
-import { AxiosError, AxiosInstance } from "axios";
-import { ApiVersion } from "@repo/shared";
-import { secios, SeciosInstance } from "secios";
-import { apiConnector } from "./connector";
-import { removeNullishValues } from "@/utils/object";
+import { AxiosError, type AxiosInstance } from 'axios';
+import { type SeciosInstance, secios } from 'secios';
+
+import type { ApiVersion } from '@repo/shared';
+
+import { removeNullishValues } from '@/utils/object';
+import { apiConnector } from './connector';
 
 /**
  * API error response, that is emitted from rejection.
@@ -103,7 +105,7 @@ export class API {
    * Builds the full URL path (axios adds that to the base URL) for the specified version and path.
    */
   private buildUrl(version: ApiVersion, path: string): string {
-    return `/v${version}${path.startsWith("/") ? "" : "/"}${path}`;
+    return `/v${version}${path.startsWith('/') ? '' : '/'}${path}`;
   }
 
   /**

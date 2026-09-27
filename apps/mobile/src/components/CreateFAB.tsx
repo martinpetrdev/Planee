@@ -1,6 +1,8 @@
-import { CreateTaskSheet } from "@/sheets/CreateTaskSheet";
-import { BottomSheetRef, DropdownMenu, FAB } from "@repo/mobile-ui";
-import { useRef } from "react";
+import { useRef } from 'react';
+
+import { type BottomSheetRef, DropdownMenu, FAB } from '@repo/mobile-ui';
+
+import { CreateTaskSheet } from '@/sheets/CreateTaskSheet';
 
 export function CreateFAB() {
   const createTaskSheetRef = useRef<BottomSheetRef>(null);
@@ -15,8 +17,8 @@ export function CreateFAB() {
             onClick: () => {},
           },*/
           {
-            label: "Task",
-            icon: "add_task",
+            label: 'Task',
+            icon: 'add_task',
             onClick: () => createTaskSheetRef.current?.open(),
           },
           /*{

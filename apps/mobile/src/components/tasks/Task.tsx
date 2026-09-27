@@ -1,12 +1,8 @@
-import { API } from "@/api/api";
-import {
-  markTaskAsCompleted,
-  markTaskAsNotCompleted,
-  TaskResponseDto,
-} from "@/api/modules/tasks";
-import { mutateTaskQueries, refetchTaskQueries } from "@/helpers/task";
-import { useSseSubscription } from "@/services/sse/context";
-import { useMaterialColors } from "@expo/ui/jetpack-compose";
+import { useMaterialColors } from '@expo/ui/jetpack-compose';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { DateTime, Duration } from 'luxon';
+import { ToastAndroid } from 'react-native';
+
 import {
   Badge,
   Box,
@@ -16,10 +12,15 @@ import {
   LoadingSpinner,
   Row,
   Text,
-} from "@repo/mobile-ui";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { DateTime, Duration } from "luxon";
-import { ToastAndroid } from "react-native";
+} from '@repo/mobile-ui';
+
+import { API } from '@/api/api';
+import {
+  markTaskAsCompleted,
+  markTaskAsNotCompleted,
+  type TaskResponseDto,
+} from '@/api/modules/tasks';
+import { mutateTaskQueries, refetchTaskQueries } from '@/helpers/task';
 
 interface ITaskProps {
   task: TaskResponseDto;
@@ -33,13 +34,13 @@ export function Task(props: ITaskProps) {
     seconds: props.task.expectedDurationSeconds,
   });
   const durationLabel = duration.toFormat(
-    duration.as("hours") >= 1 ? "h'h' m'min'" : "m'min'",
+    duration.as('hours') >= 1 ? "h'h' m'min'" : "m'min'",
   );
 
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationKey: ["tasks", props.task.id, "completed"],
+    mutationKey: ['tasks', props.task.id, 'completed'],
     mutationFn: async () =>
       props.task.completedAt === null
         ? await markTaskAsCompleted(props.task.id)
@@ -48,7 +49,7 @@ export function Task(props: ITaskProps) {
       const error = API.parseError(e);
 
       ToastAndroid.show(
-        "Error: " + (error.message ?? "Unknown error"),
+        'Error: ' + (error.message ?? 'Unknown error'),
         ToastAndroid.LONG,
       );
     },
@@ -78,13 +79,13 @@ export function Task(props: ITaskProps) {
               typography="bodySmall"
               color={materialColors.onSurfaceVariant}
             >
-              {DateTime.fromISO(props.task.dueDate).toFormat("HH:mm")} ·{" "}
+              {DateTime.fromISO(props.task.dueDate).toFormat('HH:mm')} ·{' '}
               {durationLabel}
             </Text>
-            {props.task.priority == "low" && (
+            {props.task.priority == 'low' && (
               <Badge label="Low priority" color="secondary" />
             )}
-            {props.task.priority == "high" && (
+            {props.task.priority == 'high' && (
               <Badge label="High priority" color="red" />
             )}
           </Row>

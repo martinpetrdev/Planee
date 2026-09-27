@@ -1,13 +1,14 @@
-import { PushNotifications } from "@/api/device/notifications/push";
-import { useLoadingScreen } from "@/components/LoadingScreen";
 import {
   createContext,
-  PropsWithChildren,
+  type PropsWithChildren,
   useContext,
   useEffect,
   useState,
-} from "react";
-import { AppState } from "react-native";
+} from 'react';
+import { AppState } from 'react-native';
+
+import { PushNotifications } from '@/api/device/notifications/push';
+import { useLoadingScreen } from '@/components/LoadingScreen';
 
 interface INotificationsContextValue {
   isEnabled: boolean;
@@ -24,20 +25,20 @@ export function NotificationsProvider(props: PropsWithChildren) {
   const [isEnabled, setIsEnabled] = useState<boolean | null>(null);
 
   const refresh = async (silent: boolean = false) => {
-    if (!silent) loading.request("notifications.init");
+    if (!silent) loading.request('notifications.init');
 
     setIsEnabled(
       await PushNotifications.getPermissionState().then((s) => s.isGranted),
     );
 
-    if (!silent) loading.dismiss("notifications.init");
+    if (!silent) loading.dismiss('notifications.init');
   };
 
   useEffect(() => {
     refresh();
 
-    const sub = AppState.addEventListener("change", (state) => {
-      if (state === "active") refresh(true); // Refresh when app comes to foreground (user returns from settings)
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') refresh(true); // Refresh when app comes to foreground (user returns from settings)
     });
 
     return () => {
@@ -85,7 +86,7 @@ export function useNotifications() {
   const context = useContext(NotificationsContext);
   if (!context)
     throw new Error(
-      "useNotifications must be used within a NotificationsProvider",
+      'useNotifications must be used within a NotificationsProvider',
     );
 
   return {

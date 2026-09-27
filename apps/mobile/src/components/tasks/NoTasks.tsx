@@ -1,5 +1,6 @@
-import { useMaterialColors } from "@expo/ui/jetpack-compose";
-import { Column, Icon, Row, Text } from "@repo/mobile-ui";
+import { useMaterialColors } from '@expo/ui/jetpack-compose';
+
+import { Column, Icon, Row, Text } from '@repo/mobile-ui';
 
 export function NoCompletedTasks() {
   const materialColors = useMaterialColors();

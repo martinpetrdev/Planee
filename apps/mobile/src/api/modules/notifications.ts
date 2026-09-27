@@ -1,7 +1,8 @@
-import { ApiVersion } from "@repo/shared";
-import { api } from "../api";
+import { ApiVersion } from '@repo/shared';
 
-const BASE_PATH = "/notifications/push-tokens";
+import { api } from '../api';
+
+const BASE_PATH = '/notifications/push-tokens';
 
 export const registerPushToken = (token: string) =>
   api.put<void, { token: string }>(ApiVersion.v1, BASE_PATH, { token });

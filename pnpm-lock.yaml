@@ -377,6 +377,9 @@ importers:
       '@expo/ui':
         specifier: ~57.0.18
         version: 57.0.18(@babel/core@7.29.7(supports-color@8.1.1))(@types/react-dom@19.3.0(@types/react@19.2.18))(@types/react@19.2.18)(expo@57.0.22)(react-dom@19.2.3(react@19.2.3))(react-native-worklets@0.10.1(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
+      '@ianvs/prettier-plugin-sort-imports':
+        specifier: ^4.7.1
+        version: 4.7.1(prettier@3.9.9)(supports-color@8.1.1)
       '@repo/mobile-ui':
         specifier: workspace:*
         version: link:../../packages/mobile-ui
@@ -489,6 +492,9 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0(axios@1.20.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))(typescript@6.0.3)
     devDependencies:
+      '@biomejs/biome':
+        specifier: 2.4.2
+        version: 2.4.2
       '@types/luxon':
         specifier: ^3.7.5
         version: 3.7.5
@@ -1507,6 +1513,24 @@ packages:
   '@humanwhocodes/retry@0.4.3':
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
+
+  '@ianvs/prettier-plugin-sort-imports@4.7.1':
+    resolution: {integrity: sha512-jmTNYGlg95tlsoG3JLCcuC4BrFELJtLirLAkQW/71lXSyOhVt/Xj7xWbbGcuVbNq1gwWgSyMrPjJc9Z30hynVw==}
+    peerDependencies:
+      '@prettier/plugin-oxc': ^0.0.4 || ^0.1.0
+      '@vue/compiler-sfc': 2.7.x || 3.x
+      content-tag: ^4.0.0
+      prettier: 2 || 3 || ^4.0.0-0
+      prettier-plugin-ember-template-tag: ^2.1.0
+    peerDependenciesMeta:
+      '@prettier/plugin-oxc':
+        optional: true
+      '@vue/compiler-sfc':
+        optional: true
+      content-tag:
+        optional: true
+      prettier-plugin-ember-template-tag:
+        optional: true
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -6907,6 +6931,11 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
+  prettier@3.9.9:
+    resolution: {integrity: sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg==}
+    engines: {node: '>=14'}
+    hasBin: true
+
   pretty-format@29.7.0:
     resolution: {integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -9545,6 +9574,17 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/retry@0.4.3': {}
+
+  '@ianvs/prettier-plugin-sort-imports@4.7.1(prettier@3.9.9)(supports-color@8.1.1)':
+    dependencies:
+      '@babel/generator': 7.29.8
+      '@babel/parser': 7.29.8
+      '@babel/traverse': 7.29.8(supports-color@8.1.1)
+      '@babel/types': 7.29.8
+      prettier: 3.9.9
+      semver: 7.8.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@img/colour@1.1.0':
     optional: true
@@ -15357,6 +15397,8 @@ snapshots:
   prelude-ls@1.2.1: {}
 
   prettier@3.9.6: {}
+
+  prettier@3.9.9: {}
 
   pretty-format@29.7.0:
     dependencies:

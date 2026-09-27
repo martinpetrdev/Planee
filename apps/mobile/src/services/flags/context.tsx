@@ -1,14 +1,15 @@
 import {
   createContext,
-  PropsWithChildren,
+  type PropsWithChildren,
   useContext,
   useEffect,
   useState,
-} from "react";
-import { ALL_FLAGS } from "@/configuration/flags";
-import { useLoadingScreen } from "@/components/LoadingScreen";
-import { useAuth } from "@/auth/context";
-import { getFeatureFlags } from "@/api/modules/flags";
+} from 'react';
+
+import { getFeatureFlags } from '@/api/modules/flags';
+import { useAuth } from '@/auth/context';
+import { useLoadingScreen } from '@/components/LoadingScreen';
+import type { ALL_FLAGS } from '@/configuration/flags';
 
 export type FlagKey = (typeof ALL_FLAGS)[number];
 
@@ -47,8 +48,8 @@ export function FlagsProvider(props: PropsWithChildren) {
   }, [auth]);
 
   useEffect(() => {
-    if (isLoading) loading.request("flags");
-    else loading.dismiss("flags");
+    if (isLoading) loading.request('flags');
+    else loading.dismiss('flags');
   }, [isLoading, flags]);
 
   return (
@@ -60,7 +61,7 @@ export function FlagsProvider(props: PropsWithChildren) {
 
 export function useFlags(): IFlagsContextValue {
   const ctx = useContext(FlagsContext);
-  if (!ctx) throw new Error("useFlags must be used within a FlagsProvider");
+  if (!ctx) throw new Error('useFlags must be used within a FlagsProvider');
 
   return ctx;
 }

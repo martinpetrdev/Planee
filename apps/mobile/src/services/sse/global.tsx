@@ -1,5 +1,6 @@
-import { AppEventType } from "@repo/shared";
-import { EventHandler, useSseSubscription } from "./context";
+import type { AppEventType } from '@repo/shared';
+
+import { type EventHandler, useSseSubscription } from './context';
 
 interface IGlobalSseHandlersProps {
   handlers: {

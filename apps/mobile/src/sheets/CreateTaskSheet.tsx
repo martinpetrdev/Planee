@@ -1,9 +1,10 @@
-import { API } from "@/api/api";
-import { createTask, CreateTaskDto, TaskPriority } from "@/api/modules/tasks";
-import { refetchTaskQueries } from "@/helpers/task";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { type RefObject, useState } from 'react';
+import { ToastAndroid } from 'react-native';
+
 import {
   BottomSheet,
-  BottomSheetRef,
+  type BottomSheetRef,
   Button,
   Column,
   Input,
@@ -13,10 +14,15 @@ import {
   toInstant,
   useNativeState,
   useSnackbar,
-} from "@repo/mobile-ui";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { RefObject, useState } from "react";
-import { ToastAndroid } from "react-native";
+} from '@repo/mobile-ui';
+
+import { API } from '@/api/api';
+import {
+  type CreateTaskDto,
+  createTask,
+  type TaskPriority,
+} from '@/api/modules/tasks';
+import { refetchTaskQueries } from '@/helpers/task';
 
 interface ICreateTaskSheetProps {
   sheetRef: RefObject<BottomSheetRef | null>;
@@ -25,12 +31,12 @@ interface ICreateTaskSheetProps {
 const DEFAULT_DURATION_MINUTES = 5;
 
 export function CreateTaskSheet(props: ICreateTaskSheetProps) {
-  const nameState = useNativeState("");
-  const hoursState = useNativeState("0");
+  const nameState = useNativeState('');
+  const hoursState = useNativeState('0');
   const minutesState = useNativeState(DEFAULT_DURATION_MINUTES.toString());
-  const [dueDate, setDueDate] = useState("");
-  const [dueTime, setDueTime] = useState("");
-  const [priority, setPriority] = useState<TaskPriority>("medium");
+  const [dueDate, setDueDate] = useState('');
+  const [dueTime, setDueTime] = useState('');
+  const [priority, setPriority] = useState<TaskPriority>('medium');
 
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -38,28 +44,28 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
   const queryClient = useQueryClient();
 
   const { isPending, mutate } = useMutation({
-    mutationKey: ["tasks", "create"],
+    mutationKey: ['tasks', 'create'],
     mutationFn: async (dto: CreateTaskDto) => createTask(dto),
     onError: (e) => {
       const error = API.parseError(e);
 
       if (
         error &&
-        "fields" in error &&
+        'fields' in error &&
         Object.keys(error.fields ?? {}).length > 0
       )
         setFieldErrors(error.fields!);
       else
         ToastAndroid.show(
-          error?.message ?? "Unknown error",
+          error?.message ?? 'Unknown error',
           ToastAndroid.SHORT,
         );
     },
     onSuccess: () => {
       close();
       snackbar.show({
-        message: "Task created!",
-        duration: "short",
+        message: 'Task created!',
+        duration: 'short',
         withDismissAction: true,
       });
 
@@ -68,12 +74,12 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
   });
 
   const clear = () => {
-    nameState.value = "";
-    hoursState.value = "0";
+    nameState.value = '';
+    hoursState.value = '0';
     minutesState.value = DEFAULT_DURATION_MINUTES.toString();
-    setDueDate("");
-    setDueTime("");
-    setPriority("medium");
+    setDueDate('');
+    setDueTime('');
+    setPriority('medium');
 
     setFieldErrors({});
   };
@@ -90,7 +96,7 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
       expectedDurationSeconds:
         (parseInt(hoursState.value) || 0) * 3600 +
         (parseInt(minutesState.value) || 0) * 60,
-      dueDate: toInstant(dueDate, dueTime || "00:00"),
+      dueDate: toInstant(dueDate, dueTime || '00:00'),
       priority: priority,
     });
   };
@@ -160,16 +166,16 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
             onChange={setPriority}
             items={[
               {
-                label: "Low",
-                value: "low",
+                label: 'Low',
+                value: 'low',
               },
               {
-                label: "Medium",
-                value: "medium",
+                label: 'Medium',
+                value: 'medium',
               },
               {
-                label: "High",
-                value: "high",
+                label: 'High',
+                value: 'high',
               },
             ]}
             label="Priority"

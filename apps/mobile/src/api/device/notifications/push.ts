@@ -1,7 +1,8 @@
-import * as Notifications from "expo-notifications";
-import Constants from "expo-constants";
-import { Linking, ToastAndroid } from "react-native";
-import { registerPushToken } from "@/api/modules/notifications";
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import { Linking, ToastAndroid } from 'react-native';
+
+import { registerPushToken } from '@/api/modules/notifications';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -18,11 +19,11 @@ export class PushNotifications {
     canAskAgain: boolean;
   }> {
     const { status, canAskAgain } = await Notifications.getPermissionsAsync();
-    return { isGranted: status === "granted", canAskAgain };
+    return { isGranted: status === 'granted', canAskAgain };
   }
 
   static async requestPermission(): Promise<boolean> {
-    const state = await this.getPermissionState();
+    const state = await PushNotifications.getPermissionState();
 
     if (state.isGranted) return true;
 
@@ -31,7 +32,7 @@ export class PushNotifications {
       await Linking.openSettings();
       // Show toast
       ToastAndroid.show(
-        "Please enable notifications in settings",
+        'Please enable notifications in settings',
         ToastAndroid.LONG,
       );
 
@@ -39,11 +40,11 @@ export class PushNotifications {
     }
 
     const { status } = await Notifications.requestPermissionsAsync();
-    return status === "granted";
+    return status === 'granted';
   }
 
   static async getToken(): Promise<string | null> {
-    const state = await this.getPermissionState();
+    const state = await PushNotifications.getPermissionState();
     if (!state.isGranted) return null;
 
     const { data } = await Notifications.getExpoPushTokenAsync({
@@ -57,15 +58,15 @@ export class PushNotifications {
       isError: true,
     }));
 
-    if (res && typeof res === "object" && "isError" in res) return false;
+    if (res && typeof res === 'object' && 'isError' in res) return false;
     return true;
   }
 
   static async provisionToken(): Promise<boolean> {
-    const token = await this.getToken();
+    const token = await PushNotifications.getToken();
     if (!token) return false;
 
-    const res = await this.registerTokenWithServer(token);
+    const res = await PushNotifications.registerTokenWithServer(token);
     return res;
   }
 }

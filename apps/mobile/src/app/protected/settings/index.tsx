@@ -1,7 +1,7 @@
-import { useAuth } from "@/auth/context";
-import { oidcClient } from "@/auth/oidc";
-import { useFlags } from "@/services/flags/context";
-import { MMKVKeys } from "@/types/mmkv-keys";
+import * as Application from 'expo-application';
+import Constants from 'expo-constants';
+import { useMMKVBoolean } from 'react-native-mmkv';
+
 import {
   Column,
   Icon,
@@ -9,10 +9,12 @@ import {
   SegmentedList,
   SegmentedListItem,
   Text,
-} from "@repo/mobile-ui";
-import * as Application from "expo-application";
-import Constants from "expo-constants";
-import { useMMKVBoolean } from "react-native-mmkv";
+} from '@repo/mobile-ui';
+
+import { useAuth } from '@/auth/context';
+import { oidcClient } from '@/auth/oidc';
+import { useFlags } from '@/services/flags/context';
+import { MMKVKeys } from '@/types/mmkv-keys';
 
 const { commit, channel } = Constants.expoConfig?.extra ?? {};
 
@@ -74,7 +76,7 @@ export default function Screen() {
                 onClick={() =>
                   oidcClient
                     .getToken()
-                    .then((t) => console.log("Access token:", t))
+                    .then((t) => console.log('Access token:', t))
                 }
               />
               <SegmentedListItem

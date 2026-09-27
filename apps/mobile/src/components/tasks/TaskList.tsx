@@ -1,5 +1,6 @@
-import { listTasks, TaskResponseDto } from "@/api/modules/tasks";
-import { PAGE_SIZE } from "@repo/shared";
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+
 import {
   formatISODate,
   LoadingSpinner,
@@ -7,13 +8,14 @@ import {
   Row,
   ScrollPositionDetector,
   Text,
-} from "@repo/mobile-ui";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { UpdateTaskSheet } from "@/sheets/UpdateTaskSheet";
-import { Task } from "./Task";
-import { groupTasksByDay } from "@/utils/tasks/list";
-import { NoCompletedTasks, NoTasksToday } from "./NoTasks";
+} from '@repo/mobile-ui';
+import { PAGE_SIZE } from '@repo/shared';
+
+import { listTasks, type TaskResponseDto } from '@/api/modules/tasks';
+import { UpdateTaskSheet } from '@/sheets/UpdateTaskSheet';
+import { groupTasksByDay } from '@/utils/tasks/list';
+import { NoCompletedTasks, NoTasksToday } from './NoTasks';
+import { Task } from './Task';
 
 interface ISectionHeaderProps {
   title: string;
@@ -36,8 +38,8 @@ export function TaskList() {
     data: overdueTasks,
     refetch: refetchOverdue,
   } = useQuery({
-    queryKey: ["tasks", "overdue"],
-    queryFn: async () => await listTasks({ scope: "overdue" }),
+    queryKey: ['tasks', 'overdue'],
+    queryFn: async () => await listTasks({ scope: 'overdue' }),
   });
 
   const {
@@ -45,8 +47,8 @@ export function TaskList() {
     data: todayTasks,
     refetch: refetchToday,
   } = useQuery({
-    queryKey: ["tasks", "today"],
-    queryFn: async () => await listTasks({ scope: "today" }),
+    queryKey: ['tasks', 'today'],
+    queryFn: async () => await listTasks({ scope: 'today' }),
   });
 
   const {
@@ -57,9 +59,9 @@ export function TaskList() {
     refetch,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ["tasks", "upcoming"],
+    queryKey: ['tasks', 'upcoming'],
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
-      await listTasks({ scope: "upcoming", cursorId: pageParam }),
+      await listTasks({ scope: 'upcoming', cursorId: pageParam }),
     initialPageParam: undefined,
     // Short page is the last
     getNextPageParam: (lastPage) =>
@@ -137,9 +139,9 @@ export function CompletedTaskList() {
     refetch,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ["tasks", "completed"],
+    queryKey: ['tasks', 'completed'],
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
-      await listTasks({ scope: "completed", cursorId: pageParam }),
+      await listTasks({ scope: 'completed', cursorId: pageParam }),
     initialPageParam: undefined,
     // Short page is the last
     getNextPageParam: (lastPage) =>

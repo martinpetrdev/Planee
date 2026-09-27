@@ -1,7 +1,7 @@
-import Constants from "expo-constants";
+import Constants from 'expo-constants';
 
-const EXPO_DEV_IP = Constants.expoConfig?.hostUri?.split(":").shift();
+const EXPO_DEV_IP = Constants.expoConfig?.hostUri?.split(':').shift();
 
 export const API_BASE = __DEV__
   ? `http://${EXPO_DEV_IP}:4001`
-  : "https://api.planee.martinpetr.dev"; // TODO: Add prod url into env variable
+  : 'https://api.planee.martinpetr.dev'; // TODO: Add prod url into env variable

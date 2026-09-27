@@ -1,6 +1,8 @@
-import { useAuth } from "@/auth/context";
-import { ScreenShell } from "@repo/mobile-ui";
-import { Redirect } from "expo-router";
+import { Redirect } from 'expo-router';
+
+import { ScreenShell } from '@repo/mobile-ui';
+
+import { useAuth } from '@/auth/context';
 
 export default function Screen() {
   const auth = useAuth();

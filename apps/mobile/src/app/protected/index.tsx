@@ -1,6 +1,7 @@
-import { CreateFAB } from "@/components/CreateFAB";
-import { ScreenHeader } from "@/components/ScreenHeader";
-import { Column, ScreenShell, Text } from "@repo/mobile-ui";
+import { Column, ScreenShell } from '@repo/mobile-ui';
+
+import { CreateFAB } from '@/components/CreateFAB';
+import { ScreenHeader } from '@/components/ScreenHeader';
 
 export default function Screen() {
   return (
