@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 import { Prisma, PrismaClient, Task, TaskPriority } from '@repo/database';
-import { PAGE_SIZE } from '@repo/shared';
 
-import { DAY_IN_MILISECONDS } from '../../../shared/constants/time.js';
+import { Page } from '../../../shared/domain/pagination.ts';
 import { NewTask as NewDomainTask } from '../../domain/new-task.js';
 import { TaskRepositoryPort } from '../../domain/ports/task-repository.port.js';
 import { Task as DomainTask } from '../../domain/task.js';
@@ -40,32 +39,46 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
   async findAllByUserId(
     userId: string,
     filters: {
-      scope: 'overdue' | 'today' | 'upcoming' | 'completed';
+      scope: 'overdue' | 'planned' | 'completed';
       dayStart: Date;
       cursorId: string | null;
+      limit: number;
     },
-  ): Promise<DomainTask[]> {
+  ): Promise<Page<DomainTask>> {
     const start = filters.dayStart;
-    const end = new Date(start.getTime() + DAY_IN_MILISECONDS);
     let due: Prisma.DateTimeFilter | undefined;
     let completedAt = null;
 
     if (filters.scope === 'overdue') due = { lt: start };
-    else if (filters.scope === 'today') due = { gte: start, lt: end };
-    else if (filters.scope === 'upcoming') due = { gte: end };
+    else if (filters.scope === 'planned') due = { gte: start };
     else if (filters.scope === 'completed') completedAt = { not: null };
 
-    const entities = await this.db.task.findMany({
-      where: { userId, dueDate: due, completedAt: completedAt },
-      orderBy: [
-        { dueDate: filters.scope === 'completed' ? 'desc' : 'asc' },
-        { id: 'asc' },
-      ],
-      take: filters.scope === 'today' ? undefined : PAGE_SIZE,
-      ...(filters.cursorId && { cursor: { id: filters.cursorId }, skip: 1 }),
-    });
+    return await this.db.$transaction(async (tx) => {
+      const entities = await tx.task.findMany({
+        where: { userId, dueDate: due, completedAt: completedAt },
+        orderBy: [
+          { dueDate: filters.scope === 'completed' ? 'desc' : 'asc' },
+          { id: 'asc' },
+        ],
+        take: filters.limit + 1, // Take one more to check if next page exists
+        ...(filters.cursorId && { cursor: { id: filters.cursorId }, skip: 1 }),
+      });
 
-    return entities.map((entity) => this.prismaToDomain(entity));
+      const total = await tx.task.count({
+        where: { userId, dueDate: due, completedAt: completedAt },
+      });
+
+      return {
+        items: entities
+          .slice(0, filters.limit) // Remove the last one, if it is there
+          .map((entity) => this.prismaToDomain(entity)),
+        nextCursor:
+          entities.length > filters.limit // Check if there is one more = next page exists
+            ? entities[entities.length - 2].id
+            : null,
+        total: total,
+      };
+    });
   }
 
   async insert(task: NewDomainTask): Promise<DomainTask> {
