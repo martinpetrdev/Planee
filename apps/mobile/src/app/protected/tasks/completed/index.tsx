@@ -21,7 +21,7 @@ export default function Screen() {
             },
           ]}
         />
-        <Column flex padding={16}>
+        <Column flex padding={16} paddingTop={0}>
           <CompletedTaskList />
         </Column>
       </Column>
