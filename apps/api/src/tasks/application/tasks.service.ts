@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { Page } from '../../shared/domain/pagination.ts';
 import { EventBusPort } from '../../shared/events/domain/ports/event-bus.port.js';
 import {
   taskCreated,
@@ -25,7 +26,7 @@ export class TasksService extends TaskManagementPort {
     super();
   }
 
-  async listTasks(command: ListTasksCommand): Promise<Task[]> {
+  async listTasks(command: ListTasksCommand): Promise<Page<Task>> {
     return await this.tasks.findAllByUserId(command.userId, {
       scope: command.scope,
       dayStart: command.dayStart,
