@@ -1,55 +1,112 @@
+import { useMaterialColors } from '@expo/ui/jetpack-compose';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import {
   formatISODate,
+  Icon,
   LoadingSpinner,
   PullToRefresh,
   Row,
   ScrollPositionDetector,
+  Spacer,
   Text,
+  toISODate,
 } from '@repo/mobile-ui';
-import { PAGE_SIZE } from '@repo/shared';
 
 import { listTasks, type TaskResponseDto } from '@/api/modules/tasks';
+import { NoTasksToday } from '@/components/tasks/NoTasks';
 import { UpdateTaskSheet } from '@/sheets/UpdateTaskSheet';
 import { groupTasksByDay } from '@/utils/tasks/list';
-import { NoCompletedTasks, NoTasksToday } from './NoTasks';
 import { Task } from './Task';
 
 interface ISectionHeaderProps {
   title: string;
+  action?: { label: string; onClick: () => void };
 }
 
 function SectionHeader(props: ISectionHeaderProps) {
+  const materialColors = useMaterialColors();
+
+  if (!props.action) {
+    return (
+      <Text typography="titleSmall" padding={[0, 8, 0, 4]}>
+        {props.title}
+      </Text>
+    );
+  }
+
   return (
-    <Text typography="titleSmall" padding={[0, 8, 0, 4]}>
-      {props.title}
-    </Text>
+    <Row verticalAlignment="center">
+      <Text typography="titleSmall" padding={[0, 8, 0, 4]}>
+        {props.title}
+      </Text>
+      <Spacer />
+      <Row
+        verticalAlignment="center"
+        paddingLeft={8}
+        paddingTop={8}
+        paddingBottom={4}
+        fit
+        onClick={() => props.action?.onClick()}
+      >
+        <Text typography="labelLarge" color={materialColors.primary}>
+          {props.action.label}
+        </Text>
+        <Icon name="chevron_right" size={18} color={materialColors.primary} />
+      </Row>
+    </Row>
   );
 }
 
-export function TaskList() {
+// 88 is there to land above FAB, so it is not covered by it.
+const listContentPadding = { start: 16, end: 16, bottom: 88 };
+
+interface INextPageLoaderProps {
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
+}
+
+function NextPageLoader(props: INextPageLoaderProps) {
+  if (!props.hasNextPage) return null;
+
+  return (
+    <>
+      <ScrollPositionDetector
+        onAppear={() => !props.isFetchingNextPage && props.fetchNextPage()}
+      />
+      <Row horizontalAlignment="center" padding={12}>
+        <LoadingSpinner />
+      </Row>
+    </>
+  );
+}
+
+function renderTaskGroups(
+  tasks: TaskResponseDto[],
+  onClick: (task: TaskResponseDto) => void,
+) {
+  const today = toISODate(new Date());
+
+  return groupTasksByDay(tasks).flatMap(([day, dayTasks]) => [
+    <SectionHeader
+      title={day === today ? 'Today' : formatISODate(day)}
+      key={day}
+    />,
+    ...dayTasks.map((task) => (
+      <Task task={task} onClick={() => onClick(task)} key={task.id} />
+    )),
+  ]);
+}
+
+interface ITaskListProps {
+  onSeeOverdueClick?: () => void;
+}
+
+export function TaskList(props: ITaskListProps) {
   const [selected, setSelected] = useState<TaskResponseDto | null>(null);
   const [refreshedManually, setRefreshedManually] = useState(false);
-
-  const {
-    isFetching: isFetchingOverdue,
-    data: overdueTasks,
-    refetch: refetchOverdue,
-  } = useQuery({
-    queryKey: ['tasks', 'overdue'],
-    queryFn: async () => await listTasks({ scope: 'overdue' }),
-  });
-
-  const {
-    isFetching: isFetchingToday,
-    data: todayTasks,
-    refetch: refetchToday,
-  } = useQuery({
-    queryKey: ['tasks', 'today'],
-    queryFn: async () => await listTasks({ scope: 'today' }),
-  });
 
   const {
     isFetching,
@@ -59,65 +116,78 @@ export function TaskList() {
     refetch,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ['tasks', 'upcoming'],
-    queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
-      await listTasks({ scope: 'upcoming', cursorId: pageParam }),
+    queryKey: ['tasks', 'planned'],
+    queryFn: ({ pageParam }: { pageParam: undefined | string }) =>
+      listTasks({
+        scope: 'planned',
+        cursorId: pageParam,
+      }),
     initialPageParam: undefined,
-    // Short page is the last
-    getNextPageParam: (lastPage) =>
-      lastPage.length < PAGE_SIZE
-        ? undefined
-        : lastPage[lastPage.length - 1].id,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
+
+  const {
+    isFetching: isFetchingOverdue,
+    data: overdue,
+    refetch: refetchOverdue,
+  } = useQuery({
+    queryKey: ['tasks', 'overdue', 'partial'],
+    queryFn: () =>
+      listTasks({
+        scope: 'overdue',
+        limit: 2,
+      }),
+  });
+
+  const items = data?.pages.flatMap((page) => page.items);
+  const hasToday =
+    !!items?.length &&
+    toISODate(new Date(items[0].dueDate)) === toISODate(new Date());
 
   return (
     <>
       <PullToRefresh
-        isRefreshing={
-          refreshedManually &&
-          ((isFetching && !isFetchingNextPage) ||
-            isFetchingToday ||
-            isFetchingOverdue)
-        }
+        isRefreshing={refreshedManually && (isFetching || isFetchingOverdue)}
         onRefresh={() => {
           setRefreshedManually(true);
-          Promise.all([refetch(), refetchToday(), refetchOverdue()]).finally(
-            () => setRefreshedManually(false),
+          Promise.all([refetch(), refetchOverdue()]).finally(() =>
+            setRefreshedManually(false),
           );
         }}
         gap={8}
+        contentPadding={listContentPadding}
       >
-        {!!overdueTasks?.length && [
-          <SectionHeader key="overdue" title="Overdue" />,
-          ...overdueTasks.map((task) => (
-            <Task key={task.id} task={task} onClick={() => setSelected(task)} />
-          )),
-        ]}
-        <SectionHeader title="Today" />
-        {todayTasks?.length ? (
-          todayTasks.map((task) => (
-            <Task key={task.id} task={task} onClick={() => setSelected(task)} />
-          ))
-        ) : (
-          <NoTasksToday />
-        )}
-        {data &&
-          groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
-            <SectionHeader key={day} title={formatISODate(day)} />,
-            ...tasks.map((task) => (
+        {overdue && overdue.total > 0 && (
+          <>
+            <SectionHeader
+              title="Overdue"
+              action={{
+                label: `See all ${overdue.total}`,
+                onClick: () => props.onSeeOverdueClick?.(),
+              }}
+            />
+            {overdue.items.map((task) => (
               <Task
-                key={task.id}
                 task={task}
                 onClick={() => setSelected(task)}
+                key={task.id}
               />
-            )),
-          ])}
-        <ScrollPositionDetector onAppear={() => fetchNextPage()} />
-        {hasNextPage && (
-          <Row horizontalAlignment="center" padding={12}>
-            <LoadingSpinner />
-          </Row>
+            ))}
+          </>
         )}
+
+        {items && !hasToday && (
+          <>
+            <SectionHeader title={'Today'} />
+            <NoTasksToday />
+          </>
+        )}
+        {items && renderTaskGroups(items, setSelected)}
+        <NextPageLoader
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+        />
       </PullToRefresh>
 
       {selected && (
@@ -127,7 +197,12 @@ export function TaskList() {
   );
 }
 
-export function CompletedTaskList() {
+interface IBasicTaskListProps {
+  scope: 'completed' | 'overdue';
+  noContentIndicator?: ReactNode;
+}
+
+export function BasicTaskList(props: IBasicTaskListProps) {
   const [selected, setSelected] = useState<TaskResponseDto | null>(null);
   const [refreshedManually, setRefreshedManually] = useState(false);
 
@@ -139,50 +214,38 @@ export function CompletedTaskList() {
     refetch,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ['tasks', 'completed'],
-    queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
-      await listTasks({ scope: 'completed', cursorId: pageParam }),
+    queryKey: ['tasks', props.scope],
+    queryFn: ({ pageParam }: { pageParam: undefined | string }) =>
+      listTasks({
+        scope: props.scope,
+        cursorId: pageParam,
+      }),
     initialPageParam: undefined,
-    // Short page is the last
-    getNextPageParam: (lastPage) =>
-      lastPage.length < PAGE_SIZE
-        ? undefined
-        : lastPage[lastPage.length - 1].id,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
+
+  const items = data?.pages.flatMap((page) => page.items);
 
   return (
     <>
       <PullToRefresh
-        isRefreshing={refreshedManually && isFetching && !isFetchingNextPage}
+        isRefreshing={refreshedManually && isFetching}
         onRefresh={() => {
           setRefreshedManually(true);
           refetch().finally(() => setRefreshedManually(false));
         }}
         gap={8}
+        contentPadding={listContentPadding}
       >
-        {data?.pages?.flat().length == 0 ? (
-          <NoCompletedTasks />
-        ) : (
-          <>
-            {data &&
-              groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
-                <SectionHeader key={day} title={formatISODate(day)} />,
-                ...tasks.map((task) => (
-                  <Task
-                    key={task.id}
-                    task={task}
-                    onClick={() => setSelected(task)}
-                  />
-                )),
-              ])}
-            <ScrollPositionDetector onAppear={() => fetchNextPage()} />
-            {hasNextPage && (
-              <Row horizontalAlignment="center" padding={12}>
-                <LoadingSpinner />
-              </Row>
-            )}
-          </>
-        )}
+        {items &&
+          (items.length > 0
+            ? renderTaskGroups(items, setSelected)
+            : props.noContentIndicator)}
+        <NextPageLoader
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+        />
       </PullToRefresh>
 
       {selected && (

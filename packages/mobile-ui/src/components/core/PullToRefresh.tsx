@@ -1,4 +1,8 @@
-import { LazyColumn, PullToRefreshBox } from "@expo/ui/jetpack-compose";
+import {
+  type ContentPadding,
+  LazyColumn,
+  PullToRefreshBox,
+} from "@expo/ui/jetpack-compose";
 import { PropsWithChildren } from "react";
 import { fillMaxSize, weight } from "@expo/ui/jetpack-compose/modifiers";
 
@@ -6,6 +10,7 @@ interface IPullToRefreshProps extends PropsWithChildren {
   isRefreshing: boolean;
   onRefresh: () => void;
   gap?: number;
+  contentPadding?: ContentPadding;
 }
 
 export function PullToRefresh(props: IPullToRefreshProps) {
@@ -19,6 +24,7 @@ export function PullToRefresh(props: IPullToRefreshProps) {
       <LazyColumn
         modifiers={[fillMaxSize()]}
         verticalArrangement={{ spacedBy: props.gap ?? 0 }}
+        contentPadding={props.contentPadding}
       >
         {props.children}
       </LazyColumn>

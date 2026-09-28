@@ -13,7 +13,10 @@ import {
 import { IS_DEV } from './utils/env.js';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    // This is required to prevent hanging process
+    forceCloseConnections: true,
+  });
 
   app.use(helmet());
 

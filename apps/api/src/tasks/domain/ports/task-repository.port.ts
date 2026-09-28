@@ -1,4 +1,5 @@
-import { NewTask } from '../new-task.ts';
+import { Page } from '../../../shared/domain/pagination.js';
+import { NewTask } from '../new-task.js';
 import { Task } from '../task.js';
 
 export abstract class TaskRepositoryPort {
@@ -9,9 +10,10 @@ export abstract class TaskRepositoryPort {
   abstract findAllByUserId(
     userId: string,
     filters: {
-      scope: 'overdue' | 'today' | 'upcoming' | 'completed';
+      scope: 'overdue' | 'planned' | 'completed';
       dayStart: Date;
       cursorId: string | null;
+      limit: number;
     },
-  ): Promise<Task[]>;
+  ): Promise<Page<Task>>;
 }

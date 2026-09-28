@@ -1,13 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsISO8601, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsIn,
+  IsInt,
+  IsISO8601,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
+
+import { PAGE_SIZE } from '@repo/shared';
 
 const midnight = new Date();
 midnight.setHours(0, 0, 0, 0);
 
 export class ListTasksDto {
-  @IsIn(['overdue', 'today', 'upcoming', 'completed'])
+  @IsIn(['overdue', 'planned', 'completed'])
   @ApiProperty()
-  scope: 'overdue' | 'today' | 'upcoming' | 'completed';
+  scope: 'overdue' | 'planned' | 'completed';
 
   @IsISO8601()
   @ApiProperty({ example: midnight.toISOString() })
@@ -17,4 +28,12 @@ export class ListTasksDto {
   @IsString()
   @ApiProperty({ required: false })
   cursorId: string; // Last page task id
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(PAGE_SIZE)
+  @ApiProperty({ example: PAGE_SIZE, required: false })
+  limit?: number;
 }

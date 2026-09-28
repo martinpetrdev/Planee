@@ -23,6 +23,7 @@ import { TaskManagementPort } from '../application/ports/task-management.port.js
 import { UpdateTaskCommand } from '../application/update-task.command.js';
 import { CreateTaskDto } from './dto/create-task.dto.js';
 import { ListTasksDto } from './dto/list-tasks.dto.js';
+import { TaskPageResponseDto } from './dto/task-page-response.dto.js';
 import { TaskResponseDto } from './dto/task-response.dto.js';
 import { UpdateTaskDto } from './dto/update-task.dto.js';
 
@@ -39,17 +40,18 @@ export class TasksController {
   async listTasks(
     @User('id') userId: string,
     @Query() dto: ListTasksDto,
-  ): Promise<TaskResponseDto[]> {
+  ): Promise<TaskPageResponseDto> {
     const tasks = await this.tasks.listTasks(
       new ListTasksCommand(
         userId,
         dto.scope,
         new Date(dto.dayStart),
         dto.cursorId ?? null,
+        dto.limit,
       ),
     );
 
-    return tasks.map((task) => TaskResponseDto.fromDomain(task));
+    return TaskPageResponseDto.fromDomain(tasks);
   }
 
   @Get('/:id')

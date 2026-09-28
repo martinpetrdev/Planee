@@ -17,8 +17,9 @@ export interface CreateTaskDto {
 export interface UpdateTaskDto extends CreateTaskDto {}
 
 export interface ListTasksDto {
-  scope: 'today' | 'upcoming' | 'overdue' | 'completed';
+  scope: 'overdue' | 'planned' | 'completed';
   cursorId?: string;
+  limit?: number;
 }
 
 export interface TaskResponseDto {
@@ -30,6 +31,12 @@ export interface TaskResponseDto {
   completedAt: string | null;
 }
 
+export interface TaskPageResponseDto {
+  items: TaskResponseDto[];
+  nextCursor: string | null;
+  total: number;
+}
+
 export const createTask = (dto: CreateTaskDto) =>
   api.post<TaskResponseDto, CreateTaskDto>(ApiVersion.v1, BASE_PATH, dto);
 export const updateTask = (taskId: string, dto: UpdateTaskDto) =>
@@ -39,10 +46,11 @@ export const updateTask = (taskId: string, dto: UpdateTaskDto) =>
     dto,
   );
 export const listTasks = (dto: ListTasksDto) =>
-  api.get<TaskResponseDto[]>(
+  api.get<TaskPageResponseDto>(
     ApiVersion.v1,
     api.addQuery(BASE_PATH, {
       ...dto,
+      limit: dto.limit?.toString(),
       dayStart: getTodayStartISO(),
     }),
   );
