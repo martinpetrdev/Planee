@@ -4,7 +4,8 @@ import { Column, ScreenShell } from '@repo/mobile-ui';
 
 import { CreateFAB } from '@/components/CreateFAB';
 import { ScreenHeader } from '@/components/ScreenHeader';
-import { TaskList } from '@/components/tasks/TaskList';
+import { NoOverdueTasks } from '@/components/tasks/NoTasks';
+import { BasicTaskList } from '@/components/tasks/TaskList';
 
 export default function Screen() {
   const router = useRouter();
@@ -13,17 +14,18 @@ export default function Screen() {
     <ScreenShell>
       <Column fill>
         <ScreenHeader
-          title="Tasks"
-          trailingIcons={[
+          title="Overdue tasks"
+          leadingIcons={[
             {
-              icon: 'check',
-              onClick: () => router.push('/protected/tasks/completed'),
+              icon: 'arrow_back',
+              onClick: () => router.back(),
             },
           ]}
         />
         <Column flex padding={16} paddingTop={0} paddingBottom={0}>
-          <TaskList
-            onSeeOverdueClick={() => router.push('/protected/tasks/overdue')}
+          <BasicTaskList
+            scope={'overdue'}
+            noContentIndicator={<NoOverdueTasks />}
           />
         </Column>
       </Column>

@@ -1,22 +1,24 @@
 import type { InfiniteData, QueryClient } from '@tanstack/react-query';
 
-import type { TaskResponseDto } from '@/api/modules/tasks';
+import type { TaskPageResponseDto, TaskResponseDto } from '@/api/modules/tasks';
 
 export function mutateTaskQueries(
   queryClient: QueryClient,
   response: TaskResponseDto,
 ) {
-  const replace = (tasks: TaskResponseDto[]) =>
-    tasks.map((t) => (t.id == response.id ? response : t));
+  const replace = (tasks: TaskPageResponseDto) => ({
+    ...tasks,
+    items: tasks.items.map((t) => (t.id == response.id ? response : t)),
+  });
 
   // Update the existing data instead of refetching the entire list
   queryClient.setQueriesData<
-    TaskResponseDto[] | InfiniteData<TaskResponseDto[]>
+    TaskPageResponseDto | InfiniteData<TaskPageResponseDto>
   >({ queryKey: ['tasks'] }, (data) => {
     if (!data) return data;
-    if (Array.isArray(data)) return replace(data);
+    if ('pages' in data) return { ...data, pages: data.pages.map(replace) };
 
-    return { ...data, pages: data.pages.map(replace) };
+    return replace(data);
   });
 }
 

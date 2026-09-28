@@ -31,6 +31,35 @@ export function NoCompletedTasks() {
   );
 }
 
+export function NoOverdueTasks() {
+  const materialColors = useMaterialColors();
+
+  return (
+    <Column horizontalAlignment="center" padding={32}>
+      <Icon
+        size={48}
+        name="sentiment_satisfied"
+        color={materialColors.onSurfaceVariant}
+      />
+      <Text
+        typography="titleMedium"
+        color={materialColors.onSurface}
+        align="center"
+        padding={[0, 16, 0, 8]}
+      >
+        Nothing is overdue. Good job!
+      </Text>
+      <Text
+        typography="bodyMedium"
+        color={materialColors.onSurfaceVariant}
+        align="center"
+      >
+        There are no tasks past the due date, keep it up!
+      </Text>
+    </Column>
+  );
+}
+
 export function NoTasksToday() {
   const materialColors = useMaterialColors();
 

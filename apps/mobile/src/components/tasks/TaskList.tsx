@@ -1,7 +1,8 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import {
+  Button,
   formatISODate,
   LoadingSpinner,
   PullToRefresh,
@@ -9,12 +10,10 @@ import {
   ScrollPositionDetector,
   Text,
 } from '@repo/mobile-ui';
-import { PAGE_SIZE } from '@repo/shared';
 
 import { listTasks, type TaskResponseDto } from '@/api/modules/tasks';
 import { UpdateTaskSheet } from '@/sheets/UpdateTaskSheet';
 import { groupTasksByDay } from '@/utils/tasks/list';
-import { NoCompletedTasks, NoTasksToday } from './NoTasks';
 import { Task } from './Task';
 
 interface ISectionHeaderProps {
@@ -29,89 +28,89 @@ function SectionHeader(props: ISectionHeaderProps) {
   );
 }
 
-export function TaskList() {
+interface ITaskListProps {
+  onSeeOverdueClick?: () => void;
+}
+
+export function TaskList(props: ITaskListProps) {
   const [selected, setSelected] = useState<TaskResponseDto | null>(null);
   const [refreshedManually, setRefreshedManually] = useState(false);
 
+  const { isFetching, hasNextPage, data, refetch, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ['tasks', 'planned'],
+      queryFn: async ({ pageParam }: { pageParam: undefined | string }) =>
+        await listTasks({
+          scope: 'planned',
+          cursorId: pageParam,
+        }),
+      initialPageParam: undefined,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    });
+
   const {
     isFetching: isFetchingOverdue,
-    data: overdueTasks,
+    data: overdue,
     refetch: refetchOverdue,
   } = useQuery({
-    queryKey: ['tasks', 'overdue'],
-    queryFn: async () => await listTasks({ scope: 'overdue' }),
+    queryKey: ['tasks', 'overdue', 'partial'],
+    queryFn: async () =>
+      await listTasks({
+        scope: 'overdue',
+        limit: 2,
+      }),
   });
 
-  const {
-    isFetching: isFetchingToday,
-    data: todayTasks,
-    refetch: refetchToday,
-  } = useQuery({
-    queryKey: ['tasks', 'today'],
-    queryFn: async () => await listTasks({ scope: 'today' }),
-  });
-
-  const {
-    isFetching,
-    isFetchingNextPage,
-    hasNextPage,
-    data,
-    refetch,
-    fetchNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['tasks', 'upcoming'],
-    queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
-      await listTasks({ scope: 'upcoming', cursorId: pageParam }),
-    initialPageParam: undefined,
-    // Short page is the last
-    getNextPageParam: (lastPage) =>
-      lastPage.length < PAGE_SIZE
-        ? undefined
-        : lastPage[lastPage.length - 1].id,
-  });
+  const items = data?.pages?.flatMap((page) => page.items);
 
   return (
     <>
       <PullToRefresh
-        isRefreshing={
-          refreshedManually &&
-          ((isFetching && !isFetchingNextPage) ||
-            isFetchingToday ||
-            isFetchingOverdue)
-        }
+        isRefreshing={refreshedManually && (isFetching || isFetchingOverdue)}
         onRefresh={() => {
           setRefreshedManually(true);
-          Promise.all([refetch(), refetchToday(), refetchOverdue()]).finally(
-            () => setRefreshedManually(false),
+          Promise.all([refetch(), refetchOverdue()]).finally(() =>
+            setRefreshedManually(false),
           );
         }}
         gap={8}
       >
-        {!!overdueTasks?.length && [
-          <SectionHeader key="overdue" title="Overdue" />,
-          ...overdueTasks.map((task) => (
-            <Task key={task.id} task={task} onClick={() => setSelected(task)} />
-          )),
-        ]}
-        <SectionHeader title="Today" />
-        {todayTasks?.length ? (
-          todayTasks.map((task) => (
-            <Task key={task.id} task={task} onClick={() => setSelected(task)} />
-          ))
-        ) : (
-          <NoTasksToday />
-        )}
-        {data &&
-          groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
-            <SectionHeader key={day} title={formatISODate(day)} />,
-            ...tasks.map((task) => (
+        {overdue && overdue.total > 0 && (
+          <>
+            <SectionHeader title={'Overdue'} />
+            {overdue.items.map((task) => (
               <Task
-                key={task.id}
                 task={task}
                 onClick={() => setSelected(task)}
+                key={task.id}
               />
-            )),
-          ])}
+            ))}
+            <Button
+              variant="text"
+              onClick={() => {
+                props.onSeeOverdueClick?.();
+              }}
+            >
+              See all {overdue.total} overdue tasks
+            </Button>
+          </>
+        )}
+
+        {items &&
+          (items.length > 0 ? (
+            groupTasksByDay(items).flatMap(([day, tasks]) => [
+              <SectionHeader title={formatISODate(day)} key={day} />,
+              ...tasks.map((task) => (
+                <Task
+                  task={task}
+                  onClick={() => setSelected(task)}
+                  key={task.id}
+                />
+              )),
+            ])
+          ) : (
+            <></>
+          ))}
         <ScrollPositionDetector onAppear={() => fetchNextPage()} />
         {hasNextPage && (
           <Row horizontalAlignment="center" padding={12}>
@@ -127,61 +126,57 @@ export function TaskList() {
   );
 }
 
-export function CompletedTaskList() {
+interface IBasicTaskListProps {
+  scope: 'completed' | 'overdue';
+  noContentIndicator?: ReactNode;
+}
+
+export function BasicTaskList(props: IBasicTaskListProps) {
   const [selected, setSelected] = useState<TaskResponseDto | null>(null);
   const [refreshedManually, setRefreshedManually] = useState(false);
 
-  const {
-    isFetching,
-    isFetchingNextPage,
-    hasNextPage,
-    data,
-    refetch,
-    fetchNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['tasks', 'completed'],
-    queryFn: async ({ pageParam }: { pageParam: string | undefined }) =>
-      await listTasks({ scope: 'completed', cursorId: pageParam }),
-    initialPageParam: undefined,
-    // Short page is the last
-    getNextPageParam: (lastPage) =>
-      lastPage.length < PAGE_SIZE
-        ? undefined
-        : lastPage[lastPage.length - 1].id,
-  });
+  const { isFetching, hasNextPage, data, refetch, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ['tasks', props.scope],
+      queryFn: async ({ pageParam }: { pageParam: undefined | string }) =>
+        await listTasks({
+          scope: props.scope,
+          cursorId: pageParam,
+        }),
+      initialPageParam: undefined,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    });
+
+  const items = data?.pages?.flatMap((page) => page.items);
 
   return (
     <>
       <PullToRefresh
-        isRefreshing={refreshedManually && isFetching && !isFetchingNextPage}
+        isRefreshing={refreshedManually && isFetching}
         onRefresh={() => {
           setRefreshedManually(true);
           refetch().finally(() => setRefreshedManually(false));
         }}
         gap={8}
       >
-        {data?.pages?.flat().length == 0 ? (
-          <NoCompletedTasks />
-        ) : (
-          <>
-            {data &&
-              groupTasksByDay(data.pages.flat()).flatMap(([day, tasks]) => [
-                <SectionHeader key={day} title={formatISODate(day)} />,
+        {items &&
+          (items.length > 0
+            ? groupTasksByDay(items).flatMap(([day, tasks]) => [
+                <SectionHeader title={formatISODate(day)} key={day} />,
                 ...tasks.map((task) => (
                   <Task
-                    key={task.id}
                     task={task}
                     onClick={() => setSelected(task)}
+                    key={task.id}
                   />
                 )),
-              ])}
-            <ScrollPositionDetector onAppear={() => fetchNextPage()} />
-            {hasNextPage && (
-              <Row horizontalAlignment="center" padding={12}>
-                <LoadingSpinner />
-              </Row>
-            )}
-          </>
+              ])
+            : props.noContentIndicator)}
+        <ScrollPositionDetector onAppear={() => fetchNextPage()} />
+        {hasNextPage && (
+          <Row horizontalAlignment="center" padding={12}>
+            <LoadingSpinner />
+          </Row>
         )}
       </PullToRefresh>
 
