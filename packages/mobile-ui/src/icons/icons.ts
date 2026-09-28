@@ -14,6 +14,7 @@ export const Icons = {
 	event_list: require("@expo/material-symbols/event_list.xml"),
 	cancel: require("@expo/material-symbols/cancel.xml"),
 	sentiment_satisfied: require("@expo/material-symbols/sentiment_satisfied.xml"),
+	chevron_right: require("@expo/material-symbols/chevron_right.xml"),
 } as const;
 
 export type IconType = keyof typeof Icons;

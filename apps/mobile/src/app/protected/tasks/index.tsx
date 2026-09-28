@@ -21,11 +21,9 @@ export default function Screen() {
             },
           ]}
         />
-        <Column flex padding={16} paddingTop={0} paddingBottom={0}>
-          <TaskList
-            onSeeOverdueClick={() => router.push('/protected/tasks/overdue')}
-          />
-        </Column>
+        <TaskList
+          onSeeOverdueClick={() => router.push('/protected/tasks/overdue')}
+        />
       </Column>
       <CreateFAB />
     </ScreenShell>

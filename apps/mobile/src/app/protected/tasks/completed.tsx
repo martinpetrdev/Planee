@@ -22,12 +22,10 @@ export default function Screen() {
             },
           ]}
         />
-        <Column flex padding={16} paddingTop={0} paddingBottom={0}>
-          <BasicTaskList
-            scope={'completed'}
-            noContentIndicator={<NoCompletedTasks />}
-          />
-        </Column>
+        <BasicTaskList
+          scope={'completed'}
+          noContentIndicator={<NoCompletedTasks />}
+        />
       </Column>
       <CreateFAB />
     </ScreenShell>

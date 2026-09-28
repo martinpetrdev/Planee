@@ -22,12 +22,10 @@ export default function Screen() {
             },
           ]}
         />
-        <Column flex padding={16} paddingTop={0} paddingBottom={0}>
-          <BasicTaskList
-            scope={'overdue'}
-            noContentIndicator={<NoOverdueTasks />}
-          />
-        </Column>
+        <BasicTaskList
+          scope={'overdue'}
+          noContentIndicator={<NoOverdueTasks />}
+        />
       </Column>
       <CreateFAB />
     </ScreenShell>
