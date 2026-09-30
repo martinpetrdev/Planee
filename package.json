@@ -1,24 +1,26 @@
 {
-  "name": "planee",
-  "version": "1.0.0",
-  "description": "",
-  "scripts": {
-    "dev": "dotenv -e .env -- turbo dev"
-  },
-  "keywords": [],
-  "author": "Martin Petr <martinpetrnp@gmail.com>",
-  "license": "MIT",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "11.23.0",
-      "onFail": "download"
-    }
-  },
-  "packageManager": "pnpm@11.23.0",
-  "type": "module",
-  "dependencies": {
-    "dotenv-cli": "^11.0.0",
-    "turbo": "^2.10.12"
-  }
+	"name": "planee",
+	"version": "1.0.0",
+	"description": "",
+	"scripts": {
+		"dev": "dotenv -e .env -- turbo dev",
+		"android": "dotenv -e .env -- turbo android",
+		"prebuild": "dotenv -e .env -- turbo prebuild"
+	},
+	"keywords": [],
+	"author": "Martin Petr <martinpetrnp@gmail.com>",
+	"license": "MIT",
+	"devEngines": {
+		"packageManager": {
+			"name": "pnpm",
+			"version": "11.23.0",
+			"onFail": "download"
+		}
+	},
+	"packageManager": "pnpm@11.23.0",
+	"type": "module",
+	"dependencies": {
+		"dotenv-cli": "^11.0.0",
+		"turbo": "^2.10.12"
+	}
 }
