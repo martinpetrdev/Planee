@@ -1,0 +1,17 @@
+// TODO: Should probably throw instead of the default value
+export const WebConfig = {
+	baseUrl: process.env.CONF_WEB_BASE || "",
+	api: {
+		baseUrl: process.env.CONF_WEB_API_BASE || "",
+	},
+	marketingWeb: {
+		baseUrl: process.env.CONF_WEB_MARKETING_BASE || "",
+	},
+	oidc: {
+		issuer: process.env.CONF_WEB_OIDC_ISSUER || "",
+		clientId: process.env.CONF_WEB_OIDC_CLIENT_ID || "",
+		clientSecret: process.env.CONF_WEB_OIDC_CLIENT_SECRET || "",
+		scopes: ["openid", "profile", "email", "offline_access"],
+		gracePeriod: 30_000, // 30secs
+	},
+};
