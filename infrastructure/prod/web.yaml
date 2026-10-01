@@ -47,6 +47,9 @@ spec:
           ports:
             - containerPort: 3000
               name: http
+          envFrom:
+            - configMapRef:
+                name: planee-config
           env:
             - name: PORT
               value: "3000"
@@ -56,6 +59,16 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: planee-web-oidc
+                  key: NEXTAUTH_SECRET
+            - name: CONF_WEB_OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: planee-web-oidc
+                  key: CONF_WEB_OIDC_CLIENT_SECRET
           resources:
             requests:
               cpu: "100m"
