@@ -73,7 +73,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: planee-config
-                  key: CONF_ADMIN_NEXTAUTH_URL
+                  key: CONF_WEB_NEXTAUTH_URL
           resources:
             requests:
               cpu: "100m"
