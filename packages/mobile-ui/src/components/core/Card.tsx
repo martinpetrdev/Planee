@@ -1,39 +1,49 @@
-import { Card as JetpackCard } from "@expo/ui/jetpack-compose";
-import { PropsWithChildren } from "react";
-import {
-  clickable,
-  fillMaxWidth,
-  paddingAll,
-} from "@expo/ui/jetpack-compose/modifiers";
+import { Shape, Surface, useMaterialColors } from "@expo/ui/jetpack-compose";
+import { fillMaxWidth } from "@expo/ui/jetpack-compose/modifiers";
+import type { PropsWithChildren } from "react";
 import { Box } from "./Box";
 
 interface ICardProps extends PropsWithChildren {
-  padding?: number;
-  paddingLeft?: number;
-  paddingRight?: number;
-  paddingTop?: number;
-  paddingBottom?: number;
-  fillWidth?: boolean;
-  onClick?: () => void;
+	padding?: number;
+	paddingLeft?: number;
+	paddingRight?: number;
+	paddingTop?: number;
+	paddingBottom?: number;
+	borderRadius?: number;
+	borderRadiusTL?: number;
+	borderRadiusTR?: number;
+	borderRadiusBL?: number;
+	borderRadiusBR?: number;
+	fillWidth?: boolean;
+	onClick?: () => void;
 }
 
 export function Card(props: ICardProps) {
-  return (
-    <JetpackCard
-      modifiers={[
-        props.fillWidth ? fillMaxWidth() : null,
-        props.onClick ? clickable(props.onClick) : null,
-      ].filter((m) => !!m)}
-    >
-      <Box
-        padding={props.padding}
-        paddingLeft={props.paddingLeft}
-        paddingRight={props.paddingRight}
-        paddingTop={props.paddingTop}
-        paddingBottom={props.paddingBottom}
-      >
-        {props.children}
-      </Box>
-    </JetpackCard>
-  );
+	const colors = useMaterialColors();
+
+	return (
+		<Surface
+			color={colors.surfaceContainer}
+			shape={Shape.RoundedCorner({
+				cornerRadii: {
+					topStart: props.borderRadiusTL ?? props.borderRadius,
+					topEnd: props.borderRadiusTR ?? props.borderRadius,
+					bottomStart: props.borderRadiusBL ?? props.borderRadius,
+					bottomEnd: props.borderRadiusBR ?? props.borderRadius,
+				},
+			})}
+			modifiers={props.fillWidth ? [fillMaxWidth()] : []}
+			onClick={props.onClick}
+		>
+			<Box
+				padding={props.padding}
+				paddingLeft={props.paddingLeft}
+				paddingRight={props.paddingRight}
+				paddingTop={props.paddingTop}
+				paddingBottom={props.paddingBottom}
+			>
+				{props.children}
+			</Box>
+		</Surface>
+	);
 }
