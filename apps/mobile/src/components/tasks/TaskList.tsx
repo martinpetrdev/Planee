@@ -30,7 +30,7 @@ function SectionHeader(props: ISectionHeaderProps) {
 
   if (!props.action) {
     return (
-      <Text typography="titleSmall" padding={[0, 8, 0, 4]}>
+      <Text typography="titleSmall" padding={[0, 16, 0, 8]}>
         {props.title}
       </Text>
     );
@@ -38,7 +38,7 @@ function SectionHeader(props: ISectionHeaderProps) {
 
   return (
     <Row verticalAlignment="center">
-      <Text typography="titleSmall" padding={[0, 8, 0, 4]}>
+      <Text typography="titleSmall" padding={[0, 16, 0, 8]}>
         {props.title}
       </Text>
       <Spacer />
@@ -94,8 +94,14 @@ function renderTaskGroups(
       title={day === today ? 'Today' : formatISODate(day)}
       key={day}
     />,
-    ...dayTasks.map((task) => (
-      <Task task={task} onClick={() => onClick(task)} key={task.id} />
+    ...dayTasks.map((task, index) => (
+      <Task
+        task={task}
+        onClick={() => onClick(task)}
+        isFirst={index === 0}
+        isLast={index === dayTasks.length - 1}
+        key={task.id}
+      />
     )),
   ]);
 }
@@ -154,7 +160,7 @@ export function TaskList(props: ITaskListProps) {
             setRefreshedManually(false),
           );
         }}
-        gap={8}
+        gap={2}
         contentPadding={listContentPadding}
       >
         {overdue && overdue.total > 0 && (
@@ -166,10 +172,12 @@ export function TaskList(props: ITaskListProps) {
                 onClick: () => props.onSeeOverdueClick?.(),
               }}
             />
-            {overdue.items.map((task) => (
+            {overdue.items.map((task, index) => (
               <Task
                 task={task}
                 onClick={() => setSelected(task)}
+                isFirst={index === 0}
+                isLast={index === overdue.items.length - 1}
                 key={task.id}
               />
             ))}
@@ -234,7 +242,7 @@ export function BasicTaskList(props: IBasicTaskListProps) {
           setRefreshedManually(true);
           refetch().finally(() => setRefreshedManually(false));
         }}
-        gap={8}
+        gap={2}
         contentPadding={listContentPadding}
       >
         {items &&

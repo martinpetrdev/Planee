@@ -25,7 +25,12 @@ import { mutateTaskQueries, refetchTaskQueries } from '@/helpers/task';
 interface ITaskProps {
   task: TaskResponseDto;
   onClick: () => void;
+  isFirst: boolean;
+  isLast: boolean;
 }
+
+const BORDER_RADIUS_INNER = 4;
+const BORDER_RADIUS_OUTER = 16;
 
 export function Task(props: ITaskProps) {
   const materialColors = useMaterialColors();
@@ -59,8 +64,25 @@ export function Task(props: ITaskProps) {
     },
   });
 
+  const borderRadiusTop = props.isFirst
+    ? BORDER_RADIUS_OUTER
+    : BORDER_RADIUS_INNER;
+  const borderRadiusBottom = props.isLast
+    ? BORDER_RADIUS_OUTER
+    : BORDER_RADIUS_INNER;
+
   return (
-    <Card fillWidth padding={16} paddingLeft={8} onClick={props.onClick}>
+    <Card
+      borderRadiusTL={borderRadiusTop}
+      borderRadiusTR={borderRadiusTop}
+      borderRadiusBL={borderRadiusBottom}
+      borderRadiusBR={borderRadiusBottom}
+      fillWidth
+      padding={12}
+      paddingLeft={4}
+      paddingRight={16}
+      onClick={props.onClick}
+    >
       <Row gap={4} verticalAlignment="center">
         <Box width={48} height={48} align="center">
           {isPending ? (
@@ -72,20 +94,20 @@ export function Task(props: ITaskProps) {
             />
           )}
         </Box>
-        <Column flex gap={6}>
+        <Column flex gap={2}>
           <Text typography="bodyLarge">{props.task.name}</Text>
           <Row verticalAlignment="center" gap={8}>
             <Text
-              typography="bodySmall"
+              typography="bodyMedium"
               color={materialColors.onSurfaceVariant}
             >
               {DateTime.fromISO(props.task.dueDate).toFormat('HH:mm')} ·{' '}
               {durationLabel}
             </Text>
-            {props.task.priority == 'low' && (
+            {props.task.priority === 'low' && (
               <Badge label="Low priority" color="secondary" />
             )}
-            {props.task.priority == 'high' && (
+            {props.task.priority === 'high' && (
               <Badge label="High priority" color="red" />
             )}
           </Row>
