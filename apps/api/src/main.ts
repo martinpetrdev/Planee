@@ -1,6 +1,7 @@
 import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { apiReference } from '@scalar/nestjs-api-reference';
 import helmet from 'helmet';
 
 import { ApiVersion } from '@repo/shared';
@@ -18,7 +19,19 @@ async function bootstrap() {
     forceCloseConnections: true,
   });
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: [`'self'`],
+          styleSrc: [`'self'`, `'unsafe-inline'`],
+          fontSrc: [`'self'`, 'fonts.scalar.com'],
+          imgSrc: [`'self'`, 'data:'],
+          scriptSrc: [`'self'`, `https: 'unsafe-inline'`, `'unsafe-eval'`],
+        },
+      },
+    }),
+  );
 
   app.enableShutdownHooks();
   app.enableCors({
@@ -35,9 +48,21 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
 
-  const swaggerDocumentFactory = () =>
-    SwaggerModule.createDocument(app, swaggerConfig);
-  if (IS_DEV) SwaggerModule.setup('swagger', app, swaggerDocumentFactory);
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  if (IS_DEV)
+    app.use(
+      '/docs',
+      apiReference({
+        content: swaggerDocument,
+        showDeveloperTools: 'never',
+        agent: {
+          disabled: true,
+        },
+        mcp: {
+          disabled: true,
+        },
+      }),
+    );
 
   await app.listen(getServicePort());
 }
