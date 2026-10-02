@@ -6,6 +6,7 @@ import NextAuth, {
 } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import Keycloak from "next-auth/providers/keycloak";
+import { signOut } from "next-auth/react";
 
 declare module "next-auth" {
 	interface Session {
@@ -143,12 +144,33 @@ export class OidcAuth {
 	 * Creates an URL that destroys keycloak session
 	 * @param session
 	 */
-	public getLogoutUrl(session: Session) {
+	public getLogoutUrl(
+		session: Session,
+		oidcIssuer?: string,
+		oidcClientId?: string,
+		baseUrl?: string,
+	) {
 		return (
-			`${this.issuer}/protocol/openid-connect/logout` +
-			`?client_id=${encodeURIComponent(this.clientId)}` +
-			`&post_logout_redirect_uri=${encodeURIComponent(this.baseUrl)}/oidc/signed-out` +
+			`${oidcIssuer ?? this.issuer}/protocol/openid-connect/logout` +
+			`?client_id=${encodeURIComponent(oidcClientId ?? this.clientId)}` +
+			`&post_logout_redirect_uri=${encodeURIComponent(baseUrl ?? this.baseUrl)}/oidc/signed-out` +
 			`&id_token_hint=${encodeURIComponent(session.idToken)}`
+		);
+	}
+
+	public async logout(
+		session: Session,
+		oidcIssuer: string,
+		oidcClientId: string,
+		baseUrl: string,
+	) {
+		await signOut();
+
+		location.href = this.getLogoutUrl(
+			session,
+			oidcIssuer,
+			oidcClientId,
+			baseUrl,
 		);
 	}
 }

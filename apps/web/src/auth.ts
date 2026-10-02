@@ -1,7 +1,7 @@
 import { OidcAuth } from "@repo/web-oidc";
 import { WebConfig } from "@/config";
 
-const oidcAuth = new OidcAuth(
+export const oidcAuth = new OidcAuth(
   WebConfig.oidc.clientId,
   WebConfig.oidc.clientSecret,
   WebConfig.oidc.issuer,
