@@ -46,10 +46,10 @@ ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-COPY --from=builder /app/apps/admin-dashboard/.next/standalone ./
-COPY --from=builder /app/apps/admin-dashboard/.next/static ./apps/admin-dashboard/.next/static
-COPY --from=builder /app/apps/admin-dashboard/public* ./apps/admin-dashboard/public
+COPY --from=builder /app/apps/admin/.next/standalone ./
+COPY --from=builder /app/apps/admin/.next/static ./apps/admin/.next/static
+COPY --from=builder /app/apps/admin/public* ./apps/admin/public
 
 EXPOSE 3000
 
-CMD ["node", "apps/admin-dashboard/server.js"]
+CMD ["node", "apps/admin/server.js"]
