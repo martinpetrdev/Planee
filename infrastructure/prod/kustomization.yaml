@@ -12,3 +12,4 @@ resources:
   - marketing-web.yaml
   - flipt.yaml
   - redis.yaml
+  - admin.yaml

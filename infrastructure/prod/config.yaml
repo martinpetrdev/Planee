@@ -16,4 +16,5 @@ data:
   CONF_WEB_OIDC_CLIENT_ID: "web-app"
   CONF_WEB_BASE: "https://app.planee.martinpetr.dev"
   CONF_WEB_MARKETING_BASE: "https://planee.martinpetr.dev"
-  NEXTAUTH_URL: "https://app.planee.martinpetr.dev/oidc"
+  CONF_WEB_NEXTAUTH_URL: "https://app.planee.martinpetr.dev/oidc"
+  CONF_ADMIN_NEXTAUTH_URL: "https://admin.planee.martinpetr.dev/oidc"
