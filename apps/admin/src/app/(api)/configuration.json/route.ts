@@ -6,6 +6,5 @@ export async function GET() {
 	return NextResponse.json({
 		baseUrl: WebConfig.baseUrl,
 		api: WebConfig.api,
-		marketingWeb: WebConfig.marketingWeb,
 	});
 }
