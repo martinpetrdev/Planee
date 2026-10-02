@@ -6,7 +6,7 @@ RUN npm install -g turbo
 COPY . .
 
 # Extracts only the dependencies and source files needed
-RUN turbo prune --scope=@repo/admin-dashboard --out-dir=out --docker
+RUN turbo prune --scope=@repo/admin --out-dir=out --docker
 
 # Install dependencies
 FROM node:26-alpine AS installer
@@ -36,7 +36,7 @@ COPY --from=installer /app ./
 COPY --from=pruner /app/out/full/ ./
 
 RUN pnpm turbo run generate
-RUN pnpm turbo run build --filter=@repo/admin-dashboard
+RUN pnpm turbo run build --filter=@repo/admin
 
 # Production runner
 FROM node:26-alpine AS runner
