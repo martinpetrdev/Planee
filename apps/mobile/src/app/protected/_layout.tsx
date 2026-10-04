@@ -1,15 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
 
 import { ApplicationShell, type IApplicationTab } from '@repo/mobile-ui';
-import { AppEventType } from '@repo/shared';
 
-import { refetchTaskQueries } from '@/helpers/task';
 import { AccessDeniedScreen } from '@/screens/AccessDeniedScreen';
 import { SetupNotificationsScreen } from '@/screens/SetupNotificationsScreen';
+import { EventHandlerProvider } from '@/services/EventHandler/provider';
 import { useFlags } from '@/services/flags/context';
 import { NotificationsProvider } from '@/services/notifications/context';
-import { SseProvider } from '@/services/sse/context';
-import { GlobalSseHandlers } from '@/services/sse/global';
 
 const Tabs: IApplicationTab[] = [
   {
@@ -37,15 +34,8 @@ export default function Layout() {
   if (!flags || flags['access-enabled'] !== true) return <AccessDeniedScreen />;
 
   return (
-    <NotificationsProvider>
-      <SseProvider>
-        <GlobalSseHandlers
-          handlers={{
-            [AppEventType.TaskUpdated]: () => refetchTaskQueries(queryClient),
-            [AppEventType.TaskCreated]: () => refetchTaskQueries(queryClient),
-            [AppEventType.TaskDeleted]: () => refetchTaskQueries(queryClient),
-          }}
-        />
+    <EventHandlerProvider>
+      <NotificationsProvider>
         <NotificationsProvider.Enabled>
           <ApplicationShell tabs={Tabs} />
         </NotificationsProvider.Enabled>
@@ -53,7 +43,7 @@ export default function Layout() {
         <NotificationsProvider.Disabled>
           <SetupNotificationsScreen />
         </NotificationsProvider.Disabled>
-      </SseProvider>
-    </NotificationsProvider>
+      </NotificationsProvider>
+    </EventHandlerProvider>
   );
 }
