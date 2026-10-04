@@ -79,6 +79,7 @@ export function AuthProvider(props: PropsWithChildren) {
       );
 
       await oidcClient.saveTokens(tokens);
+      oidcClient.notifyNewSession();
       await invalidateAndRefetch();
     } catch (error) {
       await invalidateAndRefetch();

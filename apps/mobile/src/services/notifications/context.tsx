@@ -8,6 +8,7 @@ import {
 import { AppState } from 'react-native';
 
 import { PushNotifications } from '@/api/device/notifications/push';
+import { oidcClient } from '@/auth/oidc';
 import { useLoadingScreen } from '@/components/LoadingScreen';
 
 interface INotificationsContextValue {
@@ -49,6 +50,12 @@ export function NotificationsProvider(props: PropsWithChildren) {
   useEffect(() => {
     if (isEnabled) PushNotifications.provisionToken();
   }, [isEnabled]);
+
+  useEffect(() => {
+    oidcClient.onBeforeSessionDestroy(async () => {
+      await PushNotifications.unregisterToken();
+    });
+  }, []);
 
   if (isEnabled === null) return null;
 
