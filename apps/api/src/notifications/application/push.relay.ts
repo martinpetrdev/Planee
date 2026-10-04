@@ -16,7 +16,7 @@ export class EventPushRelay implements OnModuleInit, OnModuleDestroy {
   ) {}
 
   onModuleInit() {
-    this.unsubscribe = this.bus.handle<any>(async (event) => {
+    this.unsubscribe = this.bus.handle<string>(async (event) => {
       await this.notifications.sendToUser(event.userId, {
         silent: true,
         data: {

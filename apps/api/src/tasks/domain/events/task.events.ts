@@ -1,9 +1,8 @@
-import { randomUUID } from 'crypto';
-
 import { AppEventType } from '@repo/shared';
 
 import { DomainEvent } from '../../../shared/events/domain/domain-event.js';
 import { Task } from '../task.js';
+import { randomUUID } from 'node:crypto';
 
 export const taskUpdated = (
   task: Task,
