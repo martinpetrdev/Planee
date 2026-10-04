@@ -40,6 +40,7 @@ export class OIDCClient {
 
   private newSessionListeners: (() => void)[] = [];
   private sessionDestroyedListeners: (() => void)[] = [];
+  private beforeSessionDestroyedListeners: (() => Promise<void>)[] = [];
 
   private refreshPromise: Promise<string | null> | null = null;
 
@@ -105,8 +106,6 @@ export class OIDCClient {
         Date.now() + tokens.expiresIn! * 1000 - this.options.gracePeriod,
       ),
     });
-
-    this.notifyNewSession();
   }
 
   public async getToken(): Promise<string | null> {
@@ -163,6 +162,8 @@ export class OIDCClient {
     const session = await this.sessionStore.getSession();
     if (!session) return;
 
+    await this.notifyBeforeSessionDestroyed();
+
     try {
       await revokeAsync(
         {
@@ -184,16 +185,22 @@ export class OIDCClient {
     return !!user;
   }
 
-  private notifyNewSession() {
+  public notifyNewSession() {
     this.newSessionListeners.forEach((listener) => {
       listener();
     });
   }
 
-  public notifySessionDestroyed() {
+  private notifySessionDestroyed() {
     this.sessionDestroyedListeners.forEach((listener) => {
       listener();
     });
+  }
+
+  private async notifyBeforeSessionDestroyed() {
+    for (const handler of this.beforeSessionDestroyedListeners) {
+      await handler();
+    }
   }
 
   public onNewSession(handler: () => void) {
@@ -213,6 +220,15 @@ export class OIDCClient {
       this.sessionDestroyedListeners = this.sessionDestroyedListeners.filter(
         (listener) => listener,
       );
+    };
+  }
+
+  public onBeforeSessionDestroy(handler: () => Promise<void>) {
+    this.beforeSessionDestroyedListeners.push(handler);
+
+    return () => {
+      this.beforeSessionDestroyedListeners =
+        this.beforeSessionDestroyedListeners.filter((listener) => listener);
     };
   }
 }

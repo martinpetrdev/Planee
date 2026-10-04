@@ -3,7 +3,7 @@ import { type PropsWithChildren, useEffect } from 'react';
 
 export function InAppUpdatesProvider(props: PropsWithChildren) {
   useEffect(() => {
-    ExpoInAppUpdates.checkAndStartUpdate(false);
+    ExpoInAppUpdates.checkAndStartUpdate(true);
   }, []);
 
   return props.children;

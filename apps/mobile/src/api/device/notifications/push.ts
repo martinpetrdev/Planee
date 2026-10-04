@@ -2,7 +2,10 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { Linking, ToastAndroid } from 'react-native';
 
-import { registerPushToken } from '@/api/modules/notifications';
+import {
+  registerPushToken,
+  unregisterPushToken,
+} from '@/api/modules/notifications';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -68,5 +71,12 @@ export class PushNotifications {
 
     const res = await PushNotifications.registerTokenWithServer(token);
     return res;
+  }
+
+  static async unregisterToken(): Promise<boolean> {
+    const token = await PushNotifications.getToken();
+    if (!token) return false;
+
+    await unregisterPushToken(token).catch(() => {});
   }
 }
