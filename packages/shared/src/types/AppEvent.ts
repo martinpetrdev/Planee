@@ -1,12 +1,13 @@
 export const AppEventType = {
-  TaskUpdated: "task.updated",
-  TaskCreated: "task.created",
-  TaskDeleted: "task.deleted",
+	TaskUpdated: "task.updated",
+	TaskCreated: "task.created",
+	TaskDeleted: "task.deleted",
 } as const;
 
 export type AppEventType = (typeof AppEventType)[keyof typeof AppEventType];
 
 export type AppEvent<T> = {
-  type: AppEventType;
-  data: T;
+	id: string;
+	type: AppEventType;
+	data: T;
 };

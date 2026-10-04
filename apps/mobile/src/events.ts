@@ -1,12 +1,15 @@
 import { scheduleNotificationAsync } from 'expo-notifications';
 
-import { Event, EventHandler } from '@/services/EventHandler/EventHandler';
+import { AppEventType } from '@repo/shared';
+
+import { EventHandler } from '@/services/EventHandler/EventHandler';
 
 export function registerGlobalEvents() {
-  EventHandler.instance.on(Event.TaskUpdated, (data) => {
+  EventHandler.instance.on(AppEventType.TaskUpdated, (data) => {
     scheduleNotificationAsync({
       content: {
-        title: 'Hey!',
+        title: 'Task updated!',
+        body: data.name,
       },
       trigger: null,
     });

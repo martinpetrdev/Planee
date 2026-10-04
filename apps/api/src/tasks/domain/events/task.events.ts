@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 import { AppEventType } from '@repo/shared';
 
 import { DomainEvent } from '../../../shared/events/domain/domain-event.js';
@@ -6,6 +8,7 @@ import { Task } from '../task.js';
 export const taskUpdated = (
   task: Task,
 ): DomainEvent<ReturnType<Task['toObject']>> => ({
+  id: randomUUID(),
   type: AppEventType.TaskUpdated,
   userId: task.userId,
   data: task.toObject(),
@@ -14,6 +17,7 @@ export const taskUpdated = (
 export const taskCreated = (
   task: Task,
 ): DomainEvent<ReturnType<Task['toObject']>> => ({
+  id: randomUUID(),
   type: AppEventType.TaskCreated,
   userId: task.userId,
   data: task.toObject(),
@@ -25,6 +29,7 @@ export const taskDeleted = (
 ): DomainEvent<{
   id: string;
 }> => ({
+  id: randomUUID(),
   type: AppEventType.TaskDeleted,
   userId: userId,
   data: {

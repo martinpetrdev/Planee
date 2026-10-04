@@ -5,18 +5,16 @@ import {
 import { defineTask } from 'expo-task-manager';
 import type { SeciosConnection } from 'secios';
 
+import type { AppEventType } from '@repo/shared';
+
 import { eventsStream } from '@/api/modules/events';
 import { oidcClient } from '@/auth/oidc';
 import { Logger } from '@/utils/logger';
 
 export interface IncomingEvent {
   id: string;
-  event: Event;
+  event: AppEventType;
   payload: Record<string, unknown>;
-}
-
-export enum Event {
-  TaskUpdated = 'TaskUpdated',
 }
 
 /**
@@ -33,8 +31,10 @@ export class EventHandler {
   private _recentlyHandledIds: string[] = [];
 
   private logger = Logger.for('EventHandler');
-  private listeners: Map<Event, ((data: Record<string, unknown>) => void)[]> =
-    new Map();
+  private listeners: Map<
+    AppEventType,
+    ((data: Record<string, unknown>) => void)[]
+  > = new Map();
 
   public static readonly EXPO_PUSH_TASK_ID = 'ExpoPushTask' as const;
 
@@ -48,7 +48,7 @@ export class EventHandler {
         body: string;
       };
     }>(EventHandler.EXPO_PUSH_TASK_ID, async (body) => {
-      await this.handleEvent(JSON.parse(body.data.data.body));
+      await this.handleEvent(JSON.parse(body.data.data.body), 'epn');
 
       return BackgroundNotificationTaskResult.NoData;
     });
@@ -94,12 +94,15 @@ export class EventHandler {
   /**
    * Handles and (not always) deduplicates the received event
    * @param event Incoming event
+   * @param source Source of the event (sse or epn)
    * @private
    */
-  private async handleEvent(event: IncomingEvent) {
+  private async handleEvent(event: IncomingEvent, source: 'sse' | 'epn') {
+    console.log(event);
+
     if (!event.id || !event.event)
-      return this.logger.error(`Event is invalid.`);
-    this.logger.info(`Received event: ${event.id}`);
+      return this.logger.error(`Event ${event.id} from ${source} is invalid.`);
+    this.logger.info(`Received event: ${event.id}, source: ${source}`);
 
     if (this.checkRecentlyHandled(event.id)) {
       this.logger.warn(`Event ${event.id} was recently handled. Throwing out.`);
@@ -167,11 +170,14 @@ export class EventHandler {
 
       const parsed = JSON.parse(data.data);
 
-      this.handleEvent({
-        id: parsed.id,
-        event: event as Event,
-        payload: parsed.data,
-      });
+      this.handleEvent(
+        {
+          id: data.id,
+          event: event as AppEventType,
+          payload: parsed,
+        },
+        'sse',
+      );
     });
   }
 
@@ -187,7 +193,10 @@ export class EventHandler {
    * @param eventId Name of the event
    * @param handler Handler that gets called when the event fires.
    */
-  public on(eventId: Event, handler: (data: Record<string, unknown>) => void) {
+  public on(
+    eventId: AppEventType,
+    handler: (data: Record<string, unknown>) => void,
+  ) {
     if (!this.listeners.has(eventId)) this.listeners.set(eventId, []);
 
     // biome-ignore lint/style/noNonNullAssertion: We have just ensured that it's there.
