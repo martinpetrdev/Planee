@@ -28,8 +28,9 @@ export class ExpoPushSender extends PushSenderPort {
         'https://exp.host/--/api/v2/push/send',
         {
           to: tokens,
-          title: notification.title,
-          body: notification.body,
+          ...(!notification.silent
+            ? { title: notification.title, body: notification.body }
+            : {}),
           data: notification.data,
         },
       )
