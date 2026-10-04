@@ -98,8 +98,6 @@ export class EventHandler {
    * @private
    */
   private async handleEvent(event: IncomingEvent, source: 'sse' | 'epn') {
-    console.log(event);
-
     if (!event.id || !event.event)
       return this.logger.error(`Event ${event.id} from ${source} is invalid.`);
     this.logger.info(`Received event: ${event.id}, source: ${source}`);

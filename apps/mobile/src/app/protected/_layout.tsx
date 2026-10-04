@@ -1,7 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 
 import { ApplicationShell, type IApplicationTab } from '@repo/mobile-ui';
+import { AppEventType } from '@repo/shared';
 
+import { refetchTaskQueries } from '@/helpers/task';
 import { AccessDeniedScreen } from '@/screens/AccessDeniedScreen';
 import { SetupNotificationsScreen } from '@/screens/SetupNotificationsScreen';
 import { EventHandlerProvider } from '@/services/EventHandler/provider';
@@ -31,10 +33,17 @@ export default function Layout() {
   const { flags } = useFlags();
   const queryClient = useQueryClient();
 
-  if (!flags || flags['access-enabled'] !== true) return <AccessDeniedScreen />;
+  if (!flags || !flags['access-enabled']) return <AccessDeniedScreen />;
 
   return (
-    <EventHandlerProvider>
+    <EventHandlerProvider
+      events={{
+        // These are run only when the app is in foreground, unlike the global ones
+        [AppEventType.TaskUpdated]: () => refetchTaskQueries(queryClient),
+        [AppEventType.TaskCreated]: () => refetchTaskQueries(queryClient),
+        [AppEventType.TaskDeleted]: () => refetchTaskQueries(queryClient),
+      }}
+    >
       <NotificationsProvider>
         <NotificationsProvider.Enabled>
           <ApplicationShell tabs={Tabs} />
