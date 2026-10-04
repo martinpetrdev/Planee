@@ -20,7 +20,7 @@ import {
   useNativeState,
   useSnackbar,
 } from '@repo/mobile-ui';
-import { type AppEvent, AppEventType } from '@repo/shared';
+import { AppEventType } from '@repo/shared';
 
 import { API } from '@/api/api';
 import {
@@ -31,7 +31,7 @@ import {
   updateTask,
 } from '@/api/modules/tasks';
 import { mutateTaskQueries, refetchTaskQueries } from '@/helpers/task';
-import { useSseSubscription } from '@/services/sse/context';
+import { useEvent } from '@/services/EventHandler/hooks';
 
 interface IUpdateTaskSheetProps {
   task: TaskResponseDto;
@@ -133,16 +133,13 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
     });
   };
 
-  useSseSubscription(
-    AppEventType.TaskDeleted,
-    (e: AppEvent<{ id: string }>) => {
-      if (e.data.id != props.task.id) return;
+  useEvent(AppEventType.TaskDeleted, (data) => {
+    if (data.id !== props.task.id) return;
 
-      // Close the bottom sheet when the task was deleted from another client.
-      close();
-      ToastAndroid.show('This task was deleted!', ToastAndroid.SHORT);
-    },
-  );
+    // Close the bottom sheet when the task was deleted from another client.
+    void close();
+    ToastAndroid.show('This task was deleted!', ToastAndroid.SHORT);
+  });
 
   return (
     <>

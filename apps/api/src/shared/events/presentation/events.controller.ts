@@ -25,6 +25,7 @@ export class EventsController {
         if (event.userId !== userId) return;
 
         sub.next({
+          id: event.id,
           type: event.type,
           data: event.data as Record<string, unknown>,
         });

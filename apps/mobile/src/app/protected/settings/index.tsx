@@ -11,6 +11,7 @@ import {
   Text,
 } from '@repo/mobile-ui';
 
+import { PushNotifications } from '@/api/device/notifications/push';
 import { useAuth } from '@/auth/context';
 import { oidcClient } from '@/auth/oidc';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -85,6 +86,12 @@ export default function Screen() {
                 <SegmentedListItem
                   title="Print feature flags"
                   onClick={() => console.log(flags)}
+                />
+                <SegmentedListItem
+                  title="Print expo push token"
+                  onClick={async () =>
+                    console.log(await PushNotifications.getToken())
+                  }
                 />
                 <SegmentedListItem
                   title="Disable dev settings"

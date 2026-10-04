@@ -38,6 +38,9 @@ export class OIDCClient {
   private readonly redirectUri: string;
   private discovery: DiscoveryDocument | null = null;
 
+  private newSessionListeners: (() => void)[] = [];
+  private sessionDestroyedListeners: (() => void)[] = [];
+
   private refreshPromise: Promise<string | null> | null = null;
 
   constructor(options: IOIDCCLientOptions, sessionStore: SessionStore) {
@@ -102,6 +105,8 @@ export class OIDCClient {
         Date.now() + tokens.expiresIn! * 1000 - this.options.gracePeriod,
       ),
     });
+
+    this.notifyNewSession();
   }
 
   public async getToken(): Promise<string | null> {
@@ -170,7 +175,45 @@ export class OIDCClient {
 
     await this.sessionStore.clearSession();
 
-    // TODO: Add events and update auth guard/hook to redirect to login
+    this.notifySessionDestroyed();
+  }
+
+  public async isLoggedIn(): Promise<boolean> {
+    const user = await this.fetchUser();
+
+    return !!user;
+  }
+
+  private notifyNewSession() {
+    this.newSessionListeners.forEach((listener) => {
+      listener();
+    });
+  }
+
+  public notifySessionDestroyed() {
+    this.sessionDestroyedListeners.forEach((listener) => {
+      listener();
+    });
+  }
+
+  public onNewSession(handler: () => void) {
+    this.newSessionListeners.push(handler);
+
+    return () => {
+      this.newSessionListeners = this.newSessionListeners.filter(
+        (listener) => listener,
+      );
+    };
+  }
+
+  public onSessionDestroy(handler: () => void) {
+    this.sessionDestroyedListeners.push(handler);
+
+    return () => {
+      this.sessionDestroyedListeners = this.sessionDestroyedListeners.filter(
+        (listener) => listener,
+      );
+    };
   }
 }
 
