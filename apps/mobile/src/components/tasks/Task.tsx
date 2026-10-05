@@ -3,12 +3,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DateTime, Duration } from 'luxon';
 import { ToastAndroid } from 'react-native';
 
+import { Swipeable } from '@repo/jetpack-swipeable';
 import {
   Badge,
   Box,
   Card,
   Checkbox,
   Column,
+  Icon,
   LoadingSpinner,
   Row,
   Text,
@@ -71,48 +73,92 @@ export function Task(props: ITaskProps) {
     ? BORDER_RADIUS_OUTER
     : BORDER_RADIUS_INNER;
 
+  const colors = useMaterialColors();
+
   return (
-    <Card
-      borderRadiusTL={borderRadiusTop}
-      borderRadiusTR={borderRadiusTop}
-      borderRadiusBL={borderRadiusBottom}
-      borderRadiusBR={borderRadiusBottom}
-      fillWidth
-      padding={12}
-      paddingLeft={4}
-      paddingRight={16}
-      onClick={props.onClick}
+    <Swipeable
+      onSwipeStartToEnd={() =>
+        ToastAndroid.show(
+          'Work in progress on this feature.',
+          ToastAndroid.SHORT,
+        )
+      }
+      onSwipeEndToStart={() =>
+        ToastAndroid.show(
+          'Work in progress on this feature.',
+          ToastAndroid.SHORT,
+        )
+      }
     >
-      <Row gap={4} verticalAlignment="center">
-        <Box width={48} height={48} align="center">
-          {isPending ? (
-            <LoadingSpinner variant="circular" size={18} strokeWidth={2} />
-          ) : (
-            <Checkbox
-              onCheckedChange={() => mutate()}
-              checked={props.task.completedAt !== null}
-            />
-          )}
+      <Swipeable.StartToEndBackground>
+        <Box
+          align="centerStart"
+          padding={16}
+          backgroundColor={colors.error}
+          borderRadiusTL={borderRadiusTop}
+          borderRadiusTR={borderRadiusTop}
+          borderRadiusBL={borderRadiusBottom}
+          borderRadiusBR={borderRadiusBottom}
+        >
+          <Icon name="delete" color={colors.onError} />
         </Box>
-        <Column flex gap={2}>
-          <Text typography="bodyLarge">{props.task.name}</Text>
-          <Row verticalAlignment="center" gap={8}>
-            <Text
-              typography="bodyMedium"
-              color={materialColors.onSurfaceVariant}
-            >
-              {DateTime.fromISO(props.task.dueDate).toFormat('HH:mm')} ·{' '}
-              {durationLabel}
-            </Text>
-            {props.task.priority === 'low' && (
-              <Badge label="Low priority" color="secondary" />
+      </Swipeable.StartToEndBackground>
+      <Swipeable.EndToStartBackground>
+        <Box
+          align="centerEnd"
+          padding={16}
+          backgroundColor={colors.primary}
+          borderRadiusTL={borderRadiusTop}
+          borderRadiusTR={borderRadiusTop}
+          borderRadiusBL={borderRadiusBottom}
+          borderRadiusBR={borderRadiusBottom}
+        >
+          <Icon name="calendar_today" color={colors.onPrimary} />
+        </Box>
+      </Swipeable.EndToStartBackground>
+
+      <Card
+        borderRadiusTL={borderRadiusTop}
+        borderRadiusTR={borderRadiusTop}
+        borderRadiusBL={borderRadiusBottom}
+        borderRadiusBR={borderRadiusBottom}
+        fillWidth
+        padding={12}
+        paddingLeft={4}
+        paddingRight={16}
+        onClick={props.onClick}
+      >
+        <Row gap={4} verticalAlignment="center">
+          <Box width={48} height={48} align="center">
+            {isPending ? (
+              <LoadingSpinner variant="circular" size={18} strokeWidth={2} />
+            ) : (
+              <Checkbox
+                onCheckedChange={() => mutate()}
+                checked={props.task.completedAt !== null}
+              />
             )}
-            {props.task.priority === 'high' && (
-              <Badge label="High priority" color="red" />
-            )}
-          </Row>
-        </Column>
-      </Row>
-    </Card>
+          </Box>
+          <Column flex gap={2}>
+            <Text typography="bodyLarge">{props.task.name}</Text>
+            <Row verticalAlignment="center" gap={8}>
+              <Text
+                typography="bodyMedium"
+                color={materialColors.onSurfaceVariant}
+              >
+                {DateTime.fromISO(props.task.dueDate).toFormat('HH:mm')} ·{' '}
+                {durationLabel}
+              </Text>
+              {props.task.priority === 'low' && (
+                <Badge label="Low priority" color="secondary" />
+              )}
+              {props.task.priority === 'high' && (
+                <Badge label="High priority" color="red" />
+              )}
+            </Row>
+          </Column>
+        </Row>
+      </Card>
+    </Swipeable>
   );
 }
