@@ -7,6 +7,7 @@ import { maybeCompleteAuthSession } from 'expo-web-browser';
 import {
   createContext,
   type PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -53,7 +54,24 @@ export function AuthProvider(props: PropsWithChildren) {
     if (result.type !== 'success') setIsLoading(false);
   };
 
-  const invalidateAndRefetch = async () => {
+  const fetchInfo = useCallback(async () => {
+    if (fetchingInfo.current || !discovery) return;
+    fetchingInfo.current = true;
+
+    const userInfo = await oidcClient.fetchUser();
+    if (!userInfo) {
+      setIsAuthenticated(false);
+      setUserInfo(null);
+    } else {
+      setIsAuthenticated(true);
+      setUserInfo(userInfo);
+    }
+
+    setIsLoading(false);
+    fetchingInfo.current = false;
+  }, [discovery]);
+
+  const invalidateAndRefetch = useCallback(async () => {
     // Invalidate current state
     setIsAuthenticated(false);
     setIsLoading(true);
@@ -61,9 +79,9 @@ export function AuthProvider(props: PropsWithChildren) {
 
     // Refetch user info after exchange
     await fetchInfo();
-  };
+  }, [fetchInfo]);
 
-  const exchange = async () => {
+  const exchange = useCallback(async () => {
     if (response?.type !== 'success' || !request || !discovery) return;
 
     // Codes are single use, this prevents re-exchanging the same
@@ -81,31 +99,14 @@ export function AuthProvider(props: PropsWithChildren) {
       await oidcClient.saveTokens(tokens);
       oidcClient.notifyNewSession();
       await invalidateAndRefetch();
-    } catch (error) {
+    } catch (_error) {
       await invalidateAndRefetch();
     }
-  };
+  }, [response, request, discovery, invalidateAndRefetch]);
 
   const logout = async () => {
     await oidcClient.logout();
     await invalidateAndRefetch();
-  };
-
-  const fetchInfo = async () => {
-    if (fetchingInfo.current || !discovery) return;
-    fetchingInfo.current = true;
-
-    const userInfo = await oidcClient.fetchUser();
-    if (!userInfo) {
-      setIsAuthenticated(false);
-      setUserInfo(null);
-    } else {
-      setIsAuthenticated(true);
-      setUserInfo(userInfo);
-    }
-
-    setIsLoading(false);
-    fetchingInfo.current = false;
   };
 
   // Check if we are the callback of OIDC login
@@ -118,13 +119,13 @@ export function AuthProvider(props: PropsWithChildren) {
 
     setIsLoading(true);
     exchange();
-  }, [response, request, discovery]);
+  }, [isExchangePending, exchange]);
 
   useEffect(() => {
     if (fetchingInfo.current || !discovery || isExchangePending) return;
 
-    fetchInfo();
-  }, [discovery]);
+    void fetchInfo();
+  }, [discovery, isExchangePending, fetchInfo]);
 
   useEffect(() => {
     // Request/dismiss loading screen based on isLoading state

@@ -1,6 +1,7 @@
 import {
   createContext,
   type PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -27,14 +28,14 @@ export function FlagsProvider(props: PropsWithChildren) {
 
   const auth = useAuth();
 
-  const fetchFlags = async () => {
+  const fetchFlags = useCallback(async () => {
     setIsLoading(true);
 
     const flags = await getFeatureFlags();
 
     setIsLoading(false);
     setFlags(flags);
-  };
+  }, []);
 
   useEffect(() => {
     if (!auth.isAuthenticated) {
@@ -44,13 +45,13 @@ export function FlagsProvider(props: PropsWithChildren) {
       return;
     }
 
-    fetchFlags();
-  }, [auth]);
+    void fetchFlags();
+  }, [auth, fetchFlags]);
 
   useEffect(() => {
     if (isLoading) loading.request('flags');
     else loading.dismiss('flags');
-  }, [isLoading, flags]);
+  }, [isLoading, loading]);
 
   return (
     <FlagsContext.Provider value={{ flags }}>

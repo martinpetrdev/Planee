@@ -8,7 +8,7 @@ export function mutateTaskQueries(
 ) {
   const replace = (tasks: TaskPageResponseDto) => ({
     ...tasks,
-    items: tasks.items.map((t) => (t.id == response.id ? response : t)),
+    items: tasks.items.map((t) => (t.id === response.id ? response : t)),
   });
 
   // Update the existing data instead of refetching the entire list

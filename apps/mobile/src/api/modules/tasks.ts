@@ -55,15 +55,15 @@ export const listTasks = (dto: ListTasksDto) =>
     }),
   );
 export const markTaskAsCompleted = (taskId: string) =>
-  api.post<TaskResponseDto, {}>(
+  api.post<TaskResponseDto, unknown>(
     ApiVersion.v1,
     `${BASE_PATH}/${taskId}/complete`,
     {},
   );
 export const markTaskAsNotCompleted = (taskId: string) =>
-  api.delete<TaskResponseDto, {}>(
+  api.delete<TaskResponseDto, unknown>(
     ApiVersion.v1,
     `${BASE_PATH}/${taskId}/complete`,
   );
 export const deleteTask = (taskId: string) =>
-  api.delete<{}, {}>(ApiVersion.v1, `${BASE_PATH}/${taskId}`);
+  api.delete<unknown, unknown>(ApiVersion.v1, `${BASE_PATH}/${taskId}`);

@@ -11,7 +11,7 @@ const scheme = IS_DEV ? 'planee-dev' : 'planee';
 
 export default {
   expo: {
-    name: 'Planee' + (IS_DEV ? ' (DEV)' : ''),
+    name: `Planee${IS_DEV ? ' (DEV)' : ''}`,
     slug: 'planee',
     version: '1.0.0',
     orientation: 'portrait',

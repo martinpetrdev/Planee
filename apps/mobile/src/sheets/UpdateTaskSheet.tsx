@@ -126,8 +126,8 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
     mutate({
       name: nameState.value,
       expectedDurationSeconds:
-        (parseInt(hoursState.value) || 0) * 3600 +
-        (parseInt(minutesState.value) || 0) * 60,
+        (parseInt(hoursState.value, 10) || 0) * 3600 +
+        (parseInt(minutesState.value, 10) || 0) * 60,
       dueDate: toInstant(dueDate, dueTime || '00:00'),
       priority: priority,
     });

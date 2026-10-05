@@ -197,7 +197,6 @@ export class EventHandler {
   ) {
     if (!this.listeners.has(eventId)) this.listeners.set(eventId, []);
 
-    // biome-ignore lint/style/noNonNullAssertion: We have just ensured that it's there.
     this.listeners.set(eventId, [...this.listeners.get(eventId)!, handler]);
 
     return () => {

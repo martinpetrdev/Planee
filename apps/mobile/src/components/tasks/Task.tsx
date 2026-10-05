@@ -54,7 +54,7 @@ export function Task(props: ITaskProps) {
       const error = API.parseError(e);
 
       ToastAndroid.show(
-        'Error: ' + (error.message ?? 'Unknown error'),
+        `Error: ${error.message ?? 'Unknown error'}`,
         ToastAndroid.LONG,
       );
     },

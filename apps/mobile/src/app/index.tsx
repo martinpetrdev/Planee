@@ -14,7 +14,7 @@ export default function Screen() {
 
     if (auth.isAuthenticated) router.replace('/protected');
     else router.replace('/onboarding');
-  }, [auth]);
+  }, [auth, router]);
 
   return <ScreenShell></ScreenShell>; // Return ScreenShell to prevent white flash
 }

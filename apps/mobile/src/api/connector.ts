@@ -17,7 +17,7 @@ export const apiConnector = axios.create({
 // Add access token to the request, when present
 apiConnector.interceptors.request.use(async (req) => {
   const token = await oidcClient.getToken();
-  req.headers['Authorization'] = token ? 'Bearer ' + token : '';
+  req.headers.Authorization = token ? `Bearer ${token}` : '';
 
   return req;
 });
