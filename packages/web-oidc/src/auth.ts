@@ -12,7 +12,7 @@ declare module "next-auth" {
 	interface Session {
 		accessToken: string;
 		idToken: string;
-		error: unknown;
+		error?: "RefreshTokenError";
 	}
 }
 
@@ -22,8 +22,16 @@ declare module "next-auth/jwt" {
 		idToken: string;
 		refreshToken: string;
 		expiresAt: number;
+		error?: "RefreshTokenError";
 	}
 }
+
+// ponytail: per-process memory, needs a shared store (redis) when running multiple instances
+// globalThis: route handlers and RSC may get separate module instances in one process
+// Added by Claude Code (Claude Opus 5.5)
+const g = globalThis as { __oidcRefreshes?: Map<string, Promise<JWT>> };
+const refreshes = g.__oidcRefreshes ?? new Map<string, Promise<JWT>>();
+g.__oidcRefreshes = refreshes;
 
 export class OidcAuth {
 	private readonly clientId: string;
@@ -49,11 +57,36 @@ export class OidcAuth {
 		this.baseUrl = baseUrl;
 	}
 
-	public async refreshOidcToken(token: JWT) {
+	/**
+	 * Refresh tokens are single-use (rotation), so concurrent callers holding the same one
+	 * (parallel /session fetches, SSR getServerSession that can't persist the cookie) must share one refresh.
+	 * Result is kept until the new AT expires, so a stale cookie still resolves to the rotated tokens.
+	 */
+	// Heavily modified by Claude Code (Claude Opus 5.5) -- mainly to be safe against
+	// multiple refreshes using one token (because I have set keycloak to only accept
+	// one refresh per refresh tokne)
+	public refreshOidcToken(token: JWT) {
+		let refresh = refreshes.get(token.refreshToken);
+
+		if (!refresh) {
+			refresh = this.requestRefresh(token);
+			refreshes.set(token.refreshToken, refresh);
+			void refresh.then((t) =>
+				setTimeout(
+					() => refreshes.delete(token.refreshToken),
+					t.error ? 0 : Math.max(t.expiresAt - Date.now(), 0),
+				),
+			);
+		}
+
+		return refresh;
+	}
+
+	private async requestRefresh(token: JWT): Promise<JWT> {
 		const url = `${this.issuer}/protocol/openid-connect/token`;
 
-		const { data } = await axios
-			.post(
+		try {
+			const { data } = await axios.post(
 				url,
 				new URLSearchParams({
 					client_id: this.clientId,
@@ -66,20 +99,22 @@ export class OidcAuth {
 						"Content-Type": "application/x-www-form-urlencoded",
 					},
 				},
-			)
-			.catch((e) => {
-				console.error("OIDC AT refresh error:", e);
+			);
 
-				return { data: {} };
-			});
+			return {
+				...token,
+				accessToken: data.access_token,
+				idToken: data.id_token ?? token.idToken,
+				expiresAt: Date.now() + (data.expires_in ?? 300) * 1000, // expires_in is in seconds, convert to milliseconds
+				refreshToken: data.refresh_token ?? token.refreshToken,
+				error: undefined,
+			};
+		} catch (e) {
+			console.error("OIDC access token refresh error:", e);
 
-		return {
-			...token,
-			accessToken: data.access_token,
-			idToken: data.id_token ?? token.idToken,
-			expiresAt: Date.now() + (data.expires_in ?? 300) * 1000, // expires_in is in seconds, convert to milliseconds
-			refreshToken: data.refresh_token,
-		};
+			// Keep the old token, but flag it so taht the client can force re-login
+			return { ...token, error: "RefreshTokenError" as const };
+		}
 	}
 
 	public get authOptions(): NextAuthOptions {
@@ -104,7 +139,8 @@ export class OidcAuth {
 						data.token.refreshToken = data.account.refresh_token ?? "";
 						data.token.expiresAt = data.account.expires_at
 							? data.account.expires_at * 1000
-							: ((data.account.expires_in as number) ?? 300) * 1000;
+							: Date.now() +
+								((data.account.expires_in as number) ?? 300) * 1000;
 					}
 
 					// If the token is not expired (with grace period), return it
@@ -115,8 +151,9 @@ export class OidcAuth {
 					)
 						return data.token;
 
-					// If token has expired or is about to, refresh it
-					if (data.token.refreshToken) return this.refreshOidcToken(data.token);
+					// If token has expired or is about to, refresh it (unless a refresh already failed)
+					if (data.token.refreshToken && !data.token.error)
+						return this.refreshOidcToken(data.token);
 
 					return data.token;
 				},
@@ -143,6 +180,9 @@ export class OidcAuth {
 	/**
 	 * Creates an URL that destroys keycloak session
 	 * @param session
+	 * @param oidcIssuer
+	 * @param oidcClientId
+	 * @param baseUrl
 	 */
 	public getLogoutUrl(
 		session: Session,

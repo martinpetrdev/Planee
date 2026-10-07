@@ -1,4 +1,8 @@
 // TODO: Should probably throw instead of the default value
+
+import axios from "axios";
+import type { ConfigurationJson } from "@/types/config";
+
 export const WebConfig = {
 	baseUrl: process.env.CONF_ADMIN_BASE || "",
 	api: {
@@ -12,3 +16,9 @@ export const WebConfig = {
 		gracePeriod: 30_000, // 30secs
 	},
 };
+
+export async function fetchWebConfig(): Promise<ConfigurationJson> {
+	const { data } = await axios.get("/configuration.json");
+
+	return data;
+}

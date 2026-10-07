@@ -3,6 +3,7 @@ import { Figtree, Lora } from "next/font/google";
 import "./globals.css";
 import { OidcAuthProvider } from "@repo/web-oidc";
 import { cn } from "@repo/web-ui";
+import { ConfigProvider } from "@/providers/ConfigProvider";
 
 const loraHeading = Lora({ subsets: ["latin"], variable: "--font-heading" });
 
@@ -27,7 +28,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 			)}
 		>
 			<body className="min-h-full flex flex-col">
-				<OidcAuthProvider>{children}</OidcAuthProvider>
+				<ConfigProvider>
+					<OidcAuthProvider>{children}</OidcAuthProvider>
+				</ConfigProvider>
 			</body>
 		</html>
 	);
