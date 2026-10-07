@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Figtree, Lora } from "next/font/google";
 import "./globals.css";
-import { OidcAuthProvider } from "@repo/web-oidc";
+import { AuthenticationProvider, OIDCProvider } from "@repo/web-oidc";
 import { cn } from "@repo/web-ui";
+import { oidcProvider } from "@/auth";
+import { WebConfig } from "@/config";
 import { ConfigProvider } from "@/providers/ConfigProvider";
 
 const loraHeading = Lora({ subsets: ["latin"], variable: "--font-heading" });
@@ -29,7 +31,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 		>
 			<body className="min-h-full flex flex-col">
 				<ConfigProvider>
-					<OidcAuthProvider>{children}</OidcAuthProvider>
+					<AuthenticationProvider provider={oidcProvider}>
+						{children}
+					</AuthenticationProvider>
 				</ConfigProvider>
 			</body>
 		</html>

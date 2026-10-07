@@ -14,6 +14,9 @@ export const WebConfig = {
 		clientSecret: process.env.CONF_WEB_OIDC_CLIENT_SECRET || "",
 		scopes: ["openid", "profile", "email", "offline_access"],
 		gracePeriod: 30_000, // 30secs
+		cookiePrefix: process.env.CONF_ADMIN_OIDC_COOKIE_PREFIX || "",
+		cookieEncryptionKey:
+			process.env.CONF_ADMIN_OIDC_COOKIE_ENCRYPTION_KEY || "",
 	},
 };
 
