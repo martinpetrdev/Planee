@@ -17,7 +17,7 @@ async function getAccessToken() {
 	const { OIDC } = await import("@repo/web-oidc");
 
 	new OIDC(oidcProvider);
-	return await OIDC.instance.getAccessToken();
+	return await OIDC.instance.getAccessToken(false);
 }
 
 apiConnector.interceptors.request.use(async (req) => {

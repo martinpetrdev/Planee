@@ -14,7 +14,7 @@ export async function AuthenticationProvider(
 
 	const state = await oidc.getSessionStateSSR();
 	const profile = await oidc.getProfile();
-	const accessToken = await oidc.getAccessToken();
+	const accessToken = await oidc.getAccessToken(false);
 
 	return (
 		<AuthenticationContextProvider

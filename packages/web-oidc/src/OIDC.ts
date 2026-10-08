@@ -11,9 +11,8 @@ import {
 	tokenRevocation,
 } from "openid-client";
 import type { OIDCProvider } from "./OIDCProvider";
-import { SessionStore } from "./Session";
+import { type Session, SessionStore } from "./Session";
 
-// TODO: Add logout
 // TODO: Add callback url state
 // TODO: Fix race condition - multi-refresh token use
 export class OIDC {
@@ -123,25 +122,18 @@ export class OIDC {
 		redirect(this._provider.baseURL.href);
 	}
 
-	async refreshAccessToken() {
-		const session = await this.sessionStore.get();
-		if (!session) throw new Error("[OIDC] Session cookie not found!");
-
+	// Pure refresh without touching cookies
+	async refreshSession(session: Session): Promise<Session | null> {
 		const discovery = await this.getDiscovery();
 
 		const tokens = await refreshTokenGrant(discovery, session.refreshToken, {
 			scope: this._provider.scope,
-		}).catch(async () => {
-			// Used/expired -> authenticate again
-			await this.authenticate();
-
-			return null;
-		});
+		}).catch(() => null);
 		if (!tokens) return null;
 
 		const claims = tokens.claims();
 
-		await this.sessionStore.set({
+		return {
 			accessToken: tokens.access_token ?? "",
 			refreshToken: tokens.refresh_token ?? "",
 			idToken: tokens.id_token ?? "",
@@ -150,9 +142,24 @@ export class OIDC {
 				name: (claims?.name as string) ?? "",
 				email: (claims?.email as string) ?? "",
 			},
-		});
+		};
+	}
 
-		return tokens.access_token ?? "";
+	async refreshAccessToken() {
+		const session = await this.sessionStore.get();
+		if (!session) throw new Error("[OIDC] Session cookie not found!");
+
+		const refreshed = await this.refreshSession(session);
+		if (!refreshed) {
+			// Used/expired -> authenticate again
+			await this.authenticate();
+
+			return null;
+		}
+
+		await this.sessionStore.set(refreshed);
+
+		return refreshed.accessToken;
 	}
 
 	async getProfile() {
@@ -166,13 +173,17 @@ export class OIDC {
 			: null;
 	}
 
-	async getAccessToken() {
+	async getAccessToken(allowRefresh: boolean = true) {
 		const session = await this.sessionStore.get();
 		if (!session) return null;
 
 		const isExpired =
 			session.expiresAt - this._provider.gracePeriod <= Date.now();
 		if (!isExpired) return session.accessToken;
+
+		// When refreshing disallowed, return null to force client to refetch
+		// token endpoint, which can then refresh session and replace cookies
+		if (!allowRefresh) return null;
 
 		// Refresh token if expired
 		return await this.refreshAccessToken();
