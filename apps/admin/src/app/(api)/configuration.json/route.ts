@@ -7,6 +7,7 @@ export async function GET(): Promise<NextResponse<ConfigurationJson>> {
 	return NextResponse.json({
 		baseUrl: WebConfig.baseUrl,
 		api: WebConfig.api,
+		app: WebConfig.app,
 		oidc: {
 			issuer: WebConfig.oidc.issuer,
 			clientId: WebConfig.oidc.clientId,

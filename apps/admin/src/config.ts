@@ -9,14 +9,17 @@ export const WebConfig = {
 		baseUrl: process.env.CONF_WEB_API_BASE || "",
 	},
 	oidc: {
-		issuer: process.env.CONF_WEB_OIDC_ISSUER || "",
-		clientId: process.env.CONF_WEB_OIDC_CLIENT_ID || "",
-		clientSecret: process.env.CONF_WEB_OIDC_CLIENT_SECRET || "",
+		issuer: process.env.CONF_ADMIN_OIDC_ISSUER || "",
+		clientId: process.env.CONF_ADMIN_OIDC_CLIENT_ID || "",
+		clientSecret: process.env.CONF_ADMIN_OIDC_CLIENT_SECRET || "",
 		scopes: ["openid", "profile", "email", "offline_access"],
 		gracePeriod: 30_000, // 30secs
 		cookiePrefix: process.env.CONF_ADMIN_OIDC_COOKIE_PREFIX || "",
 		cookieEncryptionKey:
 			process.env.CONF_ADMIN_OIDC_COOKIE_ENCRYPTION_KEY || "",
+	},
+	app: {
+		baseUrl: process.env.CONF_WEB_BASE || "",
 	},
 };
 

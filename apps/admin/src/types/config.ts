@@ -3,6 +3,9 @@ export interface ConfigurationJson {
 	api: {
 		baseUrl: string;
 	};
+	app: {
+		baseUrl: string;
+	};
 	oidc: {
 		issuer: string;
 		clientId: string;
