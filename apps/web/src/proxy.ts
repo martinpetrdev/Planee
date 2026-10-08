@@ -1,6 +1,6 @@
-import { OidcProxy } from "@repo/web-oidc";
+import { oidcAuth } from "@/auth";
 
-export { OidcProxy as proxy };
+export const proxy = oidcAuth.proxy;
 
 // Everything, except for: oidc, configuration.json, signed-out, _next, favicon.ico paths
 export const config = {

@@ -8,6 +8,7 @@ import {
 	discovery,
 	randomPKCECodeVerifier,
 	refreshTokenGrant,
+	tokenRevocation,
 } from "openid-client";
 import type { OIDCProvider } from "./OIDCProvider";
 import { SessionStore } from "./Session";
@@ -102,6 +103,7 @@ export class OIDC {
 		await this.sessionStore.set({
 			accessToken: tokens.access_token ?? "",
 			refreshToken: tokens.refresh_token ?? "",
+			idToken: tokens.id_token ?? "",
 			expiresAt: Date.now() + (tokens.expires_in ?? 300) * 1000,
 			userInfo: {
 				name: (claims?.name as string) ?? "",
@@ -133,6 +135,7 @@ export class OIDC {
 		await this.sessionStore.set({
 			accessToken: tokens.access_token ?? "",
 			refreshToken: tokens.refresh_token ?? "",
+			idToken: tokens.id_token ?? "",
 			expiresAt: Date.now() + (tokens.expires_in ?? 300) * 1000,
 			userInfo: {
 				name: (claims?.name as string) ?? "",
@@ -146,7 +149,12 @@ export class OIDC {
 	async getProfile() {
 		const session = await this.sessionStore.get();
 
-		return session ? session.userInfo : null;
+		return session
+			? {
+					...session.userInfo,
+					expiresAt: session.expiresAt,
+				}
+			: null;
 	}
 
 	async getAccessToken() {
@@ -159,5 +167,21 @@ export class OIDC {
 
 		// Refresh token if expired
 		return await this.refreshAccessToken();
+	}
+
+	async logout() {
+		const discovery = await this.getDiscovery();
+		const session = await this.sessionStore.get();
+
+		await tokenRevocation(discovery, session?.refreshToken ?? "");
+		await this.sessionStore.clear();
+
+		const url = this._provider.issuerURL;
+		const baseURL = this._provider.baseURL;
+		baseURL.pathname = "/auth/signed-out";
+
+		redirect(
+			`${url.href}/protocol/openid-connect/logout?post_logout_redirect_uri=${encodeURIComponent(baseURL.href)}&clientId=${this._provider.clientId}&id_token_hint=${encodeURIComponent(session?.idToken ?? "")}`,
+		);
 	}
 }

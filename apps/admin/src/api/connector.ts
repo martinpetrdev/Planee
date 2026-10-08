@@ -1,6 +1,5 @@
 import axios from "axios";
-import { getSession } from "next-auth/react";
-import { oidcAuth } from "@/auth";
+import { oidcProvider } from "@/auth";
 import { fetchWebConfig, WebConfig } from "@/config";
 
 export const apiConnector = axios.create({
@@ -10,11 +9,15 @@ export const apiConnector = axios.create({
 async function getAccessToken() {
 	// CSR
 	if (typeof window !== "undefined") {
-		return (await getSession())?.accessToken;
+		const { data } = await axios.get("/auth/token");
+		return data?.token;
 	}
 
 	// SSR
-	return (await oidcAuth.getSession())?.accessToken;
+	const { OIDC } = await import("@repo/web-oidc");
+
+	new OIDC(oidcProvider);
+	return await OIDC.instance.getAccessToken();
 }
 
 apiConnector.interceptors.request.use(async (req) => {

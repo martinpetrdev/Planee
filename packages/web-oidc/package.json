@@ -7,6 +7,10 @@
 		".": {
 			"import": "./src/index.ts",
 			"require": "./src/index.ts"
+		},
+		"./client": {
+			"import": "./src/client.ts",
+			"require": "./src/client.ts"
 		}
 	},
 	"keywords": [],

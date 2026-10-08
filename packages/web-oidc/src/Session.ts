@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 export interface Session {
 	accessToken: string;
 	refreshToken: string;
+	idToken: string;
 	expiresAt: number; // ms format
 	userInfo: {
 		name: string;
@@ -78,6 +79,23 @@ export class SessionStore {
 			},
 		);
 
+		nextCookies.set(
+			`oidc.${this.cookiePrefix}_idtoken`,
+			await seal(
+				{
+					idToken: session.idToken,
+				},
+				this.cookieEncKey,
+			),
+			{
+				httpOnly: true,
+				secure: this.cookieSecure,
+				sameSite: "lax",
+				path: "/",
+				maxAge: 30 * 24 * 3600,
+			},
+		);
+
 		// Delete code verifier cookie
 		nextCookies.delete("codeVerifier");
 	}
@@ -91,17 +109,32 @@ export class SessionStore {
 		const profileCookie = nextCookies.get(
 			`oidc.${this.cookiePrefix}_profile`,
 		)?.value;
-		if (!sessionCookie || !profileCookie) return null;
+		const idTokenCookie = nextCookies.get(
+			`oidc.${this.cookiePrefix}_idtoken`,
+		)?.value;
+		if (!sessionCookie || !profileCookie || !idTokenCookie) return null;
 
 		const session = await unseal(sessionCookie, this.cookieEncKey);
 		const profile = await unseal(profileCookie, this.cookieEncKey);
+		const idToken = await unseal(idTokenCookie, this.cookieEncKey);
+
+		console.log(idToken);
 
 		return {
-			...(session as Omit<Session, "userInfo">),
+			...(session as Omit<Omit<Session, "userInfo">, "idToken">),
+			idToken: idToken?.idToken as string,
 			userInfo: {
 				name: (profile?.name as string) ?? "",
 				email: (profile?.email as string) ?? "",
 			},
 		};
+	}
+
+	async clear() {
+		const nextCookies = await cookies();
+
+		nextCookies.delete(`oidc.${this.cookiePrefix}_session`);
+		nextCookies.delete(`oidc.${this.cookiePrefix}_profile`);
+		nextCookies.delete(`oidc.${this.cookiePrefix}_idtoken`);
 	}
 }
