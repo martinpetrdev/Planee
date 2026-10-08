@@ -11,5 +11,3 @@ export const oidcProvider = new OIDCProvider({
 	cookiePrefix: WebConfig.oidc.cookiePrefix,
 	cookieEncryptionKey: WebConfig.oidc.cookieEncryptionKey,
 });
-
-console.log(WebConfig);

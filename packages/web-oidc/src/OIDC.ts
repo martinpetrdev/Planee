@@ -94,7 +94,16 @@ export class OIDC {
 		if (!codeVerifier)
 			throw new Error("[OIDC] Code verifier cookie not found!");
 
-		const tokens = await authorizationCodeGrant(discovery, url, {
+		// Rebuild the callback URL from the configured public base URL.
+		// `req.url` reflects the internal request (proxy host/protocol) and
+		// would produce a redirect_uri that doesn't match the one sent in
+		// the authorization request -> Keycloak rejects with invalid_grant.
+		// Added by AI (Kimi K3)
+		const callbackUrl = this._provider.baseURL;
+		callbackUrl.pathname = url.pathname;
+		callbackUrl.search = url.search;
+
+		const tokens = await authorizationCodeGrant(discovery, callbackUrl, {
 			pkceCodeVerifier: codeVerifier.value,
 		});
 
