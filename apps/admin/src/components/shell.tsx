@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	AppWindowIcon,
 	BuildingOfficeIcon,
@@ -10,17 +12,25 @@ import {
 	SignInIcon,
 	UsersIcon,
 } from "@phosphor-icons/react/ssr";
+import { useAuthentication } from "@repo/web-oidc/client";
 import { ManagementShell } from "@repo/web-ui/components/management-shell/management-shell";
 import {
 	Sidebar,
 	SidebarHeader,
 	SidebarLink,
 	SidebarLinkGroup,
+	SidebarProfile,
 } from "@repo/web-ui/components/management-shell/sidebar";
 import type { PropsWithChildren } from "react";
 import { WebConfig } from "@/config";
+import { useConfig } from "@/providers/ConfigProvider";
 
 export function AdminShell(props: PropsWithChildren) {
+	const auth = useAuthentication();
+	const config = useConfig();
+
+	if (config.isLoading) return;
+
 	return (
 		<ManagementShell
 			sidebar={
@@ -50,7 +60,7 @@ export function AdminShell(props: PropsWithChildren) {
 						</SidebarLink>
 					</SidebarLinkGroup>
 					<SidebarLinkGroup title={"External"}>
-						<SidebarLink href={WebConfig.app.baseUrl}>
+						<SidebarLink href={config.config.app.baseUrl}>
 							<AppWindowIcon size={18} /> Planee
 						</SidebarLink>
 						<SidebarLink
@@ -64,6 +74,11 @@ export function AdminShell(props: PropsWithChildren) {
 							<FlagIcon size={18} /> Flag manager
 						</SidebarLink>
 					</SidebarLinkGroup>
+					<SidebarProfile
+						name={auth.profile?.name ?? ""}
+						email={auth.profile?.email ?? ""}
+						signOut={auth.signOut}
+					/>
 				</Sidebar>
 			}
 		>

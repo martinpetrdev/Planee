@@ -1,5 +1,7 @@
+import { SignOutIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
+import { Button } from "../ui/button";
 
 export function Sidebar(props: PropsWithChildren) {
 	return <div className="w-80 flex flex-col gap-4">{props.children}</div>;
@@ -52,5 +54,29 @@ export function SidebarLink(props: ISidebarLinkProps) {
 				</p>
 			)}
 		</Link>
+	);
+}
+
+interface ISidebarProfileProps {
+	name: string;
+	email: string;
+	signOut: () => void;
+}
+
+export function SidebarProfile(props: ISidebarProfileProps) {
+	return (
+		<div
+			className={
+				"w-full flex flex-row items-center justify-between px-4 py-2 mt-auto"
+			}
+		>
+			<div className={"flex flex-col"}>
+				<p>{props.name}</p>
+				<p className={"text-muted-foreground text-sm"}>{props.email}</p>
+			</div>
+			<Button size="icon-lg" variant="secondary" onClick={props.signOut}>
+				<SignOutIcon />
+			</Button>
+		</div>
 	);
 }
