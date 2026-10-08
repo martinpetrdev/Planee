@@ -153,8 +153,6 @@ jobs:
           file: apps/admin/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/planee/admin:${{ steps.tag.outputs.tag }}, ${{ env.REGISTRY }}/planee/admin:latest
-          cache-from: type=gha,scope=admin
-          cache-to: type=gha,mode=max,scope=admin
 
       - name: Update manifests & commit
         if: steps.build.outputs.api == 'true' || steps.build.outputs.web == 'true' || steps.build.outputs.marketing-web == 'true' || steps.build.outputs.db-migration == 'true' || steps.build.outputs.admin == 'true'

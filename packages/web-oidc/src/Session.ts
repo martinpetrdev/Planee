@@ -118,8 +118,6 @@ export class SessionStore {
 		const profile = await unseal(profileCookie, this.cookieEncKey);
 		const idToken = await unseal(idTokenCookie, this.cookieEncKey);
 
-		console.log(idToken);
-
 		return {
 			...(session as Omit<Omit<Session, "userInfo">, "idToken">),
 			idToken: idToken?.idToken as string,
