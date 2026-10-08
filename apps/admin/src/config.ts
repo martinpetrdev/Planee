@@ -4,12 +4,12 @@ import axios from "axios";
 import type { ConfigurationJson } from "@/types/config";
 
 export const WebConfig = {
-	baseUrl: process.env.CONF_ADMIN_BASE || "",
+	baseUrl: process.env.CONF_ADMIN_BASE || "http://planee.internal",
 	api: {
-		baseUrl: process.env.CONF_WEB_API_BASE || "",
+		baseUrl: process.env.CONF_WEB_API_BASE || "http://planee.internal",
 	},
 	oidc: {
-		issuer: process.env.CONF_ADMIN_OIDC_ISSUER || "",
+		issuer: process.env.CONF_ADMIN_OIDC_ISSUER || "http://planee.internal",
 		clientId: process.env.CONF_ADMIN_OIDC_CLIENT_ID || "",
 		clientSecret: process.env.CONF_ADMIN_OIDC_CLIENT_SECRET || "",
 		scopes: ["openid", "profile", "email", "offline_access"],
@@ -19,7 +19,7 @@ export const WebConfig = {
 			process.env.CONF_ADMIN_OIDC_COOKIE_ENCRYPTION_KEY || "",
 	},
 	app: {
-		baseUrl: process.env.CONF_WEB_BASE || "",
+		baseUrl: process.env.CONF_WEB_BASE || "http://planee.internal",
 	},
 };
 

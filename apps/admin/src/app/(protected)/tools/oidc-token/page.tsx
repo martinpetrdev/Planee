@@ -1,11 +1,10 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useAuthentication } from "@repo/web-oidc/client";
 
+// TODO: Remove/secure later
 export default function Page() {
-	const { data: session, status } = useSession();
+	const auth = useAuthentication();
 
-	if (status === "loading") return <p>Loading…</p>;
-
-	return <p>{session?.accessToken ?? "Not logged in"}</p>;
+	return <p>{auth.accessToken}</p>;
 }

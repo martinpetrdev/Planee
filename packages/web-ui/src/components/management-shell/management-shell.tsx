@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import type { Sidebar } from "@/components/management-shell/sidebar";
+import type { Sidebar } from "./sidebar";
 
 interface IManagementShellProps extends PropsWithChildren {
 	sidebar: ReturnType<typeof Sidebar>;
