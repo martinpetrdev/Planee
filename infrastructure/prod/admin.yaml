@@ -59,21 +59,16 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: NEXTAUTH_SECRET
+            - name: CONF_ADMIN_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: planee-web-oidc
-                  key: NEXTAUTH_SECRET
-            - name: CONF_WEB_OIDC_CLIENT_SECRET
+                  name: planee-admin-oidc
+                  key: CONF_ADMIN_OIDC_CLIENT_SECRET
+            - name: CONF_ADMIN_OIDC_COOKIE_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
-                  name: planee-web-oidc
-                  key: CONF_WEB_OIDC_CLIENT_SECRET
-            - name: NEXTAUTH_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: planee-config
-                  key: CONF_ADMIN_NEXTAUTH_URL
+                  name: planee-admin-oidc
+                  key: CONF_ADMIN_OIDC_COOKIE_ENCRYPTION_KEY
           resources:
             requests:
               cpu: "100m"

@@ -17,4 +17,8 @@ data:
   CONF_WEB_BASE: "https://app.planee.martinpetr.dev"
   CONF_WEB_MARKETING_BASE: "https://planee.martinpetr.dev"
   CONF_WEB_NEXTAUTH_URL: "https://app.planee.martinpetr.dev/oidc"
-  CONF_ADMIN_NEXTAUTH_URL: "https://admin.planee.martinpetr.dev/oidc"
+
+  CONF_ADMIN_BASE: "https://admin.planee.martinpetr.dev"
+  CONF_ADMIN_OIDC_CLIENT_ID: "admin-app"
+  CONF_ADMIN_OIDC_ISSUER: "https://kc.cloud.martinpetr.dev/realms/dev.martinpetr.planee"
+  CONF_ADMIN_OIDC_COOKIE_PREFIX: "admin"
