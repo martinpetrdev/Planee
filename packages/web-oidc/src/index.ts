@@ -1,3 +1,4 @@
-export { OidcAuth } from "./auth";
-export { proxy as OidcProxy } from "./proxy";
-export { AuthProvider as OidcAuthProvider } from "./SessionProvider";
+export * from "./AuthenticationGuard";
+export * from "./AuthenticationProvider";
+export * from "./OIDC";
+export * from "./OIDCProvider";

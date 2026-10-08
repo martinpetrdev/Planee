@@ -1,13 +1,13 @@
-import { OidcAuth } from "@repo/web-oidc";
-import { WebConfig } from "@/config";
+import { OIDCProvider } from "@repo/web-oidc";
+import { WebConfig } from "./config";
 
-const oidcAuth = new OidcAuth(
-	WebConfig.oidc.clientId,
-	WebConfig.oidc.clientSecret,
-	WebConfig.oidc.issuer,
-	WebConfig.oidc.scopes,
-	WebConfig.oidc.gracePeriod,
-	WebConfig.baseUrl,
-);
-
-export const authHandler = oidcAuth.authHandler;
+export const oidcProvider = new OIDCProvider({
+	issuer: WebConfig.oidc.issuer,
+	clientId: WebConfig.oidc.clientId,
+	clientSecret: WebConfig.oidc.clientSecret,
+	scope: WebConfig.oidc.scopes,
+	gracePeriod: WebConfig.oidc.gracePeriod,
+	baseURL: WebConfig.baseUrl,
+	cookiePrefix: WebConfig.oidc.cookiePrefix,
+	cookieEncryptionKey: WebConfig.oidc.cookieEncryptionKey,
+});
