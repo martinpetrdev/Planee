@@ -27,6 +27,31 @@ function UL({ children }: { children: React.ReactNode }) {
 	return <ul className="list-disc pl-6 mb-3 space-y-1">{children}</ul>;
 }
 
+function Cookies({ rows }: { rows: [string, string, string][] }) {
+	return (
+		<div className="overflow-x-auto mb-3">
+			<table className="w-full text-sm text-left border-collapse">
+				<thead>
+					<tr className="border-b">
+						<th className="py-2 pr-4">Cookie</th>
+						<th className="py-2 pr-4">Purpose</th>
+						<th className="py-2">Duration</th>
+					</tr>
+				</thead>
+				<tbody>
+					{rows.map(([name, purpose, duration]) => (
+						<tr key={name} className="border-b align-top">
+							<td className="py-2 pr-4 font-mono break-all">{name}</td>
+							<td className="py-2 pr-4">{purpose}</td>
+							<td className="py-2">{duration}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+	);
+}
+
 const Mail = () => (
 	<a className="underline" href={`mailto:${CONTACT_EMAIL}`}>
 		{CONTACT_EMAIL}
@@ -38,7 +63,7 @@ export default function Page() {
 		<article className="max-w-3xl mx-auto mt-20 px-4 pb-16">
 			<h1 className="text-4xl font-bold mb-2">Privacy Policy</h1>
 			<P>
-				<i>Effective date: 30 September 2026</i>
+				<i>Effective date: 9 October 2026</i>
 			</P>
 			<P>
 				This Privacy Policy explains how personal data is processed when you use
@@ -87,23 +112,98 @@ export default function Page() {
 				</li>
 			</UL>
 
-			<H2>3. Accounts</H2>
+			<H2>3. Accounts and the Early Access Program</H2>
 			<P>
-				Users currently cannot register themselves. Accounts are created by us,
-				the administrator, at your request. When you ask for an account, you
-				provide us with the data needed to create it (see below). You then log
-				in through our own identity service (Keycloak), which we operate
-				ourselves.
+				The Service is currently available only through an invite-based{" "}
+				<b>Early Access Program</b>. Public self-registration is not open. The
+				process works as follows:
+			</P>
+			<UL>
+				<li>
+					You may sign up for the program through our Google Form, where you
+					give us your email addresses (see{" "}
+					<a className="underline" href="#early-access">
+						Section 4.1
+					</a>
+					).
+				</li>
+				<li>
+					We send you a personal, single-use invite link. When you open it and
+					enter your email address, our identity service (Keycloak), which we
+					operate ourselves, sends you an invitation email.
+				</li>
+				<li>
+					Using the invitation, you register in Keycloak. As part of
+					registration you are asked to confirm that you have read and agree to
+					this Privacy Policy; an account cannot be created without this
+					confirmation.
+				</li>
+			</UL>
+			<P>
+				Confirming this policy at registration does not make consent the legal
+				basis for processing – the legal bases for each purpose are listed in
+				Section 4. You log in to the Service through Keycloak.
 			</P>
 
 			<H2>4. What data we process, why, and on what legal basis</H2>
 
-			<H3>4.1 Account data</H3>
+			<H3>
+				<span id="early-access" className="scroll-mt-24">
+					4.1 Early Access Program sign-up
+				</span>
+			</H3>
+			<UL>
+				<li>
+					<b>Data:</b> the email address of the Google account you want to use
+					for testing the Android app, and the email address to which we should
+					send the registration guide and invite link (these may be the same),
+					together with any other answers you give in the form.
+				</li>
+				<li>
+					<b>Purpose:</b> adding you to the list of testers of the Android app
+					in the Google Play testing program, and sending you the registration
+					guide and your invite link.
+				</li>
+				<li>
+					<b>Legal basis:</b> steps taken at your request before providing the
+					Service (Art. 6(1)(b) GDPR).
+				</li>
+			</UL>
+			<P>
+				The form is provided through Google Forms. The Google account email is
+				entered into the tester list in Google Play Console so that Google Play
+				lets you install the test version of the app.
+			</P>
+
+			<H3>4.2 Invitations</H3>
+			<UL>
+				<li>
+					<b>Data:</b> the email address you enter on the invite page, and the
+					invitation record in Keycloak (email address, time it was sent and
+					its expiry).
+				</li>
+				<li>
+					<b>Purpose:</b> sending you the invitation email and letting you
+					complete registration.
+				</li>
+				<li>
+					<b>Legal basis:</b> steps taken at your request before providing the
+					Service (Art. 6(1)(b) GDPR).
+				</li>
+			</UL>
+			<P>
+				Invite links are single-use and are deleted once used. They do not
+				contain any personal data.
+			</P>
+
+			<H3>4.3 Account data</H3>
 			<UL>
 				<li>
 					<b>Data:</b> your name, email address, username, password (stored only
 					as a salted hash), an internal user identifier, your account roles,
-					and the date the account was created and last updated.
+					membership in the Early Access Program, the time you confirmed this
+					Privacy Policy, and the date the account was created and last
+					updated.
 				</li>
 				<li>
 					<b>Purpose:</b> creating and managing your account, authenticating
@@ -115,7 +215,7 @@ export default function Page() {
 				</li>
 			</UL>
 
-			<H3>4.2 Your tasks</H3>
+			<H3>4.4 Your tasks</H3>
 			<UL>
 				<li>
 					<b>Data:</b> content you enter into the app – task name, expected
@@ -136,7 +236,7 @@ export default function Page() {
 				health) into task names – the Service is not designed for it.
 			</P>
 
-			<H3>4.3 Push notifications</H3>
+			<H3>4.5 Push notifications</H3>
 			<UL>
 				<li>
 					<b>Data:</b> a push token identifying the app installation on your
@@ -154,7 +254,7 @@ export default function Page() {
 				</li>
 			</UL>
 
-			<H3>4.4 Technical logs</H3>
+			<H3>4.6 Technical logs</H3>
 			<UL>
 				<li>
 					<b>Data:</b> technical server logs (IP address, time and type of
@@ -170,7 +270,7 @@ export default function Page() {
 				</li>
 			</UL>
 
-			<H3>4.5 Feature configuration</H3>
+			<H3>4.7 Feature configuration</H3>
 			<P>
 				To decide which features of the Service are enabled for you, your user
 				identifier, email address and account roles are evaluated by a feature
@@ -184,28 +284,106 @@ export default function Page() {
 				produces legal or similarly significant effects on you (Art. 22 GDPR).
 			</P>
 
-			<H2>5. Data stored on your device and cookies</H2>
+			<H2 id="cookies">5. Cookie policy and data stored on your device</H2>
+			<P>
+				We use only <b>strictly necessary cookies</b> – cookies without which
+				you could not log in and use the Service. They are not used for
+				analytics, advertising or tracking, and are not shared with third
+				parties. Under § 89(3) of Czech Act No. 127/2005 Coll., on Electronic
+				Communications, such cookies do not require your consent, which is why
+				we do not show a cookie banner. You can delete or block cookies in your
+				browser settings at any time, but you will then not be able to log in.
+			</P>
+
+			<H3>Website (planee.martinpetr.dev)</H3>
+			<P>
+				The website does not use any cookies, analytics or third-party scripts.
+				Fonts are served from our own server, so your browser does not contact
+				third-party font services.
+			</P>
+
+			<H3>Login – identity service (kc.cloud.martinpetr.dev)</H3>
+			<P>
+				Our Keycloak identity service sets the following cookies when you
+				register or log in:
+			</P>
+			<Cookies
+				rows={[
+					[
+						"AUTH_SESSION_ID, KC_AUTH_SESSION_HASH",
+						"Link the steps of a login or registration together.",
+						"Browser session",
+					],
+					[
+						"KC_RESTART",
+						"Allows a login to be restarted if it times out.",
+						"Browser session",
+					],
+					[
+						"KEYCLOAK_IDENTITY, KEYCLOAK_SESSION",
+						"Keep you logged in to the identity service (single sign-on) and allow logout.",
+						"Browser session, or until the login session expires",
+					],
+					[
+						"KEYCLOAK_REMEMBER_ME",
+						"Remembers your username, only if you tick “Remember me”.",
+						"Up to 1 year",
+					],
+					[
+						"KEYCLOAK_LOCALE",
+						"Remembers the language you selected on the login page.",
+						"Browser session",
+					],
+				]}
+			/>
+
+			<H3>Web application (app.planee.martinpetr.dev)</H3>
+			<Cookies
+				rows={[
+					[
+						"oidc.web_session",
+						"Encrypted login session (access and refresh tokens) keeping you logged in.",
+						"Up to 30 days",
+					],
+					[
+						"oidc.web_profile",
+						"Encrypted basic profile (name, email) shown in the app.",
+						"Up to 30 days",
+					],
+					[
+						"oidc.web_idtoken",
+						"Encrypted identity token used to log you out.",
+						"Up to 30 days",
+					],
+					[
+						"codeVerifier",
+						"One-time security value protecting the login (PKCE).",
+						"Browser session",
+					],
+				]}
+			/>
+			<P>
+				The web application does not use local storage for tracking and does
+				not load any analytics or advertising scripts.
+			</P>
+
 			<H3>Android app</H3>
 			<P>
-				The app stores your login tokens in the encrypted secure storage of your
-				device and keeps a local cache of your tasks while running. This data is
-				removed when you log out or uninstall the app. The app does not contain
-				any analytics, advertising or crash reporting SDKs.
+				The app does not use cookies. It stores your login tokens in the
+				encrypted secure storage of your device and keeps a local cache of your
+				tasks while running. This data is removed when you log out or uninstall
+				the app. The app does not contain any analytics, advertising or crash
+				reporting SDKs.
 			</P>
-			<H3>Web application</H3>
+
+			<H3>Google Form</H3>
 			<P>
-				The web application uses only <b>strictly necessary cookies</b> required
-				to log you in and keep you logged in: an encrypted session cookie (valid
-				for up to 30 days), a security (CSRF) cookie and a cookie remembering
-				where to return after login. These cookies are necessary to provide the
-				Service you requested and therefore do not require your consent (§ 89(3)
-				of Czech Act No. 127/2005 Coll., on Electronic Communications).
-			</P>
-			<H3>Website</H3>
-			<P>
-				The website <i>planee.martinpetr.dev</i> does not use cookies or
-				analytics. Fonts are served from our own server, so your browser does
-				not contact third-party font services.
+				When you fill in the Early Access Program sign-up form, Google may set
+				its own cookies under its own cookie policy (
+				<a className="underline" href="https://policies.google.com/technologies/cookies">
+					policies.google.com/technologies/cookies
+				</a>
+				). We have no control over these cookies.
 			</P>
 
 			<H2>6. Recipients and processors</H2>
@@ -232,7 +410,13 @@ export default function Page() {
 					notification content.
 				</li>
 				<li>
-					<b>Google (Google Play)</b> – distributes the app and provides in-app
+					<b>Google Ireland Limited (Google Forms)</b> – hosts the Early Access
+					Program sign-up form and stores its responses. Acts as our processor.
+				</li>
+				<li>
+					<b>Google (Google Play)</b> – runs the testing program; the Google
+					account email of testers is added to the tester list in Google Play
+					Console. Google also distributes the app and provides in-app
 					update checks. Google processes data related to app downloads and
 					updates as an independent controller under its own privacy policy (
 					<a className="underline" href="https://policies.google.com/privacy">
@@ -250,7 +434,9 @@ export default function Page() {
 			<P>
 				Your account data and tasks are stored in the European Union (Germany).
 				Push notification data (push token and notification content) may be
-				transferred to the USA via Expo and Google. Such transfers are carried
+				transferred to the USA via Expo and Google, and Early Access Program
+				form responses and the Google Play tester list may be processed by
+				Google outside the EU. Such transfers are carried
 				out on the basis of the European Commission's adequacy decision for the
 				EU–US Data Privacy Framework (where the recipient is certified), or the
 				Standard Contractual Clauses approved by the European Commission (Art.
@@ -260,6 +446,17 @@ export default function Page() {
 
 			<H2>8. How long we keep your data</H2>
 			<UL>
+				<li>
+					<b>Early Access Program form responses</b> – until we have sent you
+					the registration guide and added you to the tester list, and at the
+					latest until the end of the Early Access Program. Your email stays on
+					the Google Play tester list while you take part in testing.
+				</li>
+				<li>
+					<b>Invitations</b> – invite links are deleted once used; Keycloak
+					invitation records are deleted once you register or the invitation
+					expires.
+				</li>
 				<li>
 					<b>Account data</b> – for as long as your account exists. Deleted
 					within 30 days of your deletion request.
@@ -290,8 +487,9 @@ export default function Page() {
 			</P>
 			<P>
 				Within 30 days of receiving your request, we will permanently delete
-				your account and all associated data – your account data, tasks and push
-				tokens. We do not retain any of your data after deletion, unless
+				your account and all associated data – your account data, tasks, push
+				tokens, Early Access Program form responses and your entry in the
+				Google Play tester list. We do not retain any of your data after deletion, unless
 				required by law. You can also delete individual tasks directly in the
 				app at any time.
 			</P>
@@ -321,7 +519,8 @@ export default function Page() {
 				</li>
 				<li>
 					<b>withdraw consent</b> at any time, where processing is based on
-					consent (e.g. the notification permission), without affecting the
+					consent (e.g. the notification permission or optional cookies on
+					Google's form), without affecting the
 					lawfulness of prior processing.
 				</li>
 			</UL>
@@ -361,15 +560,16 @@ export default function Page() {
 
 			<H2>13. Providing your data</H2>
 			<P>
-				Providing account data is necessary to create an account and use the
+				Providing your email address in the sign-up form and account data at
+				registration is necessary to join the Early Access Program and use the
 				Service; without it we cannot provide the Service to you. Granting the
 				notification permission is optional.
 			</P>
 
 			<H2>14. Changes to this policy</H2>
 			<P>
-				We may update this Privacy Policy, for example when we add new features
-				such as self-registration. The current version is always available on
+				We may update this Privacy Policy, for example when the Early Access
+				Program ends and public registration opens. The current version is always available on
 				this page with its effective date. We will inform you of significant
 				changes in the app or by email.
 			</P>
