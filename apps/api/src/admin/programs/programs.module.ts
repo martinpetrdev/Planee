@@ -14,5 +14,6 @@ import { ProgramsController } from './presentation/programs.controller.js';
     },
     EapProgramService,
   ],
+  exports: [EapProgramService],
 })
 export class ProgramsModule {}
