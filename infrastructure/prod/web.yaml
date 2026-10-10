@@ -69,11 +69,11 @@ spec:
                 secretKeyRef:
                   name: planee-web-oidc
                   key: CONF_WEB_OIDC_CLIENT_SECRET
-            - name: NEXTAUTH_URL
+            - name: CONF_WEB_OIDC_COOKIE_ENCRYPTION_KEY
               valueFrom:
-                configMapKeyRef:
-                  name: planee-config
-                  key: CONF_WEB_NEXTAUTH_URL
+                secretKeyRef:
+                  name: planee-web-oidc
+                  key: CONF_WEB_OIDC_COOKIE_ENCRYPTION_KEY
           resources:
             requests:
               cpu: "100m"
