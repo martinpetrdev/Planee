@@ -10,13 +10,21 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { ApiVersion } from '@repo/shared';
 
 import { User } from '../../shared/auth/presentation/decorators/user.decorator.js';
 import { FeatureFlag } from '../../shared/flags/domain/flag.js';
 import { Flags } from '../../shared/flags/presentation/decorators/flags.decorator.js';
+import { ApiAuthResponses } from '../../utils/swagger/decorators.js';
 import { CreateTaskCommand } from '../application/create-task.command.js';
 import { ListTasksCommand } from '../application/list-tasks.command.js';
 import { TaskManagementPort } from '../application/ports/task-management.port.js';
@@ -32,11 +40,19 @@ import { UpdateTaskDto } from './dto/update-task.dto.js';
   version: ApiVersion.v1,
 })
 @ApiBearerAuth()
+@ApiTags('tasks')
 @Flags(FeatureFlag.AccessEnabled)
 export class TasksController {
   constructor(private readonly tasks: TaskManagementPort) {}
 
   @Get('/')
+  @ApiOperation({
+    description: 'Get all tasks for a given category, paged.',
+  })
+  @ApiOkResponse({
+    type: TaskPageResponseDto,
+  })
+  @ApiAuthResponses()
   async listTasks(
     @User('id') userId: string,
     @Query() dto: ListTasksDto,
@@ -55,6 +71,13 @@ export class TasksController {
   }
 
   @Get('/:id')
+  @ApiOperation({
+    description: 'Returns the given task by id',
+  })
+  @ApiOkResponse({
+    type: TaskResponseDto,
+  })
+  @ApiAuthResponses()
   async getTask(
     @User('id') userId: string,
     @Param('id') taskId: string,
@@ -65,6 +88,13 @@ export class TasksController {
   }
 
   @Post('/')
+  @ApiOperation({
+    description: 'Create a new task',
+  })
+  @ApiCreatedResponse({
+    type: TaskResponseDto,
+  })
+  @ApiAuthResponses()
   async createTask(
     @User('id') userId: string,
     @Body() dto: CreateTaskDto,
@@ -83,6 +113,13 @@ export class TasksController {
   }
 
   @Put('/:id')
+  @ApiOperation({
+    description: 'Update a task by id',
+  })
+  @ApiCreatedResponse({
+    type: TaskResponseDto,
+  })
+  @ApiAuthResponses()
   async updateTask(
     @User('id') userId: string,
     @Param('id') taskId: string,
@@ -104,6 +141,13 @@ export class TasksController {
 
   @Post('/:id/complete')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    description: 'Mark task as completed',
+  })
+  @ApiOkResponse({
+    type: TaskResponseDto,
+  })
+  @ApiAuthResponses()
   async markTaskAsCompleted(
     @User('id') userId: string,
     @Param('id') taskId: string,
@@ -115,6 +159,13 @@ export class TasksController {
 
   @Delete('/:id/complete')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    description: 'Mark task as not completed',
+  })
+  @ApiOkResponse({
+    type: TaskResponseDto,
+  })
+  @ApiAuthResponses()
   async markTaskAsNotCompleted(
     @User('id') userId: string,
     @Param('id') taskId: string,
@@ -126,6 +177,13 @@ export class TasksController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    description: 'Delete task',
+  })
+  @ApiNoContentResponse({
+    description: 'No response - deleted successfully',
+  })
+  @ApiAuthResponses()
   async deleteTask(@User('id') userId: string, @Param('id') taskId: string) {
     await this.tasks.deleteTask(userId, taskId);
   }
