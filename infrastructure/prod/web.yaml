@@ -59,11 +59,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: NEXTAUTH_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: planee-web-oidc
-                  key: NEXTAUTH_SECRET
             - name: CONF_WEB_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
