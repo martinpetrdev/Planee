@@ -1,0 +1,7 @@
+// TODO: Remove when removing EAP
+model EarlyAccessProgramInvitation {
+  id String @id @default(ulid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

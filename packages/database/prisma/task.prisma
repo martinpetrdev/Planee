@@ -1,0 +1,22 @@
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Task {
+  id               String       @id @default(ulid())
+  name             String
+  expectedDuration Int
+  dueDate          DateTime
+  priority         TaskPriority
+  userId           String
+  completedAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
