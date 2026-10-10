@@ -14,7 +14,7 @@ interface ISidebarHeaderProps {
 export function SidebarHeader(props: ISidebarHeaderProps) {
 	return (
 		<div className="w-full flex flex-row pl-4 pr-6 py-4">
-			<p className="text-xl">{props.title}</p>
+			<p className="text-xl font-heading">{props.title}</p>
 		</div>
 	);
 }
