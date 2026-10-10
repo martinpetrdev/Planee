@@ -7,6 +7,7 @@ RUN npm i -g pnpm@11
 
 # Copy workspace configuration files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
 
 # Copy database package 
 COPY packages/database ./packages/database
