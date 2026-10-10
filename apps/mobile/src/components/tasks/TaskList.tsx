@@ -180,6 +180,7 @@ export function TaskList(props: ITaskListProps) {
                 isFirst={index === 0}
                 isLast={index === overdue.items.length - 1}
                 key={task.id}
+                showDate
               />
             ))}
           </>
