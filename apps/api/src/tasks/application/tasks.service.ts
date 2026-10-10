@@ -32,6 +32,7 @@ export class TasksService extends TaskManagementPort {
       dayStart: command.dayStart,
       cursorId: command.cursorId,
       limit: command.limit,
+      order: command.order,
     });
   }
 

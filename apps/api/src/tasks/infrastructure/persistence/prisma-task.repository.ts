@@ -43,6 +43,7 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
       dayStart: Date;
       cursorId: string | null;
       limit: number;
+      order?: 'asc' | 'desc';
     },
   ): Promise<Page<DomainTask>> {
     const start = filters.dayStart;
@@ -57,7 +58,11 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
       const entities = await tx.task.findMany({
         where: { userId, dueDate: due, completedAt: completedAt },
         orderBy: [
-          { dueDate: filters.scope === 'completed' ? 'desc' : 'asc' },
+          {
+            dueDate:
+              filters.order ??
+              (filters.scope === 'completed' ? 'desc' : 'asc'),
+          },
           { id: 'asc' },
         ],
         take: filters.limit + 1, // Take one more to check if next page exists

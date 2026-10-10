@@ -36,4 +36,9 @@ export class ListTasksDto {
   @Max(PAGE_SIZE)
   @ApiProperty({ example: PAGE_SIZE, required: false })
   limit?: number;
+
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  @ApiProperty({ enum: ['asc', 'desc'], required: false })
+  order?: 'asc' | 'desc';
 }

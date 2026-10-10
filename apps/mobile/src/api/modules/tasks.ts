@@ -20,6 +20,7 @@ export interface ListTasksDto {
   scope: 'overdue' | 'planned' | 'completed';
   cursorId?: string;
   limit?: number;
+  order?: 'asc' | 'desc';
 }
 
 export interface TaskResponseDto {

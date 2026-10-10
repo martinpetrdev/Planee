@@ -142,6 +142,7 @@ export function TaskList(props: ITaskListProps) {
       listTasks({
         scope: 'overdue',
         limit: 2,
+        order: 'desc', // Most actionable
       }),
   });
 

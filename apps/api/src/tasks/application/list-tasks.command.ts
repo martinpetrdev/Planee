@@ -7,5 +7,6 @@ export class ListTasksCommand {
     public readonly dayStart: Date,
     public readonly cursorId: string | null,
     public readonly limit: number = PAGE_SIZE,
+    public readonly order?: 'asc' | 'desc',
   ) {}
 }

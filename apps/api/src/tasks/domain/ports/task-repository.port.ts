@@ -14,6 +14,7 @@ export abstract class TaskRepositoryPort {
       dayStart: Date;
       cursorId: string | null;
       limit: number;
+      order?: 'asc' | 'desc';
     },
   ): Promise<Page<Task>>;
 }

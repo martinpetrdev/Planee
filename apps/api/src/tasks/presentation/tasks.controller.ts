@@ -64,6 +64,7 @@ export class TasksController {
         new Date(dto.dayStart),
         dto.cursorId ?? null,
         dto.limit,
+        dto.order,
       ),
     );
 
