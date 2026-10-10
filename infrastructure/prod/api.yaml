@@ -67,6 +67,16 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: CONF_API_OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: planee-api-oidc
+                  key: CONF_API_OIDC_CLIENT_ID
+            - name: CONF_API_OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: planee-api-oidc
+                  key: CONF_API_OIDC_CLIENT_SECRET
           resources:
             requests:
               cpu: "100m"
