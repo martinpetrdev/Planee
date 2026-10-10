@@ -55,7 +55,7 @@ export function AdminShell(props: PropsWithChildren) {
 						</SidebarLink>
 					</SidebarLinkGroup>
 					<SidebarLinkGroup title={"Special"}>
-						<SidebarLink href={"/programs/early-access"} workInProgress>
+						<SidebarLink href={"/programs/early-access"}>
 							<LockIcon size={18} /> Early access program
 						</SidebarLink>
 					</SidebarLinkGroup>

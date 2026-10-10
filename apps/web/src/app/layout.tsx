@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { Figtree, Lora } from "next/font/google";
+import { Bricolage_Grotesque, Figtree, Lora } from "next/font/google";
 import "./globals.css";
 import { AuthenticationProvider } from "@repo/web-oidc";
 import { cn } from "@repo/web-ui";
 import { oidcProvider } from "@/auth";
 import { ConfigProvider } from "@/providers/ConfigProvider";
 
-const loraHeading = Lora({ subsets: ["latin"], variable: "--font-heading" });
+const bricolageHeading = Bricolage_Grotesque({
+	subsets: ["latin"],
+	variable: "--font-heading",
+});
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -25,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 				"antialiased",
 				"font-sans",
 				figtree.variable,
-				loraHeading.variable,
+				bricolageHeading.variable,
 			)}
 		>
 			<body className="min-h-full flex flex-col">
