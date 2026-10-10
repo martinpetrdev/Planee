@@ -29,6 +29,7 @@ interface ITaskProps {
   onClick: () => void;
   isFirst: boolean;
   isLast: boolean;
+  showDate?: boolean;
 }
 
 const BORDER_RADIUS_INNER = 4;
@@ -146,8 +147,10 @@ export function Task(props: ITaskProps) {
                 typography="bodyMedium"
                 color={materialColors.onSurfaceVariant}
               >
-                {DateTime.fromISO(props.task.dueDate).toFormat('HH:mm')} ·{' '}
-                {durationLabel}
+                {DateTime.fromISO(props.task.dueDate).toFormat(
+                  props.showDate ? 'dd. MM. yyyy' : 'HH:mm',
+                )}{' '}
+                · {durationLabel}
               </Text>
               {props.task.priority === 'low' && (
                 <Badge label="Low priority" color="secondary" />

@@ -6,8 +6,7 @@ index 0f14ba1996ff3e4e0a347346acd9c71c15da348f..36e2ad1486d2b6bad18a0b6bc4c04bff
        perMessageDeflate: false,
        maxPayload: 0,
        verifyClient: (info) => {
-+        // Written by Claude Code (Claude Opus 5.5)
-+        // Allow non-browser clients (WebStorm debugger) that send no Origin header.
++        // Allow non-browser clients (WebStorm debugger) that send no Origin header. Written by Claude Code (Claude Opus 5.5)
 +        if (!info.origin) {
 +          return true;
 +        }
