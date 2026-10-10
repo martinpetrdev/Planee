@@ -1,6 +1,9 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 import { EapInvite } from '../../../domain/EapInvite.ts';
 
 export class EapInviteResponseDto {
+  @ApiProperty()
   id: string;
 
   constructor(data: EapInviteResponseDto) {
