@@ -1,0 +1,16 @@
+diff --git a/dist/inspector-proxy/InspectorProxy.js b/dist/inspector-proxy/InspectorProxy.js
+index 0f14ba1996ff3e4e0a347346acd9c71c15da348f..36e2ad1486d2b6bad18a0b6bc4c04bff3bdd32d9 100644
+--- a/dist/inspector-proxy/InspectorProxy.js
++++ b/dist/inspector-proxy/InspectorProxy.js
+@@ -367,6 +367,10 @@ class InspectorProxy {
+       perMessageDeflate: false,
+       maxPayload: 0,
+       verifyClient: (info) => {
++        // Written by Claude Code (Claude Opus 5.5)
++        // Allow non-browser clients (WebStorm debugger) that send no Origin header.
++        if (!info.origin) {
++          return true;
++        }
+         if (this.#serverBaseUrl.origin === info.origin) {
+           return true;
+         }
