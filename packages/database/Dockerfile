@@ -3,7 +3,7 @@ FROM node:26-alpine
 WORKDIR /app
 ENV CI=true
 
-RUN npm i -g pnpm@11
+RUN npm i -g pnpm@12.10.1
 
 # Copy workspace configuration files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
