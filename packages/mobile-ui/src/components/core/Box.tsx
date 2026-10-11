@@ -44,7 +44,7 @@ export function Box(props: IBoxProps) {
 						topStart: props.borderRadiusTL ?? props.borderRadius ?? 0,
 						topEnd: props.borderRadiusTR ?? props.borderRadius ?? 0,
 						bottomStart: props.borderRadiusBL ?? props.borderRadius ?? 0,
-						bottomEnd: props.borderRadiusBR ?? props.borderRadiusBR ?? 0,
+						bottomEnd: props.borderRadiusBR ?? props.borderRadius ?? 0,
 					}),
 				),
 				props.backgroundColor ? background(props.backgroundColor) : null,

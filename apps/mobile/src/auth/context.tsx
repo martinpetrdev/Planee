@@ -14,6 +14,8 @@ import {
   useState,
 } from 'react';
 
+import { useSnackbar } from '@repo/mobile-ui';
+
 import { useLoadingScreen } from '@/components/LoadingScreen';
 import { OIDC_ISSUER } from '@/configuration/auth';
 import { type IOIDCUserInfo, oidcClient } from './oidc';
@@ -22,7 +24,7 @@ interface IAuthContextValue {
   isLoading: boolean;
   isAuthenticated: boolean;
   userInfo: IOIDCUserInfo | null;
-  promptLogin: () => Promise<void>;
+  promptLogin: (idpHint?: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -45,13 +47,29 @@ export function AuthProvider(props: PropsWithChildren) {
   );
 
   const loading = useLoadingScreen();
+  const snackbar = useSnackbar();
+  const showLoginError = useCallback(
+    () =>
+      snackbar.show({
+        message: 'Sign in failed, please try again',
+        duration: 'short',
+      }),
+    [snackbar],
+  );
 
-  const promptLogin = async () => {
+  const promptLogin = async (idpHint?: string) => {
     // Set loading state to prevent flash of previous screen when the login calls back
     setIsLoading(true);
 
-    const result = await promptAsync();
+    // Added by Claude Code (Claude Opus 5.5)
+    const url =
+      idpHint && request?.url
+        ? `${request.url}&kc_idp_hint=${encodeURIComponent(idpHint)}`
+        : undefined;
+
+    const result = await promptAsync({ url });
     if (result.type !== 'success') setIsLoading(false);
+    if (result.type === 'error') void showLoginError();
   };
 
   const fetchInfo = useCallback(async () => {
@@ -100,9 +118,10 @@ export function AuthProvider(props: PropsWithChildren) {
       oidcClient.notifyNewSession();
       await invalidateAndRefetch();
     } catch (_error) {
+      void showLoginError();
       await invalidateAndRefetch();
     }
-  }, [response, request, discovery, invalidateAndRefetch]);
+  }, [response, request, discovery, invalidateAndRefetch, showLoginError]);
 
   const logout = async () => {
     await oidcClient.logout();

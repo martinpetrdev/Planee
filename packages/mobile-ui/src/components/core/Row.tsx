@@ -36,7 +36,7 @@ export function Row(props: IRowProps) {
 					props.paddingLeft ?? props.padding ?? 0,
 					props.paddingTop ?? props.padding ?? 0,
 					props.paddingRight ?? props.padding ?? 0,
-					props.paddingBottom ?? props.paddingBottom ?? 0,
+					props.paddingBottom ?? props.padding ?? 0,
 				),
 			].filter((i) => !!i)}
 			verticalAlignment={props.verticalAlignment}
