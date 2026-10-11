@@ -19,7 +19,7 @@ export default function Onboard() {
     <ScreenShell>
       <Column fill padding={24} paddingBottom={48 + insets.bottom}>
         <Image
-          source={require('../../assets/images/base.png')}
+          source={require('../../assets/images/logo.png')}
           modifiers={[size(64, 64)]}
         />
 

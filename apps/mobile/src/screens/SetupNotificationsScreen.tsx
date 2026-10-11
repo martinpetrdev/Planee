@@ -14,7 +14,6 @@ export function SetupNotificationsScreen() {
   return (
     <ScreenShell>
       <Column fill padding={24} paddingBottom={48 + insets.bottom}>
-        {/* Sized and nudged so the glyph lines up with the onboarding logo mark */}
         <Column paddingTop={4}>
           <Icon name="notification_add" size={56} color={colors.primary} />
         </Column>
