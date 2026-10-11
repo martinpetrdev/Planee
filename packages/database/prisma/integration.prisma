@@ -1,0 +1,55 @@
+model GoogleCalendarIntegration {
+  userId       String  @id
+  refreshToken String // encrypted at rest
+  calendarId   String
+  syncToken    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model BakalariServer {
+  id  String @id @default(ulid())
+  url String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  integrations BakalariIntegration[]
+}
+
+model BakalariIntegration {
+  userId       String @id
+  serverId     String
+  refreshToken String // encrypted at rest
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  server BakalariServer @relation(fields: [serverId], references: [id], onDelete: Cascade)
+}
+
+enum SchoolLessonSource {
+  MANUAL
+  BAKALARI_INTEGRATION
+}
+
+model SchoolLesson {
+  id        String             @id @default(ulid())
+  weekDay   Int
+  startTime String
+  endTime   String
+  subject   String
+  room      String?
+  validFrom DateTime           @db.Date
+  validTo   DateTime           @db.Date
+  source    SchoolLessonSource
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}

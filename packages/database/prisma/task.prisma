@@ -18,5 +18,8 @@ model Task {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  timeBlocks  TimeBlock[]
+  timeEntries TimeEntry[]
+
   @@index([userId])
 }
