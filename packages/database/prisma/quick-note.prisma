@@ -1,5 +1,6 @@
-model NotificationPushToken {
-  token  String @id
+model QuickNote {
+  id     String @id @default(ulid())
+  text   String
   userId String
 
   createdAt DateTime @default(now())
