@@ -60,8 +60,7 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
         orderBy: [
           {
             dueDate:
-              filters.order ??
-              (filters.scope === 'completed' ? 'desc' : 'asc'),
+              filters.order ?? (filters.scope === 'completed' ? 'desc' : 'asc'),
           },
           { id: 'asc' },
         ],
@@ -138,9 +137,8 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
           return null; // Return null if task was not found
         else throw e;
       });
-    if (!task) return false;
 
-    return true;
+    return !!task;
   }
 
   private prismaToDomain(entity: Task): DomainTask {

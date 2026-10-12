@@ -14,7 +14,7 @@ const bricolageHeading = Bricolage_Grotesque({
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-	title: "Planee",
+	text: "Planee",
 	description: "Day planner for people who love forgetting things",
 };
 

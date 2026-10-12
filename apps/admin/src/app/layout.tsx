@@ -12,7 +12,7 @@ const loraHeading = Lora({ subsets: ["latin"], variable: "--font-heading" });
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-	title: "Planee",
+	text: "Planee",
 	description: "Day planner for people who love forgetting things",
 };
 

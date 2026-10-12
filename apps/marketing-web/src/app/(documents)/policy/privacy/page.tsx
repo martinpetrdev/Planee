@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Privacy Policy – Planee",
+	text: "Privacy Policy – Planee",
 	description: "How Planee processes your personal data.",
 };
 
@@ -179,8 +179,8 @@ export default function Page() {
 			<UL>
 				<li>
 					<b>Data:</b> the email address you enter on the invite page, and the
-					invitation record in Keycloak (email address, time it was sent and
-					its expiry).
+					invitation record in Keycloak (email address, time it was sent and its
+					expiry).
 				</li>
 				<li>
 					<b>Purpose:</b> sending you the invitation email and letting you
@@ -202,8 +202,7 @@ export default function Page() {
 					<b>Data:</b> your name, email address, username, password (stored only
 					as a salted hash), an internal user identifier, your account roles,
 					membership in the Early Access Program, the time you confirmed this
-					Privacy Policy, and the date the account was created and last
-					updated.
+					Privacy Policy, and the date the account was created and last updated.
 				</li>
 				<li>
 					<b>Purpose:</b> creating and managing your account, authenticating
@@ -363,8 +362,8 @@ export default function Page() {
 				]}
 			/>
 			<P>
-				The web application does not use local storage for tracking and does
-				not load any analytics or advertising scripts.
+				The web application does not use local storage for tracking and does not
+				load any analytics or advertising scripts.
 			</P>
 
 			<H3>Android app</H3>
@@ -380,7 +379,10 @@ export default function Page() {
 			<P>
 				When you fill in the Early Access Program sign-up form, Google may set
 				its own cookies under its own cookie policy (
-				<a className="underline" href="https://policies.google.com/technologies/cookies">
+				<a
+					className="underline"
+					href="https://policies.google.com/technologies/cookies"
+				>
 					policies.google.com/technologies/cookies
 				</a>
 				). We have no control over these cookies.
@@ -416,9 +418,9 @@ export default function Page() {
 				<li>
 					<b>Google (Google Play)</b> – runs the testing program; the Google
 					account email of testers is added to the tester list in Google Play
-					Console. Google also distributes the app and provides in-app
-					update checks. Google processes data related to app downloads and
-					updates as an independent controller under its own privacy policy (
+					Console. Google also distributes the app and provides in-app update
+					checks. Google processes data related to app downloads and updates as
+					an independent controller under its own privacy policy (
 					<a className="underline" href="https://policies.google.com/privacy">
 						policies.google.com/privacy
 					</a>
@@ -436,12 +438,12 @@ export default function Page() {
 				Push notification data (push token and notification content) may be
 				transferred to the USA via Expo and Google, and Early Access Program
 				form responses and the Google Play tester list may be processed by
-				Google outside the EU. Such transfers are carried
-				out on the basis of the European Commission's adequacy decision for the
-				EU–US Data Privacy Framework (where the recipient is certified), or the
-				Standard Contractual Clauses approved by the European Commission (Art.
-				45 and 46(2)(c) GDPR). You may request more information about these
-				safeguards at <Mail />.
+				Google outside the EU. Such transfers are carried out on the basis of
+				the European Commission's adequacy decision for the EU–US Data Privacy
+				Framework (where the recipient is certified), or the Standard
+				Contractual Clauses approved by the European Commission (Art. 45 and
+				46(2)(c) GDPR). You may request more information about these safeguards
+				at <Mail />.
 			</P>
 
 			<H2>8. How long we keep your data</H2>
@@ -488,10 +490,10 @@ export default function Page() {
 			<P>
 				Within 30 days of receiving your request, we will permanently delete
 				your account and all associated data – your account data, tasks, push
-				tokens, Early Access Program form responses and your entry in the
-				Google Play tester list. We do not retain any of your data after deletion, unless
-				required by law. You can also delete individual tasks directly in the
-				app at any time.
+				tokens, Early Access Program form responses and your entry in the Google
+				Play tester list. We do not retain any of your data after deletion,
+				unless required by law. You can also delete individual tasks directly in
+				the app at any time.
 			</P>
 
 			<H2>10. Your rights</H2>
@@ -520,8 +522,7 @@ export default function Page() {
 				<li>
 					<b>withdraw consent</b> at any time, where processing is based on
 					consent (e.g. the notification permission or optional cookies on
-					Google's form), without affecting the
-					lawfulness of prior processing.
+					Google's form), without affecting the lawfulness of prior processing.
 				</li>
 			</UL>
 			<P>
@@ -569,9 +570,9 @@ export default function Page() {
 			<H2>14. Changes to this policy</H2>
 			<P>
 				We may update this Privacy Policy, for example when the Early Access
-				Program ends and public registration opens. The current version is always available on
-				this page with its effective date. We will inform you of significant
-				changes in the app or by email.
+				Program ends and public registration opens. The current version is
+				always available on this page with its effective date. We will inform
+				you of significant changes in the app or by email.
 			</P>
 		</article>
 	);

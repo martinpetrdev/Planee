@@ -5,6 +5,7 @@ import { AdminModule } from './admin/admin.module.js';
 import { ConfigModule } from './config/config.module.js';
 import { HealthModule } from './health/health.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
+import { QuickNotesModule } from './quick-notes/quick-notes.module.js';
 import { AuthModule } from './shared/auth/auth.module.js';
 import { PrismaModule } from './shared/database/prisma.module.js';
 import { ValidationError } from './shared/domain/validation.error.js';
@@ -18,6 +19,7 @@ const DomainModules = [
   HealthModule,
   NotificationsModule,
   TasksModule,
+  QuickNotesModule,
   AdminModule,
 ];
 
