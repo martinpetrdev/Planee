@@ -4,11 +4,16 @@ import { useState } from 'react';
 
 import { Column, Icon, PullToRefresh, Text } from '@repo/mobile-ui';
 
-import { listQuickNotes } from '@/api/modules/quick-notes';
+import {
+  listQuickNotes,
+  QuickNoteResponseDto,
+} from '@/api/modules/quick-notes';
 import QuickNote from '@/components/quick-notes/QuickNote';
+import { UpdateQuickNoteSheet } from '@/sheets/UpdateQuickNoteSheet';
 
 export function QuickNoteList() {
   const [refreshedManually, setRefreshedManually] = useState(false);
+  const [selected, setSelected] = useState<QuickNoteResponseDto | null>(null);
 
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['quick-notes'],
@@ -16,26 +21,36 @@ export function QuickNoteList() {
   });
 
   return (
-    <PullToRefresh
-      isRefreshing={refreshedManually && isFetching}
-      onRefresh={() => {
-        setRefreshedManually(true);
+    <>
+      <PullToRefresh
+        isRefreshing={refreshedManually && isFetching}
+        onRefresh={() => {
+          setRefreshedManually(true);
 
-        refetch().finally(() => setRefreshedManually(false));
-      }}
-      gap={2}
-      contentPadding={{ start: 16, end: 16, bottom: 16 }}
-    >
-      {data?.length === 0 && <NoQuickNotes />}
-      {data?.map((note, i) => (
-        <QuickNote
-          isFirst={i === 0}
-          isLast={i === data.length - 1}
-          quickNote={note}
-          key={note.id}
+          refetch().finally(() => setRefreshedManually(false));
+        }}
+        gap={2}
+        contentPadding={{ start: 16, end: 16, bottom: 16 }}
+      >
+        {data?.length === 0 && <NoQuickNotes />}
+        {data?.map((note, i) => (
+          <QuickNote
+            isFirst={i === 0}
+            isLast={i === data.length - 1}
+            quickNote={note}
+            key={note.id}
+            onClick={() => setSelected(note)}
+          />
+        ))}
+      </PullToRefresh>
+
+      {selected && (
+        <UpdateQuickNoteSheet
+          quickNote={selected}
+          onClose={() => setSelected(null)}
         />
-      ))}
-    </PullToRefresh>
+      )}
+    </>
   );
 }
 
