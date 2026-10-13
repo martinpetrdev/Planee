@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { Prisma, PrismaClient, Task, TaskPriority } from '@repo/database';
+import { Prisma, Task, TaskPriority } from '@repo/database';
 
+import { PrismaUnitOfWork } from '../../../shared/database/prisma.unit-of-work.js';
 import { Page } from '../../../shared/domain/pagination.ts';
 import { NewTask as NewDomainTask } from '../../domain/new-task.js';
 import { TaskRepositoryPort } from '../../domain/ports/task-repository.port.js';
@@ -23,8 +24,12 @@ const PRIORITY_TO_DOMAIN: Record<TaskPriority, DomainTaskPriority> = {
 
 @Injectable()
 export class PrismaTaskRepository extends TaskRepositoryPort {
-  constructor(private readonly db: PrismaClient) {
+  constructor(private readonly uow: PrismaUnitOfWork) {
     super();
+  }
+
+  private get db() {
+    return this.uow.client;
   }
 
   async findById(taskId: string, userId: string): Promise<DomainTask | null> {
@@ -54,8 +59,8 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
     else if (filters.scope === 'planned') due = { gte: start };
     else if (filters.scope === 'completed') completedAt = { not: null };
 
-    return await this.db.$transaction(async (tx) => {
-      const entities = await tx.task.findMany({
+    return await this.uow.run(async () => {
+      const entities = await this.db.task.findMany({
         where: { userId, dueDate: due, completedAt: completedAt },
         orderBy: [
           {
@@ -68,7 +73,7 @@ export class PrismaTaskRepository extends TaskRepositoryPort {
         ...(filters.cursorId && { cursor: { id: filters.cursorId }, skip: 1 }),
       });
 
-      const total = await tx.task.count({
+      const total = await this.db.task.count({
         where: { userId, dueDate: due, completedAt: completedAt },
       });
 
