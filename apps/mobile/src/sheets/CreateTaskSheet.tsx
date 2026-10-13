@@ -103,6 +103,11 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
         (parseInt(minutesState.value, 10) || 0) * 60,
       dueDate: toInstant(dueDate, dueTime || '00:00'),
       priority: priority,
+      ...(props.referenceQuickNote
+        ? {
+            quickNoteId: props.referenceQuickNote.id,
+          }
+        : {}),
     });
   };
 
