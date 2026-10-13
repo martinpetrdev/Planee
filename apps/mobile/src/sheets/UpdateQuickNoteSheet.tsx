@@ -204,6 +204,10 @@ export function UpdateQuickNoteSheet(props: IUpdateQuickNoteSheetProps) {
       <CreateTaskSheet
         sheetRef={createTaskSheetRef}
         referenceQuickNote={props.quickNote}
+        onCreated={() => {
+          close();
+          refetchQuickNoteQueries(queryClient);
+        }}
       />
     </>
   );

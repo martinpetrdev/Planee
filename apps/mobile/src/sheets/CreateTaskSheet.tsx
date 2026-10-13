@@ -30,6 +30,7 @@ import { refetchTaskQueries } from '@/helpers/task';
 interface ICreateTaskSheetProps {
   sheetRef: RefObject<BottomSheetRef | null>;
   referenceQuickNote?: QuickNoteResponseDto;
+  onCreated?: () => void;
 }
 
 const DEFAULT_DURATION_MINUTES = 5;
@@ -68,6 +69,8 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
     },
     onSuccess: () => {
       close();
+      props.onCreated?.();
+
       snackbar.show({
         message: 'Task created!',
         duration: 'short',
