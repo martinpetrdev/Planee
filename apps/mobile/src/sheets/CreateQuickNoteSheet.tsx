@@ -91,7 +91,7 @@ export function CreateQuickNoteSheet(props: ICreateQuickNoteSheetProps) {
             state={textState}
             label="What needs to be done?"
             disabled={isPending}
-            error={fieldErrors?.name}
+            error={fieldErrors?.text}
           />
         </Column>
         <Row gap={12} horizontalAlignment="end">

@@ -31,3 +31,6 @@ export const updateQuickNote = (id: string, dto: UpdateQuickNoteDto) =>
     `${BASE_PATH}/${id}`,
     dto,
   );
+
+export const deleteQuickNote = (id: string) =>
+  api.delete<object, object>(ApiVersion.v1, `${BASE_PATH}/${id}`);
