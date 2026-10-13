@@ -1,3 +1,4 @@
+import { useMaterialColors } from '@expo/ui/jetpack-compose';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type RefObject, useState } from 'react';
 import { ToastAndroid } from 'react-native';
@@ -7,6 +8,7 @@ import {
   type BottomSheetRef,
   Button,
   Column,
+  Expandable,
   Input,
   Row,
   SegmentedButton,
@@ -17,6 +19,7 @@ import {
 } from '@repo/mobile-ui';
 
 import { API } from '@/api/api';
+import { QuickNoteResponseDto } from '@/api/modules/quick-notes';
 import {
   type CreateTaskDto,
   createTask,
@@ -26,11 +29,13 @@ import { refetchTaskQueries } from '@/helpers/task';
 
 interface ICreateTaskSheetProps {
   sheetRef: RefObject<BottomSheetRef | null>;
+  referenceQuickNote?: QuickNoteResponseDto;
 }
 
 const DEFAULT_DURATION_MINUTES = 5;
 
 export function CreateTaskSheet(props: ICreateTaskSheetProps) {
+  const materialColors = useMaterialColors();
   const nameState = useNativeState('');
   const hoursState = useNativeState('0');
   const minutesState = useNativeState(DEFAULT_DURATION_MINUTES.toString());
@@ -108,6 +113,13 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
       onClose={clear}
     >
       <Column padding={24} gap={24}>
+        {props.referenceQuickNote && (
+          <Expandable title="Reference note" icon="sticky_note_2">
+            <Text color={materialColors.onSurfaceVariant}>
+              {props.referenceQuickNote.text}
+            </Text>
+          </Expandable>
+        )}
         <Text typography="headlineSmall">New task</Text>
         <Column gap={16}>
           <Input

@@ -28,6 +28,7 @@ import {
   updateQuickNote,
 } from '@/api/modules/quick-notes';
 import { refetchQuickNoteQueries } from '@/helpers/quickNote';
+import { CreateTaskSheet } from '@/sheets/CreateTaskSheet';
 
 interface IUpdateQuickNoteSheetProps {
   quickNote: QuickNoteResponseDto;
@@ -36,6 +37,7 @@ interface IUpdateQuickNoteSheetProps {
 
 export function UpdateQuickNoteSheet(props: IUpdateQuickNoteSheetProps) {
   const sheetRef = useRef<BottomSheetRef | null>(null);
+  const createTaskSheetRef = useRef<BottomSheetRef | null>(null);
 
   const textState = useNativeState(props.quickNote.text);
 
@@ -140,7 +142,11 @@ export function UpdateQuickNoteSheet(props: IUpdateQuickNoteSheetProps) {
               disabled={isPending}
               error={fieldErrors?.text}
             />
-            <Card fillWidth borderRadius={12} onClick={() => {}}>
+            <Card
+              fillWidth
+              borderRadius={12}
+              onClick={() => createTaskSheetRef.current?.open()}
+            >
               <Row padding={16} gap={16} verticalAlignment="center">
                 <Icon name="add_task" color={materialColors.primary} />
                 <Column flex>
@@ -194,6 +200,11 @@ export function UpdateQuickNoteSheet(props: IUpdateQuickNoteSheetProps) {
           '? This action cannot be undone.
         </Text>
       </AlertDialog>
+
+      <CreateTaskSheet
+        sheetRef={createTaskSheetRef}
+        referenceQuickNote={props.quickNote}
+      />
     </>
   );
 }

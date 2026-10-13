@@ -16,6 +16,8 @@ export const Icons = {
 	cancel: require("@expo/material-symbols/cancel.xml"),
 	sentiment_satisfied: require("@expo/material-symbols/sentiment_satisfied.xml"),
 	chevron_right: require("@expo/material-symbols/chevron_right.xml"),
+	keyboard_arrow_down: require("@expo/material-symbols/keyboard_arrow_down.xml"),
+	sticky_note_2: require("@expo/material-symbols/sticky_note_2.xml"),
 	edit: require("@expo/material-symbols/edit.xml"),
 	inbox: require("@expo/material-symbols/inbox.xml"),
 	note_stack_add: require("@expo/material-symbols/note_stack_add.xml"),
