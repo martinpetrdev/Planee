@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
 
-import { Prisma, PrismaClient, QuickNote } from '@repo/database';
+import { Prisma, QuickNote } from '@repo/database';
 
+import { PrismaUnitOfWork } from '../../../shared/database/prisma.unit-of-work.js';
 import { NewQuickNote } from '../../domain/new-quick-note.js';
 import { QuickNoteRepositoryPort } from '../../domain/ports/quick-note-repository.port.js';
 import { QuickNote as DomainQuickNote } from '../../domain/quick-note.js';
 
 @Injectable()
 export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
-  constructor(private readonly db: PrismaClient) {
+  constructor(private readonly uow: PrismaUnitOfWork) {
     super();
+  }
+
+  private get db() {
+    return this.uow.client;
   }
 
   async findAllByUserId(userId: string): Promise<DomainQuickNote[]> {

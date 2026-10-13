@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { Page } from '../../shared/domain/pagination.ts';
+import { QuickNoteRepositoryPort } from '../../quick-notes/domain/ports/quick-note-repository.port.js';
+import { QuickNoteNotFoundError } from '../../quick-notes/domain/quick-note.errors.js';
+import { UnitOfWorkPort } from '../../shared/application/ports/unit-of-work.port.js';
+import { Page } from '../../shared/domain/pagination.js';
 import { EventBusPort } from '../../shared/events/domain/ports/event-bus.port.js';
 import {
   taskCreated,
@@ -22,6 +25,8 @@ export class TasksService extends TaskManagementPort {
   constructor(
     private readonly tasks: TaskRepositoryPort,
     private readonly events: EventBusPort,
+    private readonly quickNotes: QuickNoteRepositoryPort,
+    private readonly uow: UnitOfWorkPort,
   ) {
     super();
   }
@@ -44,15 +49,28 @@ export class TasksService extends TaskManagementPort {
   }
 
   async createTask(command: CreateTaskCommand) {
-    const task = await this.tasks.insert(
-      NewTask.create(
-        command.name,
-        Duration.fromSeconds(command.expectedDuration),
-        command.dueDate,
-        command.priority,
-        command.userId,
-      ),
-    );
+    const task = await this.uow.run(async () => {
+      const task = await this.tasks.insert(
+        NewTask.create(
+          command.name,
+          Duration.fromSeconds(command.expectedDuration),
+          command.dueDate,
+          command.priority,
+          command.userId,
+        ),
+      );
+
+      if (command.quickNoteId) {
+        const ok = await this.quickNotes.delete(
+          command.quickNoteId,
+          command.userId,
+        );
+
+        if (!ok) throw new QuickNoteNotFoundError(command.quickNoteId); // rolls back the insert
+      }
+
+      return task;
+    });
 
     await this.events.publish(taskCreated(task));
 

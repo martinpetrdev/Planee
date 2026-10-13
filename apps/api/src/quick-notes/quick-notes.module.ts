@@ -15,6 +15,6 @@ import { QuickNotesController } from './presentation/quick-notes.controller.js';
     },
     QuickNotesService,
   ],
-  exports: [],
+  exports: [QuickNoteRepositoryPort],
 })
 export class QuickNotesModule {}

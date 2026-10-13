@@ -7,5 +7,6 @@ export class CreateTaskCommand {
     public readonly expectedDuration: number,
     public readonly dueDate: Date,
     public readonly priority: TaskPriority,
+    public readonly quickNoteId?: string,
   ) {}
 }

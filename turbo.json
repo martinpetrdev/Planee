@@ -11,7 +11,7 @@
 		},
 		"generate": {
 			"cache": true,
-			"inputs": ["prisma/schema.prisma"],
+			"inputs": ["prisma/*.prisma", "prisma.config.ts"],
 			"outputs": ["src/generated/**"]
 		},
 		"build": {

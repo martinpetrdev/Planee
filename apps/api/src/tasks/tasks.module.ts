@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { QuickNotesModule } from '../quick-notes/quick-notes.module.js';
 import { TaskManagementPort } from './application/ports/task-management.port.js';
 import { TasksService } from './application/tasks.service.js';
 import { TaskRepositoryPort } from './domain/ports/task-repository.port.js';
@@ -7,6 +8,7 @@ import { PrismaTaskRepository } from './infrastructure/persistence/prisma-task.r
 import { TasksController } from './presentation/tasks.controller.js';
 
 @Module({
+  imports: [QuickNotesModule],
   providers: [
     {
       provide: TaskRepositoryPort,
