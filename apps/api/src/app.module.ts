@@ -13,6 +13,7 @@ import { EventsModule } from './shared/events/events.module.js';
 import { FlagsModule } from './shared/flags/flags.module.js';
 import { DomainExceptionFilter } from './shared/presentation/filters/domain-exception.filter.js';
 import { ValidationExceptionFilter } from './shared/presentation/filters/validation-exception.filter.js';
+import { WorkerModule } from './shared/worker/worker.module.js';
 import { TasksModule } from './tasks/tasks.module.js';
 
 const DomainModules = [
@@ -30,6 +31,7 @@ const DomainModules = [
     EventsModule,
     AuthModule,
     FlagsModule,
+    WorkerModule,
     ...DomainModules,
   ],
   providers: [

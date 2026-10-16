@@ -1,5 +1,7 @@
-import { registerAs } from '@nestjs/config';
+import { registerAs } from "@nestjs/config";
 
-export default registerAs('redis', () => ({
-  url: process.env.REDIS_URL,
+export const REDIS_URL = process.env.REDIS_URL ?? "";
+
+export default registerAs("redis", () => ({
+	url: REDIS_URL,
 }));
