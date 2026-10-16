@@ -32,6 +32,14 @@ jobs:
               - '.github/workflows/deployment.yml'
               - 'pnpm-lock.yaml'
 
+            worker:
+              - 'apps/worker'
+              - 'apps/worker/**'
+              - 'packages/database/**'
+              - 'packages/shared/**'
+              - '.github/workflows/deployment.yml'
+              - 'pnpm-lock.yaml'
+
             web:
               - 'apps/web'
               - 'apps/web/**'
@@ -69,13 +77,15 @@ jobs:
           MSG: ${{ github.event.head_commit.message }}
         run: |
           api="${{ steps.filter.outputs.api }}"
+          worker="${{ steps.filter.outputs.worker }}"
           web="${{ steps.filter.outputs.web }}"
           dbm="${{ steps.filter.outputs.db-migration }}"
           marketing_web="${{ steps.filter.outputs.marketing-web }}"
           admin="${{ steps.filter.outputs.admin }}"
-          for c in api web db-migration marketing-web admin; do
+          for c in api worker web db-migration marketing-web admin; do
             case "$c" in
               api) v="$api" ;;
+              worker) v="$worker" ;;
               web) v="$web" ;;
               db-migration) v="$dbm" ;;
               marketing-web) v="$marketing_web" ;;
@@ -111,6 +121,15 @@ jobs:
           tags: ${{ env.REGISTRY }}/planee/api:${{ steps.tag.outputs.tag }}, ${{ env.REGISTRY }}/planee/api:latest
           cache-from: type=gha,scope=api
           cache-to: type=gha,mode=max,scope=api
+
+      - name: Build & push worker
+        if: steps.build.outputs.worker == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/worker/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/planee/worker:${{ steps.tag.outputs.tag }}, ${{ env.REGISTRY }}/planee/worker:latest
 
       - name: Build & push web
         if: steps.build.outputs.web == 'true'
@@ -155,7 +174,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/planee/admin:${{ steps.tag.outputs.tag }}, ${{ env.REGISTRY }}/planee/admin:latest
 
       - name: Update manifests & commit
-        if: steps.build.outputs.api == 'true' || steps.build.outputs.web == 'true' || steps.build.outputs.marketing-web == 'true' || steps.build.outputs.db-migration == 'true' || steps.build.outputs.admin == 'true'
+        if: steps.build.outputs.api == 'true' || steps.build.outputs.worker == 'true' || steps.build.outputs.web == 'true' || steps.build.outputs.marketing-web == 'true' || steps.build.outputs.db-migration == 'true' || steps.build.outputs.admin == 'true'
         run: |
           TAG="${{ steps.tag.outputs.tag }}"
 
@@ -172,6 +191,10 @@ jobs:
           if [ "${{ steps.build.outputs.api }}" = "true" ]; then
             sed -i "s|image: ${{ env.REGISTRY }}/planee/api:.*|image: ${{ env.REGISTRY }}/planee/api:${TAG}|g" api.yaml
             git add api.yaml
+          fi
+          if [ "${{ steps.build.outputs.worker }}" = "true" ]; then
+            sed -i "s|image: ${{ env.REGISTRY }}/planee/worker:.*|image: ${{ env.REGISTRY }}/planee/worker:${TAG}|g" worker.yaml
+            git add worker.yaml
           fi
           if [ "${{ steps.build.outputs.web }}" = "true" ]; then
             sed -i "s|image: ${{ env.REGISTRY }}/planee/web:.*|image: ${{ env.REGISTRY }}/planee/web:${TAG}|g" web.yaml
