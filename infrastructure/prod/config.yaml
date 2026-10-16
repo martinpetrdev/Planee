@@ -10,6 +10,7 @@ data:
   CONF_API_OIDC_AUDIENCE: "api"
   CONF_API_FLAGS_URL: "http://planee-flipt-svc"
   CONF_API_FLAGS_NAMESPACE: "planee"
+  CONF_API_LLM_URL: "http://planee-llm-svc"
 
   CONF_WEB_API_BASE: "https://api.planee.martinpetr.dev"
   CONF_WEB_OIDC_ISSUER: "https://kc.cloud.martinpetr.dev/realms/dev.martinpetr.planee"

@@ -1,0 +1,104 @@
+# Created by AI (Claude Opus 5.5)
+# Internal-only llama.cpp server for note -> task autofill (OpenAI-compatible API, no ingress)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: planee-llm-models
+  namespace: planee
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: planee-llm-svc
+  namespace: planee
+  labels:
+    app: planee-llm
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: planee-llm
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: planee-llm
+  namespace: planee
+  labels:
+    app: planee-llm
+spec:
+  replicas: 1 # RWO volume, single writer
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: planee-llm
+  template:
+    metadata:
+      labels:
+        app: planee-llm
+    spec:
+      containers:
+        - name: llama
+          image: ghcr.io/ggml-org/llama.cpp:server
+          args:
+            # Downloaded to LLAMA_CACHE on first start, reused afterwards
+            - -hf
+            - ggml-org/gemma-4-E2B-it-GGUF:Q4_0
+            - --no-mmproj
+            - --reasoning
+            - "off" # autofill doesn't need thinking, it only costs latency
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8080"
+            - --ctx-size
+            - "4096"
+            - --parallel
+            - "2" # ctx is split between slots -> 2048 tokens per request
+            - --threads
+            - "8" # keep equal to CPU limit, otherwise throttling kills latency
+          env:
+            - name: LLAMA_CACHE
+              value: /models
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts:
+            - name: models
+              mountPath: /models
+          resources:
+            requests:
+              cpu: "2"
+              memory: "6Gi"
+            limits:
+              cpu: "8"
+              memory: "8Gi"
+          startupProbe: # first start downloads ~5 GB
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 90
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 20
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: planee-llm-models
