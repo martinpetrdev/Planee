@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
+import { EventBusPort } from '../../shared/events/domain/ports/event-bus.port.ts';
+import {
+  quickNoteCreated,
+  quickNoteDeleted,
+  quickNoteUpdated,
+} from '../domain/events/quick-note.events.ts';
 import { NewQuickNote } from '../domain/new-quick-note.js';
 import { QuickNoteAutofillPort } from '../domain/ports/quick-note-autofill.port.js';
 import { QuickNoteRepositoryPort } from '../domain/ports/quick-note-repository.port.js';
@@ -15,6 +21,7 @@ export class QuickNotesService {
   constructor(
     private readonly quickNoteRepository: QuickNoteRepositoryPort,
     private readonly quickNoteAutofill: QuickNoteAutofillPort,
+    private readonly events: EventBusPort,
   ) {}
 
   // Paging not required, this should not fill up too much
@@ -31,6 +38,8 @@ export class QuickNotesService {
       noteId: note.id,
     });
 
+    await this.events.publish(quickNoteCreated(note));
+
     return note;
   }
 
@@ -39,6 +48,8 @@ export class QuickNotesService {
       QuickNote.create(command.userId, command.id, command.text),
     );
     if (!note) throw new QuickNoteNotFoundError(command.id);
+
+    await this.events.publish(quickNoteUpdated(note));
 
     return note;
   }
@@ -49,5 +60,7 @@ export class QuickNotesService {
       command.userId,
     );
     if (!found) throw new QuickNoteNotFoundError(command.id);
+
+    await this.events.publish(quickNoteDeleted(command.id, command.userId));
   }
 }

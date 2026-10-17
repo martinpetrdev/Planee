@@ -4,6 +4,7 @@ import {
   listQuickNotes,
   QuickNoteResponseDto,
 } from '@/api/modules/quick-notes';
+import { EventHandler } from '@/services/EventHandler/EventHandler';
 import { Logger } from '@/utils/logger';
 
 export const QuickNoteRepository = createRepository<QuickNoteResponseDto[]>({
@@ -14,4 +15,25 @@ export const QuickNoteRepository = createRepository<QuickNoteResponseDto[]>({
 
 export function useQuickNoteRepository() {
   return useRepository(QuickNoteRepository);
+}
+
+export function registerQuickNoteRepositoryEvents() {
+  EventHandler.instance.on('quick-note.created', (data) => {
+    QuickNoteRepository.mutate((current) => [
+      ...(current ?? []),
+      data as unknown as QuickNoteResponseDto,
+    ]);
+  });
+  EventHandler.instance.on('quick-note.updated', (data) => {
+    QuickNoteRepository.mutate((current) =>
+      (current ?? []).map((note) =>
+        note.id === data.id ? (data as unknown as QuickNoteResponseDto) : note,
+      ),
+    );
+  });
+  EventHandler.instance.on('quick-note.deleted', (data) => {
+    QuickNoteRepository.mutate((current) =>
+      (current ?? []).filter((note) => note.id !== data.id),
+    );
+  });
 }

@@ -1,5 +1,6 @@
 type OnChangeHandler<T> = (value: T | null) => void;
 type OnStatusChangeHandler = (value: boolean) => void;
+type DataMutationFunction<T> = (current: T | null) => T | null;
 
 type RepositoryFetchHandler<T> = () => Promise<T>;
 type RepositoryLogger = {
@@ -56,6 +57,13 @@ export class Repository<T> {
 		this.updateData(data);
 		this.updateStatus(false);
 		this._fetchingPromise = null;
+	}
+
+	public mutate(fn: DataMutationFunction<T>): void {
+		this.log("Mutate data");
+
+		const data = fn(this.data);
+		this.updateData(data);
 	}
 
 	private log(...args: unknown[]) {
