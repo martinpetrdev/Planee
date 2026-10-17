@@ -107,6 +107,7 @@ export class TasksController {
         dto.expectedDurationSeconds,
         new Date(dto.dueDate),
         dto.priority,
+        dto.quickNoteId,
       ),
     );
 

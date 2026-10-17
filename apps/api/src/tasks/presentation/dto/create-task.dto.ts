@@ -3,6 +3,7 @@ import {
   IsEnum,
   IsISO8601,
   IsNumber,
+  IsOptional,
   IsString,
   Length,
   Min,
@@ -28,4 +29,9 @@ export class CreateTaskDto {
   @IsEnum(TaskPriority)
   @ApiProperty()
   priority: TaskPriority;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ required: false })
+  quickNoteId?: string;
 }

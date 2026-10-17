@@ -2,6 +2,9 @@ import { Global, Module } from '@nestjs/common';
 
 import { PrismaClient, prisma } from '@repo/database';
 
+import { UnitOfWorkPort } from '../application/ports/unit-of-work.port.js';
+import { PrismaUnitOfWork } from './prisma.unit-of-work.js';
+
 @Global()
 @Module({
   providers: [
@@ -9,7 +12,12 @@ import { PrismaClient, prisma } from '@repo/database';
       provide: PrismaClient,
       useValue: prisma,
     },
+    PrismaUnitOfWork,
+    {
+      provide: UnitOfWorkPort,
+      useExisting: PrismaUnitOfWork,
+    },
   ],
-  exports: [PrismaClient],
+  exports: [PrismaClient, PrismaUnitOfWork, UnitOfWorkPort],
 })
 export class PrismaModule {}

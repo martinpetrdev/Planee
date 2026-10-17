@@ -2,20 +2,22 @@ import { useRef } from 'react';
 
 import { type BottomSheetRef, DropdownMenu, FAB } from '@repo/mobile-ui';
 
+import { CreateQuickNoteSheet } from '@/sheets/CreateQuickNoteSheet';
 import { CreateTaskSheet } from '@/sheets/CreateTaskSheet';
 
 export function CreateFAB() {
   const createTaskSheetRef = useRef<BottomSheetRef>(null);
+  const createQuickNoteSheetRef = useRef<BottomSheetRef>(null);
 
   return (
     <>
       <DropdownMenu
         items={[
-          /*{
-            label: "Quick note",
-            icon: "note_add",
-            onClick: () => {},
-          },*/
+          {
+            label: 'Quick note',
+            icon: 'note_stack_add',
+            onClick: () => createQuickNoteSheetRef.current?.open(),
+          },
           {
             label: 'Task',
             icon: 'add_task',
@@ -37,6 +39,7 @@ export function CreateFAB() {
       />
 
       <CreateTaskSheet sheetRef={createTaskSheetRef} />
+      <CreateQuickNoteSheet sheetRef={createQuickNoteSheetRef} />
     </>
   );
 }

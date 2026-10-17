@@ -107,6 +107,8 @@ function renderTaskGroups(
 }
 
 interface ITaskListProps {
+  header?: ReactNode;
+  onRefetch?: () => void;
   onSeeOverdueClick?: () => void;
 }
 
@@ -157,13 +159,17 @@ export function TaskList(props: ITaskListProps) {
         isRefreshing={refreshedManually && (isFetching || isFetchingOverdue)}
         onRefresh={() => {
           setRefreshedManually(true);
-          Promise.all([refetch(), refetchOverdue()]).finally(() =>
-            setRefreshedManually(false),
-          );
+
+          Promise.all([
+            refetch(),
+            refetchOverdue(),
+            props.onRefetch?.(),
+          ]).finally(() => setRefreshedManually(false));
         }}
         gap={2}
         contentPadding={listContentPadding}
       >
+        {props.header}
         {overdue && overdue.total > 0 && (
           <>
             <SectionHeader

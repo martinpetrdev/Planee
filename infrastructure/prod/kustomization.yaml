@@ -13,3 +13,5 @@ resources:
   - flipt.yaml
   - redis.yaml
   - admin.yaml
+  - llm.yaml
+  - worker.yaml

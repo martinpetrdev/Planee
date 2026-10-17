@@ -72,6 +72,10 @@ async function bootstrap() {
       'Group of endpoints that allow obtaining state of feature flags',
     )
     .addTag('tasks', 'Group of endpoints that allow to manage tasks')
+    .addTag(
+      'quick-notes',
+      'Group of endpoints that allow to manage quick notes',
+    )
     .addTag('users', 'Group of endpoints for managing user accounts')
     .addBearerAuth({
       type: 'openIdConnect',
@@ -92,7 +96,7 @@ async function bootstrap() {
       },
       {
         name: 'Application',
-        tags: ['tasks'],
+        tags: ['tasks', 'quick-notes'],
       },
       {
         name: 'Mobile-specific',

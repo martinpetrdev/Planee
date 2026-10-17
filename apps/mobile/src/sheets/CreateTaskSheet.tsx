@@ -1,3 +1,4 @@
+import { useMaterialColors } from '@expo/ui/jetpack-compose';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type RefObject, useState } from 'react';
 import { ToastAndroid } from 'react-native';
@@ -7,6 +8,7 @@ import {
   type BottomSheetRef,
   Button,
   Column,
+  Expandable,
   Input,
   Row,
   SegmentedButton,
@@ -17,6 +19,7 @@ import {
 } from '@repo/mobile-ui';
 
 import { API } from '@/api/api';
+import { QuickNoteResponseDto } from '@/api/modules/quick-notes';
 import {
   type CreateTaskDto,
   createTask,
@@ -26,16 +29,27 @@ import { refetchTaskQueries } from '@/helpers/task';
 
 interface ICreateTaskSheetProps {
   sheetRef: RefObject<BottomSheetRef | null>;
+  referenceQuickNote?: QuickNoteResponseDto;
+  onCreated?: () => void;
 }
 
 const DEFAULT_DURATION_MINUTES = 5;
 
 export function CreateTaskSheet(props: ICreateTaskSheetProps) {
-  const nameState = useNativeState('');
-  const hoursState = useNativeState('0');
-  const minutesState = useNativeState(DEFAULT_DURATION_MINUTES.toString());
-  const [dueDate, setDueDate] = useState('');
-  const [dueTime, setDueTime] = useState('');
+  const materialColors = useMaterialColors();
+
+  // Autofill dates are local wall clock
+  const autofill = props.referenceQuickNote?.autofill;
+  const nameState = useNativeState(autofill?.title ?? '');
+
+  const autofillMinutes =
+    autofill?.expectedDurationMinutes ?? DEFAULT_DURATION_MINUTES;
+  const hoursState = useNativeState(
+    Math.floor(autofillMinutes / 60).toString(),
+  );
+  const minutesState = useNativeState((autofillMinutes % 60).toString());
+  const [dueDate, setDueDate] = useState(autofill?.dueDate ?? '');
+  const [dueTime, setDueTime] = useState(autofill?.dueTime ?? '');
   const [priority, setPriority] = useState<TaskPriority>('medium');
 
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -63,6 +77,8 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
     },
     onSuccess: () => {
       close();
+      props.onCreated?.();
+
       snackbar.show({
         message: 'Task created!',
         duration: 'short',
@@ -98,6 +114,11 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
         (parseInt(minutesState.value, 10) || 0) * 60,
       dueDate: toInstant(dueDate, dueTime || '00:00'),
       priority: priority,
+      ...(props.referenceQuickNote
+        ? {
+            quickNoteId: props.referenceQuickNote.id,
+          }
+        : {}),
     });
   };
 
@@ -108,6 +129,13 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
       onClose={clear}
     >
       <Column padding={24} gap={24}>
+        {props.referenceQuickNote && (
+          <Expandable title="Reference note" icon="sticky_note_2">
+            <Text color={materialColors.onSurfaceVariant}>
+              {props.referenceQuickNote.text}
+            </Text>
+          </Expandable>
+        )}
         <Text typography="headlineSmall">New task</Text>
         <Column gap={16}>
           <Input

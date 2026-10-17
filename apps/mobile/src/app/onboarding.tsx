@@ -1,6 +1,6 @@
 import { RNHostView } from '@expo/ui';
 import { Image, useMaterialColors } from '@expo/ui/jetpack-compose';
-import { size } from '@expo/ui/jetpack-compose/modifiers';
+import { padding, size } from '@expo/ui/jetpack-compose/modifiers';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -20,7 +20,7 @@ export default function Onboard() {
       <Column fill padding={24} paddingBottom={48 + insets.bottom}>
         <Image
           source={require('../../assets/images/logo.png')}
-          modifiers={[size(64, 64)]}
+          modifiers={[padding(8, 0, 0, 0), size(64, 64)]}
         />
 
         <Column padding={8} paddingBottom={0}>

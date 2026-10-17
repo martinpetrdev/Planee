@@ -1,7 +1,7 @@
 import { Shape, Surface, useMaterialColors } from "@expo/ui/jetpack-compose";
 import { fillMaxWidth } from "@expo/ui/jetpack-compose/modifiers";
 import type { PropsWithChildren } from "react";
-import { Box } from "./Box";
+import { Column } from "./Column";
 
 interface ICardProps extends PropsWithChildren {
 	padding?: number;
@@ -35,7 +35,7 @@ export function Card(props: ICardProps) {
 			modifiers={props.fillWidth ? [fillMaxWidth()] : []}
 			onClick={props.onClick}
 		>
-			<Box
+			<Column
 				padding={props.padding}
 				paddingLeft={props.paddingLeft}
 				paddingRight={props.paddingRight}
@@ -43,7 +43,7 @@ export function Card(props: ICardProps) {
 				paddingBottom={props.paddingBottom}
 			>
 				{props.children}
-			</Box>
+			</Column>
 		</Surface>
 	);
 }

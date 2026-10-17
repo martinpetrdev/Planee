@@ -12,6 +12,7 @@ export interface CreateTaskDto {
   expectedDurationSeconds: number;
   dueDate: string;
   priority: TaskPriority;
+  quickNoteId?: string;
 }
 
 export interface UpdateTaskDto extends CreateTaskDto {}
