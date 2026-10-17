@@ -119,8 +119,6 @@ jobs:
           file: apps/api/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/planee/api:${{ steps.tag.outputs.tag }}, ${{ env.REGISTRY }}/planee/api:latest
-          cache-from: type=gha,scope=api
-          cache-to: type=gha,mode=max,scope=api
 
       - name: Build & push worker
         if: steps.build.outputs.worker == 'true'
