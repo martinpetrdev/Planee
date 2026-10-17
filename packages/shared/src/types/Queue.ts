@@ -1,5 +1,5 @@
 export const Queue = {
-	llm: "llm",
+	quickNote: "quickNote",
 } as const;
 
 export type Queue = (typeof Queue)[keyof typeof Queue];

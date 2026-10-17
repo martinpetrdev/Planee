@@ -5,5 +5,6 @@ export abstract class QuickNoteRepositoryPort {
   abstract findAllByUserId(userId: string): Promise<QuickNote[]>;
   abstract insert(quickNote: NewQuickNote): Promise<QuickNote>;
   abstract update(quickNote: QuickNote): Promise<QuickNote | null>;
+  abstract setAutofill(quickNoteId: string, autofill: object): Promise<boolean>;
   abstract delete(id: string, userId: string): Promise<boolean>;
 }

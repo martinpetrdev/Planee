@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { NewQuickNote } from '../domain/new-quick-note.js';
+import { QuickNoteAutofillPort } from '../domain/ports/quick-note-autofill.port.js';
 import { QuickNoteRepositoryPort } from '../domain/ports/quick-note-repository.port.js';
 import { QuickNoteNotFoundError } from '../domain/quick-note.errors.js';
 import { QuickNote } from '../domain/quick-note.js';
@@ -11,7 +12,10 @@ import { UpdateQuickNoteCommand } from './update-quick-note.command.js';
 
 @Injectable()
 export class QuickNotesService {
-  constructor(private readonly quickNoteRepository: QuickNoteRepositoryPort) {}
+  constructor(
+    private readonly quickNoteRepository: QuickNoteRepositoryPort,
+    private readonly quickNoteAutofill: QuickNoteAutofillPort,
+  ) {}
 
   // Paging not required, this should not fill up too much
   async list(command: ListQuickNotesCommand): Promise<QuickNote[]> {
@@ -19,9 +23,15 @@ export class QuickNotesService {
   }
 
   async create(command: CreateQuickNoteCommand) {
-    return await this.quickNoteRepository.insert(
+    const note = await this.quickNoteRepository.insert(
       NewQuickNote.create(command.userId, command.text),
     );
+
+    await this.quickNoteAutofill.request({
+      noteId: note.id,
+    });
+
+    return note;
   }
 
   async update(command: UpdateQuickNoteCommand) {

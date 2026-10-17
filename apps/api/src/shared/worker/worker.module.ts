@@ -15,7 +15,7 @@ import { WorkerService } from './application/worker.service.js';
       },
     }),
     BullModule.registerQueue({
-      name: Queue.llm,
+      name: Queue.quickNote,
     }),
   ],
   providers: [WorkerService],

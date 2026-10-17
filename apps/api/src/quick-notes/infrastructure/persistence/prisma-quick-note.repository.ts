@@ -62,6 +62,29 @@ export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
     return this.prismaToDomain(entity);
   }
 
+  async setAutofill(quickNoteId: string, autofill: object): Promise<boolean> {
+    const entity = await this.db.quickNote
+      .update({
+        data: {
+          autofill: autofill,
+        },
+        where: {
+          id: quickNoteId,
+        },
+      })
+      .catch((e) => {
+        if (
+          e instanceof Prisma.PrismaClientKnownRequestError &&
+          e.code === 'P2025'
+        )
+          return null;
+        else throw e;
+      });
+    if (!entity) return false;
+
+    return true;
+  }
+
   async delete(id: string, userId: string): Promise<boolean> {
     const entity = await this.db.quickNote
       .delete({

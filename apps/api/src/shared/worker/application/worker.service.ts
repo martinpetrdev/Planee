@@ -6,15 +6,19 @@ import { Queue as QueueName } from '@repo/shared';
 
 @Injectable()
 export class WorkerService {
-  constructor(@InjectQueue(QueueName.llm) private readonly queue: Queue) {}
+  constructor(
+    @InjectQueue(QueueName.quickNote) private readonly quickNoteQueue: Queue,
+  ) {}
 
-  public async enqueue<T>(taskName: string, data: T) {
-    const job = await this.queue.add(taskName, data);
+  public async enqueueQuickNote<T>(taskName: string, data: T) {
+    const job = await this.quickNoteQueue.add(taskName, data, {
+      attempts: 1,
+    });
 
     return job.id;
   }
 
-  public async dequeue(jobId: string) {
-    await this.queue.remove(jobId);
+  public async dequeueQuickNote(jobId: string) {
+    await this.quickNoteQueue.remove(jobId);
   }
 }
