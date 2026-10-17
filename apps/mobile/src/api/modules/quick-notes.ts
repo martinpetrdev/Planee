@@ -11,6 +11,7 @@ export interface QuickNoteResponseDto {
     title: string;
     dueDate: string | null;
     dueTime: string | null;
+    expectedDurationMinutes: number | null;
   } | null;
 }
 

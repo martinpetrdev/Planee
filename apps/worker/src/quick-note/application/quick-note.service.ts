@@ -20,6 +20,8 @@ export class QuickNoteService {
     });
     if (!note) throw new Error('Note does not exist');
 
+    this.logger.log(`Generating autofill for quick note ${noteId}...`);
+
     const autofill = await this.llm.completion(
       [
         {
@@ -27,7 +29,7 @@ export class QuickNoteService {
           content:
             'Your goal is to convert given note into a structured task. Today is ' +
             new Date().toISOString() +
-            '. Return dates in format yyyy-mm-dd, time in hh:mm. Return JSON with schema { task: { title: string, dueDate: "yyyy-mm-dd" | null, dueTime: "hh:mm" | null } }',
+            '. Return dates in format yyyy-mm-dd, time in hh:mm, expected duration is how long the task will probably take (upper bound) in minutes. Return JSON with schema { task: { title: string, dueDate: "yyyy-mm-dd" | null, dueTime: "hh:mm" | null, expectedDurationMinutes: number | null } }. Feel free to guess the date/time/duration - it\'s for autofill only.',
         },
         {
           role: 'user',
@@ -42,11 +44,17 @@ export class QuickNoteService {
             name: 'task',
             schema: {
               type: 'object',
-              required: ['title', 'dueDate', 'dueTime'],
+              required: [
+                'title',
+                'dueDate',
+                'dueTime',
+                'expectedDurationMinutes',
+              ],
               properties: {
                 title: { type: 'string' },
                 dueDate: { type: ['string', 'null'] },
                 dueTime: { type: ['string', 'null'] },
+                expectedDurationMinutes: { type: ['integer', 'null'] },
               },
             },
           },
@@ -61,5 +69,7 @@ export class QuickNoteService {
       jobId: jobId,
       fields: 'task' in parsed ? parsed.task : parsed,
     });
+
+    this.logger.log(`Generated autofill for quick note ${noteId}`);
   }
 }

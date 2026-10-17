@@ -41,8 +41,13 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
   // Autofill dates are local wall clock
   const autofill = props.referenceQuickNote?.autofill;
   const nameState = useNativeState(autofill?.title ?? '');
-  const hoursState = useNativeState('0');
-  const minutesState = useNativeState(DEFAULT_DURATION_MINUTES.toString());
+
+  const autofillMinutes =
+    autofill?.expectedDurationMinutes ?? DEFAULT_DURATION_MINUTES;
+  const hoursState = useNativeState(
+    Math.floor(autofillMinutes / 60).toString(),
+  );
+  const minutesState = useNativeState((autofillMinutes % 60).toString());
   const [dueDate, setDueDate] = useState(autofill?.dueDate ?? '');
   const [dueTime, setDueTime] = useState(autofill?.dueTime ?? '');
   const [priority, setPriority] = useState<TaskPriority>('medium');
