@@ -4,6 +4,7 @@ import {
   listQuickNotes,
   QuickNoteResponseDto,
 } from '@/api/modules/quick-notes';
+import { datasyncStorage } from '@/services/datasync.storage';
 import { EventHandler } from '@/services/EventHandler/EventHandler';
 import { Logger } from '@/utils/logger';
 
@@ -11,6 +12,7 @@ export const QuickNoteRepository = createRepository<QuickNoteResponseDto[]>({
   name: 'QuickNote',
   logger: Logger.for('Datasync'),
   fetch: () => listQuickNotes(),
+  storage: datasyncStorage,
 });
 
 export function useQuickNoteRepository() {

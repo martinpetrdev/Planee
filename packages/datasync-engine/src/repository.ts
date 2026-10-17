@@ -6,10 +6,15 @@ type RepositoryFetchHandler<T> = () => Promise<T>;
 type RepositoryLogger = {
 	info(...args: unknown[]): void;
 };
+export type RepositoryStorage = {
+	get(name: string): string | null;
+	set(name: string, value: string): void;
+};
 type RepositoryOptions<T> = {
 	name: string;
 	fetch: RepositoryFetchHandler<T>;
 	logger: RepositoryLogger;
+	storage?: RepositoryStorage;
 };
 
 export class Repository<T> {
@@ -26,6 +31,8 @@ export class Repository<T> {
 
 	constructor(options: RepositoryOptions<T>) {
 		this._options = options;
+
+		this.loadCached();
 	}
 
 	public get data(): T | null {
@@ -45,18 +52,29 @@ export class Repository<T> {
 		await this.fetch();
 	}
 
+	private loadCached() {
+		const cached = this._options.storage?.get(this._options.name);
+		if (cached) this._data = JSON.parse(cached) as T;
+	}
+
+	private cache(data: T | null) {
+		this._options.storage?.set(this._options.name, JSON.stringify(data));
+	}
+
 	private async fetch() {
 		if (this._fetchingPromise) return await this._fetchingPromise;
 
-		this.log("Fetching...");
-
 		this.updateStatus(true);
-		this._fetchingPromise = this._options.fetch();
-		const data = await this._fetchingPromise;
 
-		this.updateData(data);
-		this.updateStatus(false);
-		this._fetchingPromise = null;
+		try {
+			this._fetchingPromise = this._options.fetch();
+			this.updateData(await this._fetchingPromise);
+		} catch (error) {
+			this.log("Fetch failed, keeping cached data", error);
+		} finally {
+			this.updateStatus(false);
+			this._fetchingPromise = null;
+		}
 	}
 
 	public mutate(fn: DataMutationFunction<T>): void {
@@ -74,6 +92,7 @@ export class Repository<T> {
 		this.log("Set data");
 
 		this._data = data;
+		this.cache(data);
 		this.fireOnChange(data);
 	}
 

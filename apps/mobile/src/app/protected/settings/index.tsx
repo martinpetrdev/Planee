@@ -15,6 +15,7 @@ import { PushNotifications } from '@/api/device/notifications/push';
 import { useAuth } from '@/auth/context';
 import { oidcClient } from '@/auth/oidc';
 import { ScreenHeader } from '@/components/ScreenHeader';
+import { dumpDb } from '@/services/datasync.storage';
 import { useFlags } from '@/services/flags/context';
 import { MMKVKeys } from '@/types/mmkv-keys';
 
@@ -92,6 +93,10 @@ export default function Screen() {
                   onClick={async () =>
                     console.log(await PushNotifications.getToken())
                   }
+                />
+                <SegmentedListItem
+                  title="Print datasync db"
+                  onClick={() => dumpDb()}
                 />
                 <SegmentedListItem
                   title="Disable dev settings"
