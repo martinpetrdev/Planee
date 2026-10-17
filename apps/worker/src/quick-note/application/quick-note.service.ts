@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 
-import { LlmService } from '../../shared/llm/application/llm.service.js';
+import { LlmService } from '../../shared/llm/application/llm.service.ts';
 import { QuickNoteRepositoryPort } from '../domain/ports/quick-note-repository.port.js';
 
 @Injectable()

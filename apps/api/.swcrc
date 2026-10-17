@@ -9,7 +9,8 @@
     "transform": {
       "legacyDecorator": true,
       "decoratorMetadata": true
-    }
+    },
+    "rewriteRelativeImportExtensions": true
   },
   "module": {
     "type": "es6"
