@@ -37,11 +37,14 @@ const DEFAULT_DURATION_MINUTES = 5;
 
 export function CreateTaskSheet(props: ICreateTaskSheetProps) {
   const materialColors = useMaterialColors();
-  const nameState = useNativeState('');
+
+  // Autofill dates are local wall clock
+  const autofill = props.referenceQuickNote?.autofill;
+  const nameState = useNativeState(autofill?.title ?? '');
   const hoursState = useNativeState('0');
   const minutesState = useNativeState(DEFAULT_DURATION_MINUTES.toString());
-  const [dueDate, setDueDate] = useState('');
-  const [dueTime, setDueTime] = useState('');
+  const [dueDate, setDueDate] = useState(autofill?.dueDate ?? '');
+  const [dueTime, setDueTime] = useState(autofill?.dueTime ?? '');
   const [priority, setPriority] = useState<TaskPriority>('medium');
 
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});

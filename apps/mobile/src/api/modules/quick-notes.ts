@@ -7,6 +7,11 @@ const BASE_PATH = '/quick-notes';
 export interface QuickNoteResponseDto {
   id: string;
   text: string;
+  autofill: {
+    title: string;
+    dueDate: string | null;
+    dueTime: string | null;
+  } | null;
 }
 
 export interface CreateQuickNoteDto {

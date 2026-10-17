@@ -9,6 +9,9 @@ export class QuickNoteResponseDto {
   @ApiProperty()
   text: string;
 
+  @ApiProperty()
+  autofill: Record<string, any> | null;
+
   constructor(data: QuickNoteResponseDto) {
     Object.assign(this, data);
   }

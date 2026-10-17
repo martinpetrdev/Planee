@@ -106,6 +106,9 @@ export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
   }
 
   private prismaToDomain(entity: QuickNote): DomainQuickNote {
-    return DomainQuickNote.fromPersistence(entity);
+    return DomainQuickNote.fromPersistence({
+      ...entity,
+      autofill: entity.autofill as Record<string, any> | null,
+    });
   }
 }
