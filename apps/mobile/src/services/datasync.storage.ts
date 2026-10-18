@@ -9,8 +9,6 @@ import {
 
 import type { RepositoryStorage } from '@repo/datasync-engine';
 
-import { oidcClient } from '@/auth/oidc';
-
 const DB_NAME = 'datasync.db';
 const KEY_NAME = 'datasync-db-enckey';
 
@@ -89,8 +87,7 @@ export const datasyncStorage: RepositoryStorage = {
       value,
     );
   },
+  clear: (name: string) => {
+    getDb().runSync('DELETE FROM repo_cache WHERE name = ?', name);
+  },
 };
-
-oidcClient.onBeforeSessionDestroy(async () => {
-  getDb().execSync('DELETE FROM repo_cache');
-});
