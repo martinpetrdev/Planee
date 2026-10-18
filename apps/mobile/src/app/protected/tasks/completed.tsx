@@ -6,6 +6,7 @@ import { CreateFAB } from '@/components/CreateFAB';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { NoCompletedTasks } from '@/components/tasks/NoTasks';
 import { BasicTaskList } from '@/components/tasks/TaskList';
+import { CompletedTaskRepository } from '@/repositories/completed.task.repository';
 
 export default function Screen() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function Screen() {
         <BasicTaskList
           scope={'completed'}
           noContentIndicator={<NoCompletedTasks />}
+          repository={CompletedTaskRepository}
         />
       </Column>
       <CreateFAB />

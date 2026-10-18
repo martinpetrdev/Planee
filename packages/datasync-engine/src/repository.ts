@@ -5,6 +5,14 @@ type OnStatusChangeHandler = (value: boolean) => void;
 type DataMutationFunction<T> = (current: T[] | null) => T[] | null;
 
 type RepositoryFetchHandler<T> = () => Promise<T[]>;
+type RepositoryPage<T> = {
+	items: T[];
+	total: number;
+	nextCursor: string | null;
+};
+type RepositoryPageFetchHandler<T> = (
+	cursor: string | null, // cursor is null for first page
+) => Promise<RepositoryPage<T>>;
 type RepositoryLogger = {
 	info(...args: unknown[]): void;
 };
@@ -15,7 +23,7 @@ export type RepositoryStorage = {
 };
 type RepositoryOptions<T> = {
 	name: string;
-	fetch: RepositoryFetchHandler<T>;
+	fetch: RepositoryFetchHandler<T> | RepositoryPageFetchHandler<T>;
 	logger: RepositoryLogger;
 	storage?: RepositoryStorage;
 	getId: (item: T) => string;
@@ -26,9 +34,11 @@ export class Repository<T> {
 
 	private readonly _data = new Observable<T[] | null>(null);
 	private readonly _isFetching = new Observable<boolean>(false);
+	private readonly _nextCursor = new Observable<string | null>(null);
 
-	private _fetchingPromise: Promise<T[] | null> | null = null;
+	private _fetchingPromise: Promise<T[] | RepositoryPage<T>> | null = null;
 	private _generation: number = 0;
+	private _pageCount: number = 1;
 
 	constructor(options: RepositoryOptions<T>) {
 		this._options = options;
@@ -44,13 +54,25 @@ export class Repository<T> {
 		return this._isFetching.value;
 	}
 
+	public get hasNextPage(): boolean {
+		return this._nextCursor.value !== null;
+	}
+
 	public init() {
 		this.log("Initializing...");
 		this.requestRefetch();
 	}
 
+	/*
+	 * WARNING: Refetches every page loaded so far
+	 */
 	public async requestRefetch() {
-		await this.fetch();
+		await this.fetch(null);
+	}
+
+	public async fetchNextPage() {
+		const cursor = this._nextCursor.value;
+		if (cursor) await this.fetch(cursor);
 	}
 
 	public clear() {
@@ -59,6 +81,8 @@ export class Repository<T> {
 
 		this._data.reset();
 		this._isFetching.reset();
+		this._nextCursor.reset();
+		this._pageCount = 1;
 
 		this._options.storage?.clear(this._options.name);
 	}
@@ -72,18 +96,33 @@ export class Repository<T> {
 		this._options.storage?.set(this._options.name, JSON.stringify(data));
 	}
 
-	private async fetch() {
-		if (this._fetchingPromise)
-			return await this._fetchingPromise.catch(() => null);
+	private async fetch(cursor: string | null) {
+		if (this._fetchingPromise) {
+			await this._fetchingPromise.catch(() => null);
+
+			return;
+		}
 
 		const generation = this._generation;
 		this.updateStatus(true);
 
 		try {
-			this._fetchingPromise = this._options.fetch();
-			const data = await this._fetchingPromise;
+			this._fetchingPromise = cursor
+				? this._options.fetch(cursor)
+				: this.fetchLoadedPages();
+			const result = await this._fetchingPromise;
+			if (this._generation !== generation) return;
 
-			if (this._generation === generation) this.updateData(data);
+			if (Array.isArray(result)) this.updateData(result);
+			else {
+				// Parsed paged results - merge added by Claude Code (Claude Opus 5.5)
+				this._nextCursor.set(result.nextCursor);
+
+				if (cursor) this._pageCount++;
+				this.updateData(
+					cursor ? this.merge(this.data, result.items) : result.items,
+				);
+			}
 		} catch (error) {
 			// TODO: Notify user?
 			this.log("Fetch failed, keeping cached data", error);
@@ -124,6 +163,30 @@ export class Repository<T> {
 		);
 	}
 
+	// Added by Claude Code (Claude Opus 5.5)
+	private async fetchLoadedPages(): Promise<T[] | RepositoryPage<T>> {
+		const first = await this._options.fetch(null);
+		if (Array.isArray(first)) return first;
+
+		let page = first;
+		let items = first.items;
+		for (let i = 1; i < this._pageCount && page.nextCursor; i++) {
+			page = (await this._options.fetch(page.nextCursor)) as RepositoryPage<T>;
+			items = this.merge(items, page.items);
+		}
+
+		return { ...page, items };
+	}
+
+	private merge(current: T[] | null, items: T[]): T[] {
+		const byId = new Map(
+			(current ?? []).map((item) => [this._options.getId(item), item]),
+		);
+		for (const item of items) byId.set(this._options.getId(item), item);
+
+		return [...byId.values()];
+	}
+
 	private log(...args: unknown[]) {
 		this._options.logger.info(`REPOSITORY{${this._options.name}}`, ...args);
 	}
@@ -147,6 +210,10 @@ export class Repository<T> {
 
 	public $onStatusChange(handler: OnStatusChangeHandler) {
 		return this._isFetching.subscribe(handler);
+	}
+
+	public $onNextCursorChange(handler: (value: string | null) => void) {
+		return this._nextCursor.subscribe(handler);
 	}
 }
 

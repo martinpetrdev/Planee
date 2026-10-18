@@ -11,7 +11,16 @@ export function useRepository<T>(repository: Repository<T>) {
 		() => repository.isFetching,
 	);
 
-	const refetch = useCallback(() => repository.requestRefetch(), [repository]);
+	const hasNextPage = useSyncExternalStore(
+		(onChange) => repository.$onNextCursorChange(onChange),
+		() => repository.hasNextPage,
+	);
 
-	return { data, refetch, isFetching };
+	const refetch = useCallback(() => repository.requestRefetch(), [repository]);
+	const fetchNextPage = useCallback(
+		() => repository.fetchNextPage(),
+		[repository],
+	);
+
+	return { data, refetch, isFetching, hasNextPage, fetchNextPage };
 }

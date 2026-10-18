@@ -2,6 +2,7 @@ import { useMaterialColors } from '@expo/ui/jetpack-compose';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
 
+import { Repository, useRepository } from '@repo/datasync-engine';
 import {
   formatISODate,
   Icon,
@@ -216,6 +217,7 @@ export function TaskList(props: ITaskListProps) {
 interface IBasicTaskListProps {
   scope: 'completed' | 'overdue';
   noContentIndicator?: ReactNode;
+  repository: Repository<TaskResponseDto>;
 }
 
 export function BasicTaskList(props: IBasicTaskListProps) {
@@ -224,23 +226,11 @@ export function BasicTaskList(props: IBasicTaskListProps) {
 
   const {
     isFetching,
-    isFetchingNextPage,
     hasNextPage,
-    data,
+    data: items,
     refetch,
     fetchNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['tasks', props.scope],
-    queryFn: ({ pageParam }: { pageParam: undefined | string }) =>
-      listTasks({
-        scope: props.scope,
-        cursorId: pageParam,
-      }),
-    initialPageParam: undefined,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-  });
-
-  const items = data?.pages.flatMap((page) => page.items);
+  } = useRepository(props.repository);
 
   return (
     <>
@@ -259,7 +249,7 @@ export function BasicTaskList(props: IBasicTaskListProps) {
             : props.noContentIndicator)}
         <NextPageLoader
           hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
+          isFetchingNextPage={isFetching}
           fetchNextPage={fetchNextPage}
         />
       </PullToRefresh>
