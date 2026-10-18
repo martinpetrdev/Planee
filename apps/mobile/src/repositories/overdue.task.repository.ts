@@ -15,10 +15,11 @@ export const OverdueTaskRepository = createRepository<TaskResponseDto>({
     listTasks({
       scope: 'overdue',
       cursorId: cursor ?? undefined,
+      order: 'desc', // Most actionable first, also used for preview in task list
     }),
   storage: datasyncStorage,
   getId: (item) => item.id,
-  sort: compareTasksByDueDate('asc'),
+  sort: compareTasksByDueDate('desc'),
 });
 
 oidcClient.onBeforeSessionDestroy(async () => OverdueTaskRepository.clear());

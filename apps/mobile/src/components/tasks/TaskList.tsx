@@ -1,5 +1,4 @@
 import { useMaterialColors } from '@expo/ui/jetpack-compose';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
 
 import { Repository, useRepository } from '@repo/datasync-engine';
@@ -15,8 +14,10 @@ import {
   toISODate,
 } from '@repo/mobile-ui';
 
-import { listTasks, type TaskResponseDto } from '@/api/modules/tasks';
+import type { TaskResponseDto } from '@/api/modules/tasks';
 import { NoTasksToday } from '@/components/tasks/NoTasks';
+import { useOverdueTaskRepository } from '@/repositories/overdue.task.repository';
+import { usePlannedTaskRepository } from '@/repositories/planned.task.repository';
 import { UpdateTaskSheet } from '@/sheets/UpdateTaskSheet';
 import { groupTasksByDay } from '@/utils/tasks/list';
 import { Task } from './Task';
@@ -65,7 +66,7 @@ const listContentPadding = { start: 16, end: 16, bottom: 88 };
 
 interface INextPageLoaderProps {
   hasNextPage: boolean;
-  isFetchingNextPage: boolean;
+  loadedCount: number;
   fetchNextPage: () => void;
 }
 
@@ -74,8 +75,11 @@ function NextPageLoader(props: INextPageLoaderProps) {
 
   return (
     <>
+      {/* Remount after each page, so it fires again when it stays visible
+          Fixed by Claude Code (Claude Opus 5.5) */}
       <ScrollPositionDetector
-        onAppear={() => !props.isFetchingNextPage && props.fetchNextPage()}
+        key={props.loadedCount}
+        onAppear={props.fetchNextPage}
       />
       <Row horizontalAlignment="center" padding={12}>
         <LoadingSpinner />
@@ -118,38 +122,21 @@ export function TaskList(props: ITaskListProps) {
   const [refreshedManually, setRefreshedManually] = useState(false);
 
   const {
+    data: items,
     isFetching,
-    isFetchingNextPage,
-    hasNextPage,
-    data,
     refetch,
     fetchNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['tasks', 'planned'],
-    queryFn: ({ pageParam }: { pageParam: undefined | string }) =>
-      listTasks({
-        scope: 'planned',
-        cursorId: pageParam,
-      }),
-    initialPageParam: undefined,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-  });
+    hasNextPage,
+  } = usePlannedTaskRepository();
 
   const {
     isFetching: isFetchingOverdue,
-    data: overdue,
+    data: overdueItems,
+    total: overdueTotal,
     refetch: refetchOverdue,
-  } = useQuery({
-    queryKey: ['tasks', 'overdue', 'partial'],
-    queryFn: () =>
-      listTasks({
-        scope: 'overdue',
-        limit: 2,
-        order: 'desc', // Most actionable
-      }),
-  });
+  } = useOverdueTaskRepository();
+  const overdue = overdueItems?.slice(0, 2) ?? []; // Most actionable
 
-  const items = data?.pages.flatMap((page) => page.items);
   const hasToday =
     !!items?.length &&
     toISODate(new Date(items[0].dueDate)) === toISODate(new Date());
@@ -171,21 +158,21 @@ export function TaskList(props: ITaskListProps) {
         contentPadding={listContentPadding}
       >
         {props.header}
-        {overdue && overdue.total > 0 && (
+        {overdue.length > 0 && (
           <>
             <SectionHeader
               title="Overdue"
               action={{
-                label: `See all ${overdue.total}`,
+                label: `See all ${overdueTotal}`,
                 onClick: () => props.onSeeOverdueClick?.(),
               }}
             />
-            {overdue.items.map((task, index) => (
+            {overdue.map((task, index) => (
               <Task
                 task={task}
                 onClick={() => setSelected(task)}
                 isFirst={index === 0}
-                isLast={index === overdue.items.length - 1}
+                isLast={index === overdue.length - 1}
                 key={task.id}
                 showDate
               />
@@ -202,7 +189,7 @@ export function TaskList(props: ITaskListProps) {
         {items && renderTaskGroups(items, setSelected)}
         <NextPageLoader
           hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
+          loadedCount={items?.length ?? 0}
           fetchNextPage={fetchNextPage}
         />
       </PullToRefresh>
@@ -249,7 +236,7 @@ export function BasicTaskList(props: IBasicTaskListProps) {
             : props.noContentIndicator)}
         <NextPageLoader
           hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetching}
+          loadedCount={items?.length ?? 0}
           fetchNextPage={fetchNextPage}
         />
       </PullToRefresh>

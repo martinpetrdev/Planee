@@ -16,11 +16,24 @@ export function useRepository<T>(repository: Repository<T>) {
 		() => repository.hasNextPage,
 	);
 
+	const total = useSyncExternalStore(
+		(onChange) => {
+			const offTotal = repository.$onTotalChange(onChange);
+			const offData = repository.$onChange(onChange);
+
+			return () => {
+				offTotal();
+				offData();
+			};
+		},
+		() => repository.total,
+	);
+
 	const refetch = useCallback(() => repository.requestRefetch(), [repository]);
 	const fetchNextPage = useCallback(
 		() => repository.fetchNextPage(),
 		[repository],
 	);
 
-	return { data, refetch, isFetching, hasNextPage, fetchNextPage };
+	return { data, total, refetch, isFetching, hasNextPage, fetchNextPage };
 }
