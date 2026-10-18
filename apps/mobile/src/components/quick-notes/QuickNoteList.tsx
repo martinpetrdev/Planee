@@ -1,24 +1,18 @@
 import { useMaterialColors } from '@expo/ui/jetpack-compose';
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Column, Icon, PullToRefresh, Text } from '@repo/mobile-ui';
 
-import {
-  listQuickNotes,
-  QuickNoteResponseDto,
-} from '@/api/modules/quick-notes';
+import { QuickNoteResponseDto } from '@/api/modules/quick-notes';
 import QuickNote from '@/components/quick-notes/QuickNote';
+import { useQuickNoteRepository } from '@/repositories/quickNote.repository';
 import { UpdateQuickNoteSheet } from '@/sheets/UpdateQuickNoteSheet';
 
 export function QuickNoteList() {
   const [refreshedManually, setRefreshedManually] = useState(false);
   const [selected, setSelected] = useState<QuickNoteResponseDto | null>(null);
 
-  const { data, isFetching, refetch } = useQuery({
-    queryKey: ['quick-notes'],
-    queryFn: () => listQuickNotes(),
-  });
+  const { data, refetch, isFetching } = useQuickNoteRepository();
 
   return (
     <>

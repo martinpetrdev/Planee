@@ -6,7 +6,7 @@ import {
 import { Icon } from "./Icon";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { align, offset } from "@expo/ui/jetpack-compose/modifiers";
-import { Icon as IconType } from "../../icons/icons";
+import type { IconType } from "../../icons/icons";
 
 interface IDropdownMenuItem {
   label: string;

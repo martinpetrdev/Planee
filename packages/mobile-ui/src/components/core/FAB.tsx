@@ -1,6 +1,6 @@
 import { FloatingActionButton } from "@expo/ui/jetpack-compose";
 import type { ComponentProps } from "react";
-import { Icons, type Icon as IconType } from "../../icons/icons";
+import type { IconType } from "../../icons/icons";
 import { Icon } from "./Icon";
 
 interface IFABProps {

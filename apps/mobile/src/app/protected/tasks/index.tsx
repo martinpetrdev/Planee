@@ -1,13 +1,12 @@
 import { useMaterialColors } from '@expo/ui/jetpack-compose';
-import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 
 import { Card, Column, Icon, Row, ScreenShell, Text } from '@repo/mobile-ui';
 
-import { listQuickNotes } from '@/api/modules/quick-notes';
 import { CreateFAB } from '@/components/CreateFAB';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { TaskList } from '@/components/tasks/TaskList';
+import { useQuickNoteRepository } from '@/repositories/quickNote.repository';
 
 export default function Screen() {
   const router = useRouter();
@@ -15,12 +14,9 @@ export default function Screen() {
 
   const {
     data: quickNotes,
-    isLoading: quickNotesLoading,
+    isFetching: quickNotesLoading,
     refetch: refetchQuickNotes,
-  } = useQuery({
-    queryKey: ['quick-notes'],
-    queryFn: () => listQuickNotes(),
-  });
+  } = useQuickNoteRepository();
 
   return (
     <ScreenShell>

@@ -77,6 +77,8 @@ export class PushNotifications {
     const token = await PushNotifications.getToken();
     if (!token) return false;
 
-    await unregisterPushToken(token).catch(() => {});
+    return unregisterPushToken(token)
+      .then(() => true)
+      .catch(() => false);
   }
 }

@@ -16,7 +16,7 @@ import {
 
 import { API } from '@/api/api';
 import { CreateQuickNoteDto, createQuickNote } from '@/api/modules/quick-notes';
-import { refetchQuickNoteQueries } from '@/helpers/quickNote';
+import { useQuickNoteRepository } from '@/repositories/quickNote.repository';
 
 interface ICreateQuickNoteSheetProps {
   sheetRef: RefObject<BottomSheetRef | null>;
@@ -29,6 +29,8 @@ export function CreateQuickNoteSheet(props: ICreateQuickNoteSheetProps) {
 
   const snackbar = useSnackbar();
   const queryClient = useQueryClient();
+
+  const { refetch: refetchQuickNoteRepository } = useQuickNoteRepository();
 
   const { isPending, mutate } = useMutation({
     mutationKey: ['quick-notes', 'create'],
@@ -56,7 +58,7 @@ export function CreateQuickNoteSheet(props: ICreateQuickNoteSheetProps) {
         withDismissAction: true,
       });
 
-      refetchQuickNoteQueries(queryClient);
+      refetchQuickNoteRepository();
     },
   });
 

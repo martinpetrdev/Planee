@@ -6,6 +6,7 @@ import { CreateFAB } from '@/components/CreateFAB';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { NoOverdueTasks } from '@/components/tasks/NoTasks';
 import { BasicTaskList } from '@/components/tasks/TaskList';
+import { OverdueTaskRepository } from '@/repositories/overdue.task.repository';
 
 export default function Screen() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function Screen() {
         <BasicTaskList
           scope={'overdue'}
           noContentIndicator={<NoOverdueTasks />}
+          repository={OverdueTaskRepository}
         />
       </Column>
       <CreateFAB />

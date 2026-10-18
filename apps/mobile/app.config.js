@@ -82,6 +82,12 @@ export default {
           },
         },
       ],
+      [
+        'expo-sqlite',
+        {
+          useSQLCipher: true,
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,

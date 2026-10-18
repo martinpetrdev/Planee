@@ -27,7 +27,7 @@ import {
   QuickNoteResponseDto,
   updateQuickNote,
 } from '@/api/modules/quick-notes';
-import { refetchQuickNoteQueries } from '@/helpers/quickNote';
+import { useQuickNoteRepository } from '@/repositories/quickNote.repository';
 import { CreateTaskSheet } from '@/sheets/CreateTaskSheet';
 
 interface IUpdateQuickNoteSheetProps {
@@ -47,6 +47,8 @@ export function UpdateQuickNoteSheet(props: IUpdateQuickNoteSheetProps) {
   const materialColors = useMaterialColors();
   const snackbar = useSnackbar();
   const queryClient = useQueryClient();
+
+  const { refetch: refetchQuickNoteRepository } = useQuickNoteRepository();
 
   const { isPending, mutate } = useMutation({
     mutationKey: ['quick-notes', props.quickNote.id, 'update'],
@@ -75,7 +77,7 @@ export function UpdateQuickNoteSheet(props: IUpdateQuickNoteSheetProps) {
         withDismissAction: true,
       });
 
-      refetchQuickNoteQueries(queryClient);
+      refetchQuickNoteRepository();
     },
   });
 
@@ -105,7 +107,7 @@ export function UpdateQuickNoteSheet(props: IUpdateQuickNoteSheetProps) {
         withDismissAction: true,
       });
 
-      refetchQuickNoteQueries(queryClient);
+      refetchQuickNoteRepository();
     },
   });
 
@@ -206,7 +208,7 @@ export function UpdateQuickNoteSheet(props: IUpdateQuickNoteSheetProps) {
         referenceQuickNote={props.quickNote}
         onCreated={() => {
           close();
-          refetchQuickNoteQueries(queryClient);
+          refetchQuickNoteRepository();
         }}
       />
     </>
