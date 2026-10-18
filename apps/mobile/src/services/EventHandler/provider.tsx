@@ -7,7 +7,7 @@ import { EventHandler } from '@/services/EventHandler/EventHandler';
 
 interface IEventHandlerProviderProps extends PropsWithChildren {
   events: {
-    [key in AppEventType]: (data: Record<string, unknown>) => void;
+    [key in AppEventType]?: (data: Record<string, unknown>) => void;
   };
 }
 
@@ -30,7 +30,7 @@ export function EventHandlerProvider(props: IEventHandlerProviderProps) {
 
   useEffect(() => {
     const offs = (Object.keys(props.events) as AppEventType[]).map((k) =>
-      EventHandler.instance.on(k, props.events[k]),
+      EventHandler.instance.on(k, props.events[k]!),
     );
 
     return () => {

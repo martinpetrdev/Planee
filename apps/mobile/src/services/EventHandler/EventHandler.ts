@@ -3,7 +3,6 @@ import {
   registerTaskAsync,
 } from 'expo-notifications';
 import { defineTask } from 'expo-task-manager';
-import type { SeciosConnection } from 'secios';
 
 import type { AppEventType } from '@repo/shared';
 
@@ -26,7 +25,9 @@ export class EventHandler {
   private static _instance: EventHandler | undefined;
   private _initialized = false;
   private _destroyed = false;
-  private _sse: SeciosConnection | undefined;
+  // Typed from the API client: mobile and @repo/shared resolve different secios copies (TS 6 vs 7 peer)
+  // Fixed by Claude Code (Claude Opus 5.5)
+  private _sse: Awaited<ReturnType<typeof eventsStream>> | undefined;
 
   private _recentlyHandledIds: string[] = [];
 
