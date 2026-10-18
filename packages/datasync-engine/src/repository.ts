@@ -27,6 +27,7 @@ type RepositoryOptions<T> = {
 	logger: RepositoryLogger;
 	storage?: RepositoryStorage;
 	getId: (item: T) => string;
+	sort?: (a: T, b: T) => number;
 };
 
 export class Repository<T> {
@@ -193,6 +194,8 @@ export class Repository<T> {
 
 	private updateData(data: T[] | null) {
 		this.log("Set data");
+
+		if (data && this._options.sort) data = [...data].sort(this._options.sort);
 
 		this.cache(data);
 		this._data.set(data);

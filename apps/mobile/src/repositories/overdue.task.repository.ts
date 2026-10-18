@@ -5,6 +5,7 @@ import { oidcClient } from '@/auth/oidc';
 import { datasyncStorage } from '@/services/datasync.storage';
 import { EventHandler } from '@/services/EventHandler/EventHandler';
 import { Logger } from '@/utils/logger';
+import { compareTasksByDueDate } from '@/utils/tasks/list';
 import { getTodayStartISO } from '@/utils/time';
 
 export const OverdueTaskRepository = createRepository<TaskResponseDto>({
@@ -17,6 +18,7 @@ export const OverdueTaskRepository = createRepository<TaskResponseDto>({
     }),
   storage: datasyncStorage,
   getId: (item) => item.id,
+  sort: compareTasksByDueDate('asc'),
 });
 
 oidcClient.onBeforeSessionDestroy(async () => OverdueTaskRepository.clear());

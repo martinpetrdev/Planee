@@ -5,6 +5,7 @@ import { oidcClient } from '@/auth/oidc';
 import { datasyncStorage } from '@/services/datasync.storage';
 import { EventHandler } from '@/services/EventHandler/EventHandler';
 import { Logger } from '@/utils/logger';
+import { compareTasksByDueDate } from '@/utils/tasks/list';
 
 export const CompletedTaskRepository = createRepository<TaskResponseDto>({
   name: 'CompletedTask',
@@ -16,6 +17,7 @@ export const CompletedTaskRepository = createRepository<TaskResponseDto>({
     }),
   storage: datasyncStorage,
   getId: (item) => item.id,
+  sort: compareTasksByDueDate('desc'),
 });
 
 oidcClient.onBeforeSessionDestroy(async () => CompletedTaskRepository.clear());
