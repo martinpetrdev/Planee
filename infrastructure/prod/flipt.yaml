@@ -12,6 +12,19 @@ spec:
       storage: 1Gi
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: planee-flipt-config
+  namespace: planee
+data:
+  default.yml: |
+    storage:
+      default:
+        backend:
+          type: local
+          path: /var/opt/flipt
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: planee-flipt-svc
@@ -54,6 +67,9 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/opt/flipt
+            - name: config
+              mountPath: /etc/flipt/config
+              readOnly: true
           resources:
             requests:
               cpu: "50m"
@@ -77,6 +93,9 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: planee-flipt-data
+        - name: config
+          configMap:
+            name: planee-flipt-config
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
