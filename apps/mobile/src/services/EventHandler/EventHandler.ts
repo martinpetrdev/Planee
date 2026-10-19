@@ -146,7 +146,7 @@ export class EventHandler {
     this._recentlyHandledIds.push(id);
 
     // If too long, remove first
-    if (this._recentlyHandledIds.length > 100) this._recentlyHandledIds.pop();
+    if (this._recentlyHandledIds.length > 100) this._recentlyHandledIds.shift();
   }
 
   public async connectSSE() {
@@ -201,7 +201,10 @@ export class EventHandler {
     this.listeners.set(eventId, [...this.listeners.get(eventId)!, handler]);
 
     return () => {
-      this.listeners.delete(eventId);
+      this.listeners.set(
+        eventId,
+        (this.listeners.get(eventId) ?? []).filter((h) => h !== handler),
+      );
     };
   }
 }
