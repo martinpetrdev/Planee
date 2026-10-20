@@ -88,6 +88,7 @@ export default {
           useSQLCipher: true,
         },
       ],
+      'expo-localization',
     ],
     experiments: {
       typedRoutes: true,

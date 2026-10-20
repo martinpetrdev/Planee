@@ -22,7 +22,6 @@ import {
   markTaskAsNotCompleted,
   type TaskResponseDto,
 } from '@/api/modules/tasks';
-import { mutateTaskQueries, refetchTaskQueries } from '@/helpers/task';
 
 interface ITaskProps {
   task: TaskResponseDto;
@@ -60,10 +59,6 @@ export function Task(props: ITaskProps) {
         `Error: ${error.message ?? 'Unknown error'}`,
         ToastAndroid.LONG,
       );
-    },
-    onSuccess: (response) => {
-      mutateTaskQueries(queryClient, response);
-      refetchTaskQueries(queryClient);
     },
   });
 
