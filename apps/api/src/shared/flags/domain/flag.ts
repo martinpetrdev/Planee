@@ -1,6 +1,6 @@
 export const FeatureFlag = {
   AccessEnabled: 'access-enabled',
-  TestFlag: 'test-flag',
+  NewHomeScreen: 'new-home-screen',
 } as const;
 
 export type FeatureFlag = (typeof FeatureFlag)[keyof typeof FeatureFlag];

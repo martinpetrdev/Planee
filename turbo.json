@@ -1,32 +1,56 @@
 {
 	"$schema": "https://turborepo.org/schema.json",
-	"globalDependencies": [".env"],
-	"globalPassThroughEnv": ["*"],
+	"globalDependencies": [
+		".env"
+	],
+	"globalPassThroughEnv": [
+		"*"
+	],
 	"ui": "tui",
 	"tasks": {
 		"dev": {
 			"persistent": true,
 			"cache": false,
-			"dependsOn": ["^build"]
+			"dependsOn": [
+				"^build"
+			]
 		},
 		"generate": {
 			"cache": true,
-			"inputs": ["prisma/*.prisma", "prisma.config.ts"],
-			"outputs": ["src/generated/**"]
+			"inputs": [
+				"prisma/*.prisma",
+				"prisma.config.ts"
+			],
+			"outputs": [
+				"src/generated/**"
+			]
 		},
 		"build": {
-			"dependsOn": ["generate", "^build"],
-			"outputs": ["dist/**"]
+			"dependsOn": [
+				"generate",
+				"^build"
+			],
+			"outputs": [
+				"dist/**"
+			]
 		},
 		"android": {
 			"persistent": true,
 			"cache": false,
-			"dependsOn": ["^build"]
+			"dependsOn": [
+				"^build"
+			]
 		},
 		"prebuild": {
 			"persistent": true,
 			"cache": false,
-			"dependsOn": ["^build"]
+			"dependsOn": [
+				"^build"
+			]
+		},
+		"typecheck": {
+			"persistent": false,
+			"cache": false
 		}
 	}
 }

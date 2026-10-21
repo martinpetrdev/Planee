@@ -2,6 +2,7 @@ import {
 	Box,
 	CircularProgressIndicator,
 	Button as JetpackButton,
+	ElevatedButton as JetpackElevatedButton,
 	IconButton as JetpackIconButton,
 	OutlinedButton as JetpackOutlinedButton,
 	TextButton as JetpackTextButton,
@@ -12,7 +13,7 @@ import {
 import { alpha, fillMaxWidth, size } from "@expo/ui/jetpack-compose/modifiers";
 import type { PropsWithChildren, ReactNode } from "react";
 
-type ButtonVariant = "filled" | "outlined" | "icon" | "text";
+type ButtonVariant = "filled" | "elevated" | "outlined" | "icon" | "text";
 type ButtonColorVariant = "primary" | "secondary" | "tertiary" | "danger";
 
 interface IButtonProps extends PropsWithChildren {
@@ -46,6 +47,7 @@ export function Button(props: IButtonProps) {
 
 	const Component = {
 		filled: JetpackButton,
+		elevated: JetpackElevatedButton,
 		outlined: JetpackOutlinedButton,
 		icon: JetpackIconButton,
 		text: JetpackTextButton,

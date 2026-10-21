@@ -21,6 +21,7 @@ export const Icons = {
 	edit: require("@expo/material-symbols/edit.xml"),
 	inbox: require("@expo/material-symbols/inbox.xml"),
 	note_stack_add: require("@expo/material-symbols/note_stack_add.xml"),
+	stop: require("@expo/material-symbols/stop.xml"),
 } as const;
 
 export type IconType = keyof typeof Icons;

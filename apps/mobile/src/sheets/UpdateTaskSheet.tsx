@@ -30,7 +30,6 @@ import {
   type UpdateTaskDto,
   updateTask,
 } from '@/api/modules/tasks';
-import { mutateTaskQueries, refetchTaskQueries } from '@/helpers/task';
 import { useEvent } from '@/services/EventHandler/hooks';
 
 interface IUpdateTaskSheetProps {
@@ -91,9 +90,6 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
         duration: 'short',
         withDismissAction: true,
       });
-
-      mutateTaskQueries(queryClient, response);
-      refetchTaskQueries(queryClient);
     },
   });
 
@@ -112,8 +108,6 @@ export function UpdateTaskSheet(props: IUpdateTaskSheetProps) {
         duration: 'short',
         withDismissAction: true,
       });
-
-      refetchTaskQueries(queryClient);
     },
   });
 

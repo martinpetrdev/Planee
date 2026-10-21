@@ -15,6 +15,7 @@ interface ICardProps extends PropsWithChildren {
 	borderRadiusBL?: number;
 	borderRadiusBR?: number;
 	fillWidth?: boolean;
+	color?: string;
 	onClick?: () => void;
 }
 
@@ -23,7 +24,7 @@ export function Card(props: ICardProps) {
 
 	return (
 		<Surface
-			color={colors.surfaceContainer}
+			color={props.color ?? colors.surfaceContainer}
 			shape={Shape.RoundedCorner({
 				cornerRadii: {
 					topStart: props.borderRadiusTL ?? props.borderRadius,

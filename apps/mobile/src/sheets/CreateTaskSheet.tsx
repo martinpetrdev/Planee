@@ -25,7 +25,6 @@ import {
   createTask,
   type TaskPriority,
 } from '@/api/modules/tasks';
-import { refetchTaskQueries } from '@/helpers/task';
 
 interface ICreateTaskSheetProps {
   sheetRef: RefObject<BottomSheetRef | null>;
@@ -84,8 +83,6 @@ export function CreateTaskSheet(props: ICreateTaskSheetProps) {
         duration: 'short',
         withDismissAction: true,
       });
-
-      refetchTaskQueries(queryClient);
     },
   });
 

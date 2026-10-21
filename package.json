@@ -6,7 +6,8 @@
     "dev": "dotenv -e .env -- turbo dev",
     "android": "dotenv -e .env -- turbo android",
     "prebuild": "dotenv -e .env -- turbo prebuild",
-    "port-forward-llm": "kubectl -n planee port-forward svc/planee-llm-svc 8080:80"
+    "port-forward-llm": "kubectl -n planee port-forward svc/planee-llm-svc 8080:80",
+    "typecheck": "turbo typecheck"
   },
   "keywords": [],
   "author": "Martin Petr <martinpetrnp@gmail.com>",
