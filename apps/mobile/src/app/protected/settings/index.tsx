@@ -9,6 +9,7 @@ import {
   SegmentedList,
   SegmentedListItem,
   Text,
+  useSnackbar,
 } from '@repo/mobile-ui';
 
 import { PushNotifications } from '@/api/device/notifications/push';
@@ -17,6 +18,7 @@ import { oidcClient } from '@/auth/oidc';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { dumpDb } from '@/services/datasync.storage';
 import { useFlags } from '@/services/flags/context';
+import { useInAppUpdates } from '@/services/InAppUpdatesProvider';
 import { MMKVKeys } from '@/types/mmkv-keys';
 
 const { commit, channel } = Constants.expoConfig?.extra ?? {};
@@ -28,12 +30,28 @@ export default function Screen() {
 
   const auth = useAuth();
   const { flags } = useFlags();
+  const updates = useInAppUpdates();
+  const snackbar = useSnackbar();
+
+  // Written by Claude Code (Claude Opus 5.5)
+  const checkForUpdates = async () => {
+    const available = await updates.check();
+    if (available) return void updates.update();
+
+    void snackbar.show({
+      message:
+        available === null
+          ? "Couldn't check for updates"
+          : 'Planee is up to date',
+      duration: 'short',
+    });
+  };
 
   return (
     <ScreenShell>
       <Column fill>
         <ScreenHeader title="Settings" />
-        <Column gap={16} padding={16} paddingTop={0} flex>
+        <Column gap={16} padding={16} paddingTop={0} flex scrollable>
           <Column gap={8}>
             <Text padding={[16, 0, 0, 0]} typography="labelLarge">
               Account
@@ -59,6 +77,11 @@ export default function Screen() {
                     {Application.nativeBuildVersion})
                   </Text>
                 }
+              />
+              <SegmentedListItem
+                title="Check for updates"
+                onClick={checkForUpdates}
+                trailing={<Icon name="upgrade" size={20} />}
               />
               <SegmentedListItem
                 title="Channel"
@@ -97,6 +120,10 @@ export default function Screen() {
                 <SegmentedListItem
                   title="Print datasync db"
                   onClick={() => dumpDb()}
+                />
+                <SegmentedListItem
+                  title="Show update screen"
+                  onClick={() => updates.showScreen()}
                 />
                 <SegmentedListItem
                   title="Disable dev settings"

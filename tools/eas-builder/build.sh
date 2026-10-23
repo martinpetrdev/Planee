@@ -23,6 +23,16 @@ OUT="$ROOT/.eas-build"
 
 mkdir -p "$OUT/gradle" "$OUT/cache"
 
+# User-home gradle.properties wins over the one prebuild regenerates
+cat >"$OUT/gradle/gradle.properties" <<EOF
+org.gradle.caching=true
+org.gradle.parallel=true
+EOF
+
+# Dev builds only need the ABI of the test device (4x less native code); override with ARCHS=...
+archs="armeabi-v7a,arm64-v8a,x86,x86_64"
+[[ $profile == "development" ]] && archs="${ARCHS:-arm64-v8a}"
+
 docker build -f "$ROOT/tools/eas-builder/Dockerfile" -t eas-build "$ROOT"
 docker run \
   --rm \
@@ -32,8 +42,14 @@ docker run \
   -v "$OUT/gradle:/root/.gradle" \
   -v "$OUT/cache:/eas-cache" \
   -v "$OUT:/eas-out" \
-  -v "/app/node_modules" \
+  -v "eas-build-node-modules:/app/node_modules" \
   -e TMPDIR=/eas-cache \
+  -e EAS_LOCAL_BUILD_WORKINGDIR=/eas-cache/build \
+  -e npm_config_store_dir=/eas-cache/pnpm-store \
+  -e CCACHE_DIR=/eas-cache/ccache \
+  -e CMAKE_C_COMPILER_LAUNCHER=ccache \
+  -e CMAKE_CXX_COMPILER_LAUNCHER=ccache \
+  -e ORG_GRADLE_PROJECT_reactNativeArchitectures="$archs" \
   -e GOOGLE_SERVICES_JSON=/app/apps/mobile/google-services.json \
   eas-build \
   apps/mobile \

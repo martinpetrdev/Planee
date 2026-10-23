@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
   git \
   unzip \
   openjdk-21-jdk-headless \
+  ccache \
   && rm -rf /var/lib/apt/lists/*
 
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.7/install.sh | bash
@@ -42,7 +43,8 @@ RUN yes | sdkmanager --licenses > /dev/null \
   "platform-tools" \
   "platforms;android-36" \
   "build-tools;36.0.0" \
-  "ndk;27.1.12297006"
+  "ndk;27.1.12297006" \
+  "cmake;3.22.1"
 
 # Bind-mounted repo is owned by the host user, not root
 RUN git config --global --add safe.directory '*'
