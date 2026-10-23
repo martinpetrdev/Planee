@@ -16,6 +16,8 @@ import { DeleteQuickNoteCommand } from './delete-quick-note.command.js';
 import { ListQuickNotesCommand } from './list-quick-notes.command.js';
 import { UpdateQuickNoteCommand } from './update-quick-note.command.js';
 
+// TODO: Add autofill regeneration
+// TODO: Add autofill generation cancellation when deleting/updating note
 @Injectable()
 export class QuickNotesService {
   constructor(
@@ -48,6 +50,10 @@ export class QuickNotesService {
       QuickNote.create(command.userId, command.id, command.text),
     );
     if (!note) throw new QuickNoteNotFoundError(command.id);
+
+    await this.quickNoteAutofill.request({
+      noteId: note.id,
+    });
 
     await this.events.publish(quickNoteUpdated(note));
 

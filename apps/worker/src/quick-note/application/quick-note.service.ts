@@ -76,6 +76,7 @@ export class QuickNoteService {
         fields: {},
       });
       if (failed) await this.events.publish(quickNoteUpdated(failed));
+
       throw e;
     }
 

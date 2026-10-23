@@ -6,7 +6,9 @@ import { Queue as QueueName } from '@repo/shared';
 
 import { QuickNoteService } from '../application/quick-note.service.js';
 
-@Processor(QueueName.quickNote)
+@Processor(QueueName.quickNote, {
+  concurrency: 1,
+})
 export class QuickNoteProcessor extends WorkerHost {
   private readonly logger = new Logger(QuickNoteProcessor.name);
 
