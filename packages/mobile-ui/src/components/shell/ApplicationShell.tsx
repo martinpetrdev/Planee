@@ -2,12 +2,12 @@ import { useMemo } from "react";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router";
 import { useColorScheme } from "react-native";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
-import { IconType } from "../../icons/icons";
+import { MaterialIconType } from "../../icons/icons";
 import { StatusBar } from "expo-status-bar";
 
 export interface IApplicationTab {
   label: string;
-  icon: IconType;
+  icon: MaterialIconType;
   id: string;
 }
 

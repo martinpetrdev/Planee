@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient, QuickNote } from '@repo/database';
 
 import { QuickNoteRepositoryPort } from '../../domain/ports/quick-note-repository.port.js';
+import { QuickNote as DomainQuickNote } from '../../domain/quick-note.ts';
 
 @Injectable()
 export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
@@ -13,7 +14,7 @@ export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
   async setAutofill(
     id: string,
     autofill: Record<string, any>,
-  ): Promise<QuickNote | null> {
+  ): Promise<DomainQuickNote | null> {
     const updated = await this.db.quickNote
       .update({
         data: {
@@ -33,6 +34,13 @@ export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
       });
     if (!updated) return null;
 
-    return updated;
+    return this.prismaToDomain(updated);
+  }
+
+  private prismaToDomain(entity: QuickNote): DomainQuickNote {
+    return DomainQuickNote.fromPersistence({
+      ...entity,
+      autofill: entity.autofill as Record<string, any> | null,
+    });
   }
 }

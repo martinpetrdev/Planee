@@ -1,4 +1,4 @@
-import { QuickNote } from '@repo/database';
+import { QuickNote } from '../quick-note.ts';
 
 export abstract class QuickNoteRepositoryPort {
   abstract setAutofill(

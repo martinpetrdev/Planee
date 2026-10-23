@@ -6,6 +6,7 @@ import { REDIS_URL } from './config/redis.config.js';
 import { HealthModule } from './health/health.module.js';
 import { QuickNoteModule } from './quick-note/quick-note.module.js';
 import { PrismaModule } from './shared/database/prisma.module.js';
+import { EventsModule } from './shared/events/events.module.ts';
 import { LlmModule } from './shared/llm/llm.module.js';
 
 const DomainModules = [HealthModule, LlmModule, QuickNoteModule];
@@ -20,6 +21,7 @@ const DomainModules = [HealthModule, LlmModule, QuickNoteModule];
       },
     }),
     LlmModule,
+    EventsModule,
     ...DomainModules,
   ],
   providers: [],

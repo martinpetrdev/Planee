@@ -32,6 +32,7 @@ export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
       data: {
         text: quickNote.text,
         userId: quickNote.userId,
+        autofill: { status: 'processing', jobId: null, fields: {} },
       },
     });
 

@@ -1,4 +1,4 @@
-import { Card, Text } from '@repo/mobile-ui';
+import { Badge, Card, Column, Text } from '@repo/mobile-ui';
 
 import { QuickNoteResponseDto } from '@/api/modules/quick-notes';
 
@@ -30,7 +30,31 @@ export default function QuickNote(props: IQuickNoteProps) {
       padding={16}
       onClick={props.onClick}
     >
-      <Text typography="bodyLarge">{props.quickNote.text}</Text>
+      <Column gap={8}>
+        <Text typography="bodyLarge">{props.quickNote.text}</Text>
+        <AutofillBadge status={props.quickNote.autofillStatus} />
+      </Column>
     </Card>
   );
+}
+
+interface IAutofillBadgeProps {
+  status: QuickNoteResponseDto['autofillStatus'];
+}
+
+function AutofillBadge(props: IAutofillBadgeProps) {
+  if (props.status === 'processing')
+    return (
+      <Badge
+        icon="sparkles"
+        label="Generating autofill…"
+        color="secondary"
+        pulse
+      />
+    );
+
+  if (props.status === 'failed')
+    return <Badge icon="sparkles" label="Autofill failed" color="error" />;
+
+  return null;
 }

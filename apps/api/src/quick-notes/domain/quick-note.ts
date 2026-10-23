@@ -1,3 +1,5 @@
+export type QuickNoteAutofillStatus = 'processing' | 'done' | 'failed' | null;
+
 export class QuickNote {
   constructor(
     private readonly _id: string,
@@ -22,6 +24,10 @@ export class QuickNote {
         : null;
   }
 
+  public get autofillStatus(): QuickNoteAutofillStatus {
+    return this._autofill?.status ?? null;
+  }
+
   public get userId() {
     return this._userId;
   }
@@ -31,6 +37,7 @@ export class QuickNote {
       id: this._id,
       text: this._text,
       autofill: this.autofill,
+      autofillStatus: this.autofillStatus,
     };
   }
 
