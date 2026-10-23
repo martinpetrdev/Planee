@@ -13,6 +13,7 @@ export interface QuickNoteResponseDto {
     dueTime: string | null;
     expectedDurationMinutes: number | null;
   } | null;
+  autofillStatus: 'processing' | 'done' | 'failed' | null;
 }
 
 export interface CreateQuickNoteDto {

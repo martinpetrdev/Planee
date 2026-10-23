@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { QuickNote } from '../../domain/quick-note.js';
+import type { QuickNoteAutofillStatus } from '../../domain/quick-note.js';
 
 export class QuickNoteResponseDto {
   @ApiProperty()
@@ -11,6 +12,9 @@ export class QuickNoteResponseDto {
 
   @ApiProperty()
   autofill: Record<string, any> | null;
+
+  @ApiProperty({ enum: ['processing', 'done', 'failed'], nullable: true })
+  autofillStatus: QuickNoteAutofillStatus;
 
   constructor(data: QuickNoteResponseDto) {
     Object.assign(this, data);
