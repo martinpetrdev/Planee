@@ -9,8 +9,8 @@ export default function Page() {
 
 	return (
 		<div className="w-full flex p-8">
-			<div className="flex flex-col gap-8 max-w-240 h-min p-8 bg-secondary rounded-md">
-				<p className="wrap-anywhere">{auth.accessToken}</p>
+			<div className="flex flex-col gap-4 h-min p-8 bg-secondary rounded-md">
+				<code className="wrap-anywhere">{auth.accessToken}</code>
 				<Button onClick={() => navigator.clipboard.writeText(auth.accessToken)}>
 					Copy
 				</Button>
