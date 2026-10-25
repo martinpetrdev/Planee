@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from '@/auth/context';
 import { LoadingScreenProvider } from '@/components/LoadingScreen';
 import { FlagsProvider } from '@/services/flags/context';
 import { InAppUpdatesProvider } from '@/services/InAppUpdatesProvider';
+import { TPNothingGlyphProvider } from '@/services/third-party/nothing/glyph.tsx';
 
 const queryClient = new QueryClient();
 
@@ -34,7 +35,9 @@ export default function Layout() {
           <InAppUpdatesProvider>
             <AuthProvider>
               <FlagsProvider>
-                <RootNavigator />
+                <TPNothingGlyphProvider>
+                  <RootNavigator />
+                </TPNothingGlyphProvider>
               </FlagsProvider>
             </AuthProvider>
           </InAppUpdatesProvider>

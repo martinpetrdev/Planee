@@ -1,0 +1,48 @@
+{
+  "name": "@repo/nothing-glyph",
+  "version": "0.1.0",
+  "description": "Module for controlling the glyph interface on Nothing devices",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "keywords": [
+    "react-native",
+    "expo",
+    "nothing-glyph",
+    "NothingGlyph"
+  ],
+  "repository": "https://github.com/martinpetrdev/nothing-glyph",
+  "bugs": {
+    "url": "https://github.com/martinpetrdev/nothing-glyph/issues"
+  },
+  "author": "Martin Petr <martinpetrnp@gmail.com> (https://github.com/martinpetrdev)",
+  "license": "MIT",
+  "homepage": "https://github.com/martinpetrdev/nothing-glyph#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@react-native/jest-preset": "0.88.0",
+    "@types/jest": "^30.0.0",
+    "@types/react": "~19.3.0",
+    "babel-preset-expo": "~58.0.15",
+    "eslint": "~9.39.4",
+    "eslint-config-universe": "^16.1.2",
+    "expo": "^58.0.11",
+    "jest": "^30.0.0",
+    "jest-expo": "~58.0.11",
+    "prettier": "^3.0.0",
+    "react": "19.3.0",
+    "react-native": "0.88.0",
+    "typescript": "~6.0.3"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "roots": [
+      "<rootDir>/src"
+    ]
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  }
+}

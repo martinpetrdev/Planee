@@ -1,0 +1,22 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'dev.martinpetr.nglyph'
+version = '0.1.0'
+
+android {
+  namespace "dev.martinpetr.nglyph"
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+  }
+  lintOptions {
+    abortOnError false
+  }
+}
+
+dependencies {
+  implementation files('libs/glyph-matrix-sdk-2.0.aar')
+}

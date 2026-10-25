@@ -1,5 +1,6 @@
 import * as Application from 'expo-application';
 import Constants from 'expo-constants';
+import { router } from 'expo-router';
 import { useMMKVBoolean } from 'react-native-mmkv';
 
 import {
@@ -124,6 +125,13 @@ export default function Screen() {
                 <SegmentedListItem
                   title="Show update screen"
                   onClick={() => updates.showScreen()}
+                />
+                <SegmentedListItem
+                  title={'3rd party integrations'}
+                  trailing={<Icon name={'chevron_right'} />}
+                  onClick={() =>
+                    router.push('/protected/settings/third-party-integrations')
+                  }
                 />
                 <SegmentedListItem
                   title="Disable dev settings"
