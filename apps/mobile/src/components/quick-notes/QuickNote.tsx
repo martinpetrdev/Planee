@@ -1,4 +1,7 @@
-import { Badge, Card, Column, Text } from '@repo/mobile-ui';
+import { useMaterialColors } from '@expo/ui/jetpack-compose';
+import { DateTime } from 'luxon';
+
+import { Badge, Card, Column, Row, Spacer, Text } from '@repo/mobile-ui';
 
 import { QuickNoteResponseDto } from '@/api/modules/quick-notes';
 
@@ -13,6 +16,8 @@ const BORDER_RADIUS_INNER = 4;
 const BORDER_RADIUS_OUTER = 16;
 
 export default function QuickNote(props: IQuickNoteProps) {
+  const materialColors = useMaterialColors();
+
   const borderRadiusTop = props.isFirst
     ? BORDER_RADIUS_OUTER
     : BORDER_RADIUS_INNER;
@@ -32,7 +37,16 @@ export default function QuickNote(props: IQuickNoteProps) {
     >
       <Column gap={8}>
         <Text typography="bodyLarge">{props.quickNote.text}</Text>
-        <AutofillBadge status={props.quickNote.autofillStatus} />
+        <Row verticalAlignment="center">
+          <Text
+            typography="labelMedium"
+            color={materialColors.onSurfaceVariant}
+          >
+            {formatCreatedAt(props.quickNote.createdAt)}
+          </Text>
+          <Spacer />
+          <AutofillBadge status={props.quickNote.autofillStatus} />
+        </Row>
       </Column>
     </Card>
   );
@@ -57,4 +71,13 @@ function AutofillBadge(props: IAutofillBadgeProps) {
     return <Badge icon="sparkles" label="Autofill failed" color="error" />;
 
   return null;
+}
+
+function formatCreatedAt(instant: string) {
+  const date = DateTime.fromISO(instant);
+
+  if (date.hasSame(DateTime.now(), 'day')) return date.toFormat('HH:mm');
+
+  const relative = date.toRelativeCalendar() ?? '';
+  return relative.charAt(0).toUpperCase() + relative.slice(1);
 }

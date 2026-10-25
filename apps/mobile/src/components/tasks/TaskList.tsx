@@ -162,10 +162,14 @@ export function TaskList(props: ITaskListProps) {
           <>
             <SectionHeader
               title="Overdue"
-              action={{
-                label: `See all ${overdueTotal}`,
-                onClick: () => props.onSeeOverdueClick?.(),
-              }}
+              action={
+                overdueTotal > 2
+                  ? {
+                      label: `See all ${overdueTotal}`,
+                      onClick: () => props.onSeeOverdueClick?.(),
+                    }
+                  : undefined
+              }
             />
             {overdue.map((task, index) => (
               <Task

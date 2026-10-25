@@ -16,6 +16,9 @@ export class QuickNoteResponseDto {
   @ApiProperty({ enum: ['processing', 'done', 'failed'], nullable: true })
   autofillStatus: QuickNoteAutofillStatus;
 
+  @ApiProperty()
+  createdAt: Date;
+
   constructor(data: QuickNoteResponseDto) {
     Object.assign(this, data);
   }

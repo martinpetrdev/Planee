@@ -6,6 +6,7 @@ export class QuickNote {
     private readonly _text: string,
     private readonly _autofill: Record<string, any> | null,
     private readonly _userId: string,
+    private readonly _createdAt: Date,
   ) {}
 
   public get id() {
@@ -32,17 +33,22 @@ export class QuickNote {
     return this._userId;
   }
 
+  public get createdAt() {
+    return this._createdAt;
+  }
+
   public toObject() {
     return {
       id: this._id,
       text: this._text,
       autofill: this.autofill,
       autofillStatus: this.autofillStatus,
+      createdAt: this._createdAt,
     };
   }
 
   static create(userId: string, id: string, text: string) {
-    return new QuickNote(id, text.trim(), null, userId);
+    return new QuickNote(id, text.trim(), null, userId, new Date());
   }
 
   static fromPersistence(props: {
@@ -50,7 +56,14 @@ export class QuickNote {
     text: string;
     autofill: Record<string, any> | null;
     userId: string;
+    createdAt: Date;
   }) {
-    return new QuickNote(props.id, props.text, props.autofill, props.userId);
+    return new QuickNote(
+      props.id,
+      props.text,
+      props.autofill,
+      props.userId,
+      props.createdAt,
+    );
   }
 }
