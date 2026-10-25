@@ -8,9 +8,11 @@ import { OverdueTaskRepository } from '@/repositories/overdue.task.repository';
 import { PlannedTaskRepository } from '@/repositories/planned.task.repository';
 import { QuickNoteRepository } from '@/repositories/quickNote.repository';
 import { EventHandler } from '@/services/EventHandler/EventHandler';
+import MyWidget from '@/widgets/MyWidget.tsx';
 
 export async function onApplicationStartup() {
   EventHandler.instance.initialize();
+  MyWidget.updateSnapshot({ count: Date.now() });
 
   initRepositories(
     QuickNoteRepository,

@@ -67,9 +67,23 @@ export default {
       'expo-web-browser',
       'expo-secure-store',
       [
-        'react-native-android-widget',
+        'expo-widgets',
         {
-          widgets: [],
+          enableAndroid: true,
+          widgets: [
+            {
+              name: 'MyWidget',
+              displayName: 'My Widget',
+              description: 'A sample home screen widget',
+              ios: {
+                supportedFamilies: [
+                  'systemSmall',
+                  'systemMedium',
+                  'systemLarge',
+                ],
+              },
+            },
+          ],
         },
       ],
       '@react-native-vector-icons/fontawesome6',
