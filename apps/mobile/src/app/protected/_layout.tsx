@@ -1,5 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
-
 import { ApplicationShell, type IApplicationTab } from '@repo/mobile-ui';
 
 import { AccessDeniedScreen } from '@/screens/AccessDeniedScreen';
@@ -11,7 +9,6 @@ import { NotificationsProvider } from '@/services/notifications/context';
 export default function Layout() {
   // TODO: Remove when public access is permanently enabled
   const { flags } = useFlags();
-  const queryClient = useQueryClient();
 
   if (!flags || !flags['access-enabled']) return <AccessDeniedScreen />;
 
@@ -21,15 +18,11 @@ export default function Layout() {
       id: 'index',
       icon: 'home',
     },
-    ...(flags['plan-enabled']
-      ? [
-          {
-            label: 'Plan',
-            id: 'plan',
-            icon: 'calendar_today',
-          } as IApplicationTab,
-        ]
-      : []),
+    {
+      label: 'Plan',
+      id: 'plan',
+      icon: 'calendar_today',
+    },
     {
       label: 'Tasks',
       id: 'tasks',

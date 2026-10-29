@@ -23,6 +23,11 @@ export function CreateFAB() {
             icon: 'add_task',
             onClick: () => createTaskSheetRef.current?.open(),
           },
+          {
+            label: 'Event',
+            icon: 'calendar_today',
+            onClick: () => {},
+          },
           /*{
             label: "Reminder",
             icon: "notification_add",
