@@ -8,30 +8,39 @@ import { EventHandlerProvider } from '@/services/EventHandler/provider';
 import { useFlags } from '@/services/flags/context';
 import { NotificationsProvider } from '@/services/notifications/context';
 
-const Tabs: IApplicationTab[] = [
-  {
-    label: 'Home',
-    id: 'index',
-    icon: 'home',
-  },
-  {
-    label: 'Tasks',
-    id: 'tasks',
-    icon: 'task_alt',
-  },
-  {
-    label: 'Settings',
-    id: 'settings',
-    icon: 'settings',
-  },
-];
-
 export default function Layout() {
   // TODO: Remove when public access is permanently enabled
   const { flags } = useFlags();
   const queryClient = useQueryClient();
 
   if (!flags || !flags['access-enabled']) return <AccessDeniedScreen />;
+
+  const Tabs: IApplicationTab[] = [
+    {
+      label: 'Home',
+      id: 'index',
+      icon: 'home',
+    },
+    ...(flags['plan-enabled']
+      ? [
+          {
+            label: 'Plan',
+            id: 'plan',
+            icon: 'calendar_today',
+          } as IApplicationTab,
+        ]
+      : []),
+    {
+      label: 'Tasks',
+      id: 'tasks',
+      icon: 'task_alt',
+    },
+    {
+      label: 'Settings',
+      id: 'settings',
+      icon: 'settings',
+    },
+  ];
 
   return (
     <EventHandlerProvider
