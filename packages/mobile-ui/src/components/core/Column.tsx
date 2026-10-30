@@ -3,6 +3,7 @@ import {
 	fillMaxSize,
 	fillMaxWidth,
 	padding,
+	size,
 	verticalScroll,
 	weight,
 } from "@expo/ui/jetpack-compose/modifiers";
@@ -20,6 +21,7 @@ interface IColumnProps extends PropsWithChildren {
 	paddingLeft?: number;
 	paddingRight?: number;
 	gap?: number;
+	size?: [number, number];
 }
 
 export function Column(props: IColumnProps) {
@@ -28,7 +30,13 @@ export function Column(props: IColumnProps) {
 			modifiers={[
 				...(props.flex
 					? [weight(1), fillMaxWidth()]
-					: [props.fill ? fillMaxSize() : fillMaxWidth()]),
+					: [
+							props.fill
+								? fillMaxSize()
+								: props.size
+									? size(props.size[0], props.size[1])
+									: fillMaxWidth(),
+						]),
 				props.scrollable && verticalScroll(),
 				padding(
 					props.paddingLeft ?? props.padding ?? 0,
