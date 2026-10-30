@@ -22,3 +22,7 @@ export function getDuration(minutes: number) {
     minutes >= 60 ? "h'h' m'min'" : "m'min'",
   );
 }
+
+export function capitalize(text: string) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}

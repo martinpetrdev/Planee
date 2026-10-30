@@ -24,8 +24,22 @@ export default function Screen() {
           ]}
         />
         <PlanDaySelector dayISO={dayISO} setDayISO={setDayISO} />
-        <Box paddingRight={8} paddingLeft={8} paddingTop={8}>
-          <PlanContainer></PlanContainer>
+        <Box paddingRight={16} paddingLeft={4} paddingTop={8}>
+          <PlanContainer
+            showCurrentTimeMarker={dayISO === DateTime.now().toISODate()}
+            blocks={[
+              {
+                title: 'Test',
+                startHour: 10,
+                endHour: 13.5,
+              },
+              {
+                title: 'Abc',
+                startHour: 11,
+                endHour: 12,
+              },
+            ]}
+          />
         </Box>
       </Column>
       <CreateFAB />

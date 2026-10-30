@@ -5,10 +5,12 @@ import {
 } from "@expo/ui/jetpack-compose";
 import {
 	background,
+	clickable,
 	clip,
 	fillMaxSize,
 	fillMaxWidth,
 	height,
+	offset,
 	padding,
 	Shapes,
 	weight,
@@ -24,7 +26,7 @@ interface IBoxProps extends PropsWithChildren {
 	paddingBottom?: number;
 	flex?: boolean;
 	align?: BoxProps["contentAlignment"];
-	width?: number;
+	width?: number | "fill";
 	height?: number;
 	backgroundColor?: string;
 	borderRadius?: number;
@@ -32,6 +34,9 @@ interface IBoxProps extends PropsWithChildren {
 	borderRadiusTR?: number;
 	borderRadiusBL?: number;
 	borderRadiusBR?: number;
+	top?: number;
+	left?: number;
+	onClick?: () => void;
 }
 
 export function Box(props: IBoxProps) {
@@ -39,6 +44,10 @@ export function Box(props: IBoxProps) {
 		<JetpackBox
 			contentAlignment={props.align}
 			modifiers={[
+				props.top || props.left
+					? offset(props.left ?? 0, props.top ?? 0)
+					: null,
+				props.onClick ? clickable(props.onClick) : null,
 				clip(
 					Shapes.RoundedCorner({
 						topStart: props.borderRadiusTL ?? props.borderRadius ?? 0,
@@ -50,7 +59,11 @@ export function Box(props: IBoxProps) {
 				props.backgroundColor ? background(props.backgroundColor) : null,
 				...(props.width || props.height
 					? [
-							props.width ? width(props.width) : null,
+							props.width
+								? props.width === "fill"
+									? fillMaxWidth()
+									: width(props.width)
+								: null,
 							props.height ? height(props.height) : null,
 						]
 					: props.flex
