@@ -13,11 +13,11 @@ plugins {
 }
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
-group = 'dev.martinpetr.planee.module.swipeable'
+group = 'dev.martinpetr.planee.module.jetpack'
 version = '0.1.0'
 
 android {
-  namespace "dev.martinpetr.planee.module.swipeable"
+  namespace "dev.martinpetr.planee.module.jetpack"
   defaultConfig {
     versionCode 1
     versionName "0.1.0"

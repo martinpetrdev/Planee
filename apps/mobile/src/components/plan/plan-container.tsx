@@ -1,8 +1,17 @@
-import { HorizontalDivider, useMaterialColors } from '@expo/ui/jetpack-compose';
-import { offset } from '@expo/ui/jetpack-compose/modifiers';
+import {
+  HorizontalDivider,
+  Column as JetpackColumn,
+  useMaterialColors,
+} from '@expo/ui/jetpack-compose';
+import {
+  fillMaxWidth,
+  offset,
+  weight,
+} from '@expo/ui/jetpack-compose/modifiers';
 import { DateTime } from 'luxon';
 import { useEffect, useMemo, useState } from 'react';
 
+import { verticalScrollTo } from '@repo/jetpack';
 import { Box, Column, Row, Text } from '@repo/mobile-ui';
 
 interface IPlanContainerBlock {
@@ -14,6 +23,8 @@ interface IPlanContainerBlock {
 interface IPlanContainerProps {
   blocks: IPlanContainerBlock[];
   showCurrentTimeMarker?: boolean;
+  // Increment to scroll the current time marker into view
+  scrollToNowRequest?: number;
 }
 
 interface IBlockCluster {
@@ -86,7 +97,16 @@ export function PlanContainer(props: IPlanContainerProps) {
     timeMarkerValue * HOUR_BLOCK_HEIGHT + TOP_INSET;
 
   return (
-    <Column scrollable flex>
+    <JetpackColumn
+      modifiers={[
+        weight(1),
+        fillMaxWidth(),
+        verticalScrollTo(
+          currentTimeMarkerOffset,
+          props.scrollToNowRequest ?? 0,
+        ),
+      ]}
+    >
       <Box>
         <Row paddingBottom={TOP_INSET * 2}>
           <Column size={[LABEL_WIDTH, HOUR_BLOCK_HEIGHT * 24 + TOP_INSET]}>
@@ -194,6 +214,6 @@ export function PlanContainer(props: IPlanContainerProps) {
           </>
         ) : null}
       </Box>
-    </Column>
+    </JetpackColumn>
   );
 }

@@ -10,6 +10,7 @@ import { ScreenHeader } from '@/components/ScreenHeader.tsx';
 
 export default function Screen() {
   const [dayISO, setDayISO] = useState(DateTime.now().toISODate());
+  const [scrollToNowRequest, setScrollToNowRequest] = useState(0);
 
   return (
     <ScreenShell>
@@ -19,7 +20,10 @@ export default function Screen() {
           trailingIcons={[
             {
               icon: 'today',
-              onClick: () => setDayISO(DateTime.now().toISODate()),
+              onClick: () => {
+                setDayISO(DateTime.now().toISODate());
+                setScrollToNowRequest((r) => r + 1);
+              },
             },
           ]}
         />
@@ -27,6 +31,7 @@ export default function Screen() {
         <Box paddingRight={16} paddingLeft={4} paddingTop={8}>
           <PlanContainer
             showCurrentTimeMarker={dayISO === DateTime.now().toISODate()}
+            scrollToNowRequest={scrollToNowRequest}
             blocks={[
               {
                 title: 'Test',

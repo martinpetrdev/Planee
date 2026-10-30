@@ -7,7 +7,7 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@react-native-vector-icons/fontawesome6": "^13.1.4",
     "@repo/datasync-engine": "workspace:*",
-    "@repo/jetpack-swipeable": "workspace:*",
+    "@repo/jetpack": "workspace:*",
     "@repo/mobile-ui": "workspace:*",
     "@repo/shared": "workspace:*",
     "@repo/nothing-glyph": "workspace:*",

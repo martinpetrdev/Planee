@@ -1,6 +1,6 @@
 // Created by AI (Claude Opus 5.5)
 
-package dev.martinpetr.planee.module.swipeable
+package dev.martinpetr.planee.module.jetpack
 
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue

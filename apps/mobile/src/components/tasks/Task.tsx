@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DateTime, Duration } from 'luxon';
 import { ToastAndroid } from 'react-native';
 
-import { Swipeable } from '@repo/jetpack-swipeable';
+import { Swipeable } from '@repo/jetpack';
 import {
   Badge,
   Box,
