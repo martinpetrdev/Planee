@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Box, Column, ScreenShell } from '@repo/mobile-ui';
 
@@ -11,6 +11,10 @@ import { ScreenHeader } from '@/components/ScreenHeader.tsx';
 export default function Screen() {
   const [dayISO, setDayISO] = useState(DateTime.now().toISODate());
   const [scrollToNowRequest, setScrollToNowRequest] = useState(0);
+
+  useEffect(() => {
+    setScrollToNowRequest((r) => r + 1);
+  }, []);
 
   return (
     <ScreenShell>
@@ -41,7 +45,7 @@ export default function Screen() {
               {
                 title: 'Abc',
                 startHour: 11,
-                endHour: 12,
+                endHour: 23.9999,
               },
             ]}
           />

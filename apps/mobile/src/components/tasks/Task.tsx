@@ -1,5 +1,5 @@
 import { useMaterialColors } from '@expo/ui/jetpack-compose';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { DateTime, Duration } from 'luxon';
 import { ToastAndroid } from 'react-native';
 
@@ -43,8 +43,6 @@ export function Task(props: ITaskProps) {
   const durationLabel = duration.toFormat(
     duration.as('hours') >= 1 ? "h'h' m'min'" : "m'min'",
   );
-
-  const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
     mutationKey: ['tasks', props.task.id, 'completed'],
