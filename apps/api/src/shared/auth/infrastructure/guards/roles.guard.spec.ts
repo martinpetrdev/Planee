@@ -42,6 +42,7 @@ const ctx = (
   cls: object = Routes,
 ) =>
   ({
+    getType: () => 'http',
     switchToHttp: () => ({ getRequest: () => ({ user }) }),
     getHandler: () => handler,
     getClass: () => cls,

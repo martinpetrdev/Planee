@@ -21,6 +21,10 @@ export class JwtAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (isPublic(this.reflector, context)) return true;
 
+    // MCP calls are authenticated by the McpModule auth gate (McpKeycloakVerifier) before they run
+    // Added by Claude Code (Claude Opus 5.5)
+    if (context.getType<string>() === 'mcp') return true;
+
     const req = context.switchToHttp().getRequest();
     const [scheme, token] = (req.headers.authorization ?? '').split(' ');
     if ((scheme as string)?.toLowerCase() !== 'bearer' || !token)

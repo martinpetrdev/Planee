@@ -4,6 +4,7 @@ const oidcIssuer = process.env.CONF_API_OIDC_ISSUER;
 const oidcAudience = process.env.CONF_API_OIDC_AUDIENCE;
 const oidcClientId = process.env.CONF_API_OIDC_CLIENT_ID;
 const oidcClientSecret = process.env.CONF_API_OIDC_CLIENT_SECRET;
+const mcpResource = process.env.CONF_API_MCP_RESOURCE;
 
 if (oidcIssuer === undefined || oidcIssuer === '')
   throw new Error(
@@ -21,6 +22,10 @@ if (oidcClientSecret === undefined || oidcClientSecret === '')
   throw new Error(
     'CONF_API_OIDC_CLIENT_SECRET environment variable is not set or empty',
   );
+if (mcpResource === undefined || mcpResource === '')
+  throw new Error(
+    'CONF_API_MCP_RESOURCE environment variable is not set or empty',
+  );
 
 export default registerAs('auth', () => ({
   oidc: {
@@ -28,5 +33,8 @@ export default registerAs('auth', () => ({
     audience: oidcAudience,
     clientId: oidcClientId,
     clientSecret: oidcClientSecret,
+  },
+  mcp: {
+    resource: mcpResource,
   },
 }));
