@@ -6,6 +6,7 @@ import { TasksService } from './application/tasks.service.js';
 import { TaskRepositoryPort } from './domain/ports/task-repository.port.js';
 import { PrismaTaskRepository } from './infrastructure/persistence/prisma-task.repository.js';
 import { TasksController } from './presentation/tasks.controller.js';
+import { TasksMcp } from './presentation/tasks.mcp.ts';
 
 @Module({
   imports: [QuickNotesModule],
@@ -18,6 +19,7 @@ import { TasksController } from './presentation/tasks.controller.js';
       provide: TaskManagementPort,
       useClass: TasksService,
     },
+    TasksMcp,
   ],
   controllers: [TasksController],
 })
