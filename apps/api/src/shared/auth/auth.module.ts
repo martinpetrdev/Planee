@@ -7,9 +7,11 @@ import { TokenVerifierPort } from './domain/ports/token-verifier.port.js';
 import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard.js';
 import { RolesGuard } from './infrastructure/guards/roles.guard.js';
 import { KeycloakTokenVerifier } from './infrastructure/keycloak-token.verifier.js';
+import { McpOAuthController } from './presentation/mcp-oauth.controller.js';
 
 @Module({
   imports: [UsersModule],
+  controllers: [McpOAuthController],
   providers: [
     {
       provide: TokenVerifierPort,
