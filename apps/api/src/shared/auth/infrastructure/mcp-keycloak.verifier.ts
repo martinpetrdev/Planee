@@ -23,12 +23,12 @@ export class McpKeycloakVerifier implements McpTokenVerifier {
     await this.provisioning.ensureProvisioned(user.id);
 
     // Signature already verified above, decoding only reads the remaining claims
-    const { exp, aud, azp, scope } = decodeJwt(token);
+    const { exp, aud, scope } = decodeJwt(token);
     const audiences = [aud ?? []].flat();
 
     return {
       token,
-      clientId: typeof azp === 'string' ? azp : '',
+      clientId: 'mcp',
       scopes: typeof scope === 'string' ? scope.split(' ').filter(Boolean) : [],
       expiresAt: exp,
       resource: audiences.includes(this.resource)

@@ -60,9 +60,9 @@ const DomainModules = [
           auth: {
             verifier: new McpKeycloakVerifier(verifier, provisioning, resource),
             resource,
-            authorizationServers: [
-              config.getOrThrow<string>('auth.oidc.issuer'),
-            ],
+            // The API itself (McpOAuthController) to work around client_id needing to be provided by keycloak
+            authorizationServers: [new URL(resource).origin],
+            scopesSupported: ['offline_access'],
             resourceName: 'Planee',
           },
         };
