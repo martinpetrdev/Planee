@@ -8,13 +8,19 @@ export class TimeBlockValidator {
       });
   }
 
-  static validateDates(start: Date, end: Date) {
+  static validateDates(
+    start: Date,
+    end: Date,
+    opts: {
+      enforceStartInFuture: boolean;
+    },
+  ) {
     if (start >= end)
       throw new TaskInvalidError({
         end: 'end must be greater than start',
       });
 
-    if (start < new Date())
+    if (opts.enforceStartInFuture && start < new Date())
       throw new TaskInvalidError({
         start: 'start must be in the future',
       });

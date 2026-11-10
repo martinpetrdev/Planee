@@ -37,7 +37,9 @@ export class NewTimeBlock {
     userId: string,
   ) {
     TimeBlockValidator.validateTitle(title);
-    TimeBlockValidator.validateDates(start, end);
+    TimeBlockValidator.validateDates(start, end, {
+      enforceStartInFuture: true,
+    });
 
     return new NewTimeBlock(start, end, title, taskId, userId);
   }
