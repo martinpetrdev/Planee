@@ -76,6 +76,7 @@ async function bootstrap() {
       'quick-notes',
       'Group of endpoints that allow to manage quick notes',
     )
+    .addTag('calendar', 'Group of endpoints that allow to manage calendar')
     .addTag('users', 'Group of endpoints for managing user accounts')
     .addBearerAuth({
       type: 'openIdConnect',
@@ -96,7 +97,7 @@ async function bootstrap() {
       },
       {
         name: 'Application',
-        tags: ['tasks', 'quick-notes'],
+        tags: ['tasks', 'quick-notes', 'calendar'],
       },
       {
         name: 'Mobile-specific',

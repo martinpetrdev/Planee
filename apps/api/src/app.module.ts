@@ -4,6 +4,7 @@ import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { McpModule } from '@nestjs/mcp';
 
 import { AdminModule } from './admin/admin.module.js';
+import { CalendarModule } from './calendar/calendar.module.ts';
 import { ConfigModule } from './config/config.module.js';
 import { HealthModule } from './health/health.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
@@ -29,6 +30,7 @@ const DomainModules = [
   TasksModule,
   QuickNotesModule,
   AdminModule,
+  CalendarModule,
 ];
 
 @Module({
