@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { TimeBlock } from '@repo/database';
 
 import { PrismaUnitOfWork } from '../../../shared/database/prisma.unit-of-work.ts';
+import { NewTimeBlock } from '../../domain/new-time-block.ts';
 import { TimeBlockRepositoryPort } from '../../domain/ports/time-block-repository.port.ts';
 import { TimeBlock as DomainTimeBlock } from '../../domain/time-block.ts';
 
@@ -30,6 +31,20 @@ export class PrismaTimeBlockRepository extends TimeBlockRepositoryPort {
     });
 
     return entities.map(this.toDomain.bind(this));
+  }
+
+  async insert(timeBlock: NewTimeBlock): Promise<DomainTimeBlock> {
+    const entity = await this.db.timeBlock.create({
+      data: {
+        start: timeBlock.start,
+        end: timeBlock.end,
+        title: timeBlock.title,
+        taskId: timeBlock.taskId,
+        userId: timeBlock.userId,
+      },
+    });
+
+    return this.toDomain(entity);
   }
 
   private toDomain(tb: TimeBlock) {

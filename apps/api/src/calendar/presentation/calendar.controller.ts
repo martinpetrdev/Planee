@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -13,7 +13,9 @@ import { FeatureFlag } from '../../shared/flags/domain/flag.ts';
 import { Flags } from '../../shared/flags/presentation/decorators/flags.decorator.ts';
 import { ApiAuthResponses } from '../../utils/swagger/decorators.ts';
 import { CalendarService } from '../application/calendar.service.ts';
+import { CreateTimeBlockCommand } from '../application/commands/create-time-block.command.ts';
 import { GetTimeBlocksCommand } from '../application/commands/get-time-blocks.command.ts';
+import { CreateTimeBlockDto } from './dto/create-time-block.dto.ts';
 import { TimeBlockResponseDto } from './dto/time-block-response.dto.ts';
 
 @Controller({
@@ -45,5 +47,30 @@ export class CalendarController {
         new GetTimeBlocksCommand(date, userId),
       )
     ).map(TimeBlockResponseDto.fromDomain);
+  }
+
+  @Post('/time-blocks')
+  @ApiOperation({
+    description: 'Create a calendar time block',
+  })
+  @ApiAuthResponses()
+  @ApiOkResponse({
+    type: TimeBlockResponseDto,
+  })
+  async createTimeBlock(
+    @User('id') userId: string,
+    @Body() dto: CreateTimeBlockDto,
+  ): Promise<TimeBlockResponseDto> {
+    return new TimeBlockResponseDto(
+      await this.calendarService.createTimeBlock(
+        new CreateTimeBlockCommand(
+          dto.title,
+          dto.start,
+          dto.end,
+          dto.taskId,
+          userId,
+        ),
+      ),
+    );
   }
 }

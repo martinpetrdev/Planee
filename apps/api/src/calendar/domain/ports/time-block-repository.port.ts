@@ -1,3 +1,4 @@
+import { NewTimeBlock } from '../new-time-block.ts';
 import { TimeBlock } from '../time-block.ts';
 
 export abstract class TimeBlockRepositoryPort {
@@ -6,4 +7,5 @@ export abstract class TimeBlockRepositoryPort {
     dateStart: Date,
     dateEnd: Date,
   ): Promise<TimeBlock[]>;
+  abstract insert(timeBlock: NewTimeBlock): Promise<TimeBlock>;
 }
