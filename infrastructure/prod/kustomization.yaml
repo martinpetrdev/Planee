@@ -5,6 +5,7 @@ resources:
   - namespace.yaml
   - postgres.yaml
   - api.yaml
+  - mcp.yaml
   - config.yaml
   - db-migration.yaml
   - sa.yaml

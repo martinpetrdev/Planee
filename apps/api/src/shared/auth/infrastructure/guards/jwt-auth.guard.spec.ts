@@ -34,6 +34,7 @@ const ctx = (handler: () => void, headers: Record<string, string> = {}) => {
   const req: Record<string, unknown> = { headers };
 
   return {
+    getType: () => 'http',
     switchToHttp: () => ({ getRequest: () => req }),
     getHandler: () => handler,
     getClass: () => Routes,

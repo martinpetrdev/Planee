@@ -7,10 +7,10 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 
-import { AuthenticatedUser } from '../../domain/authenticated-user.entity.js';
 import { UserRole } from '../../domain/user-role.js';
 import { isPublic } from '../../presentation/decorators/public.decorator.js';
 import { ROLES_DECORATOR_KEY } from '../../presentation/decorators/roles.decorator.js';
+import { getRequestUser } from '../../presentation/decorators/user.decorator.js';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -32,7 +32,7 @@ export class RolesGuard implements CanActivate {
     )
       return true; // Endpoint does not require any roles
 
-    const user = context.switchToHttp().getRequest().user as AuthenticatedUser;
+    const user = getRequestUser(context);
 
     // User not authenticated - this is a safeguard for improperly combined guards and decorators
     if (!user) throw new ForbiddenException();

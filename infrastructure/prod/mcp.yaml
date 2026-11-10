@@ -1,0 +1,29 @@
+# Written by Claude Code (Claude Opus 5.5)
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: planee-mcp-rewrite
+  namespace: planee
+spec:
+  replacePathRegex:
+    regex: "^/(.*)"
+    replacement: "/mcp/$1"
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: planee-mcp-ingress
+  namespace: planee
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`mcp.planee.martinpetr.dev`)
+      kind: Rule
+      middlewares:
+        - name: planee-mcp-rewrite
+      services:
+        - name: planee-api-svc
+          port: 80
+  tls:
+    certResolver: cloudflare

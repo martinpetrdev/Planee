@@ -9,6 +9,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
+import { z } from 'zod';
 
 import { PAGE_SIZE } from '@repo/shared';
 
@@ -42,3 +43,29 @@ export class ListTasksDto {
   @ApiProperty({ enum: ['asc', 'desc'], required: false })
   order?: 'asc' | 'desc';
 }
+
+export const ListTasksMCPSchema = z.object({
+  scope: z
+    .enum(['overdue', 'planned', 'completed'])
+    .describe(
+      'Scope of the task list. Sorted by due date/completion status. Overdue are not completed, completed but overdue go to completed.',
+    ),
+  dayStart: z.iso
+    .datetime()
+    .describe(
+      'Datetime of the current day start (00:00 of the local time), must include Z',
+    ),
+  cursorId: z
+    .ulid()
+    .optional()
+    .describe(
+      'ID of the last task on the current to use as a cursor for the next page',
+    ),
+  limit: z
+    .int()
+    .min(1)
+    .max(PAGE_SIZE)
+    .optional()
+    .describe('Maximum number of tasks returned'),
+  order: z.enum(['asc', 'desc']).optional().describe('Ordering by due date'),
+});

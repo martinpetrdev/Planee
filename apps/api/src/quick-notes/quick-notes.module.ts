@@ -6,6 +6,7 @@ import { QuickNoteRepositoryPort } from './domain/ports/quick-note-repository.po
 import { PrismaQuickNoteRepository } from './infrastructure/persistence/prisma-quick-note.repository.js';
 import { WorkerQuickNoteAutofill } from './infrastructure/worker-quick-note.autofill.js';
 import { QuickNotesController } from './presentation/quick-notes.controller.js';
+import {QuickNotesMcp} from "./presentation/quick-notes.mcp.ts";
 
 @Module({
   imports: [],
@@ -20,6 +21,7 @@ import { QuickNotesController } from './presentation/quick-notes.controller.js';
       useClass: WorkerQuickNoteAutofill,
     },
     QuickNotesService,
+    QuickNotesMcp
   ],
   exports: [QuickNoteRepositoryPort],
 })
