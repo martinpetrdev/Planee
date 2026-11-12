@@ -283,6 +283,9 @@ importers:
       '@repo/config':
         specifier: workspace:*
         version: link:../../shared/config
+      '@repo/contracts':
+        specifier: workspace:*
+        version: link:../../shared/contracts
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -1041,6 +1044,15 @@ importers:
         version: 5.9.3
 
   shared/config:
+    devDependencies:
+      '@types/node':
+        specifier: ^26.6.6
+        version: 26.6.6
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
+  shared/contracts:
     devDependencies:
       '@types/node':
         specifier: ^26.6.6

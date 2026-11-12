@@ -1,6 +1,8 @@
+import { VersioningType } from "@nestjs/common";
 import { NestApplication, NestFactory } from "@nestjs/core";
 
 import { Configuration, getConfiguration } from "@repo/config";
+import { ApiVersion } from "@repo/contracts";
 
 import { AppModule } from "./app.module.ts";
 
@@ -21,12 +23,19 @@ class Program {
 
   static async configure(): Promise<void> {
     Program.app.enableShutdownHooks();
+
     Program.app.enableCors(Program.config.cors.options);
+    Program.app.enableVersioning({
+      type: VersioningType.URI,
+      defaultVersion: ApiVersion.v1,
+    });
   }
 
   static async bootstrap(): Promise<void> {
     await Program.init();
     await Program.configure();
+
+    await Program.app.listen(Program.config.addressing.api.svcPort);
   }
 }
 
