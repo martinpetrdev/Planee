@@ -1,19 +1,19 @@
-import { NestApplication, NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module.ts";
-import { Configuration, ConfigurationObject } from "@repo-shared/configuration";
 import { StandardSchemaValidationPipe, VersioningType } from "@nestjs/common";
+import { NestApplication, NestFactory } from "@nestjs/core";
+import { ConfigurationObject } from "@repo-shared/configuration";
 import { ApiVersion } from "@repo-shared/contracts";
 
-class Program {
+import { AppModule } from "./app.module.ts";
+import { ApplicationConfig } from "./configuration.ts";
+
+export class Program {
   static readonly APP_MODULE = AppModule;
 
   static app: NestApplication;
   static config: ConfigurationObject;
 
   static async init(): Promise<void> {
-    Program.config = new Configuration(
-      process.env.APPLICATION_CONFIG!,
-    ).getObject();
+    Program.config = ApplicationConfig;
 
     Program.app = await NestFactory.create(Program.APP_MODULE, {
       // Prevent hanging processes

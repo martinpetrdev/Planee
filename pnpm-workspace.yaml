@@ -4,3 +4,10 @@ packages:
 allowBuilds:
   "@swc/core": true
   esbuild: true
+  msgpackr-extract: true
+  workerd: true
+minimumReleaseAgeExclude:
+  - "@nestjs/core@12.5.1"
+  - "@nestjs/common@12.5.1"
+  - "@nestjs/terminus@12.2.0"
+  - "@nestjs/platform-express@12.5.1"

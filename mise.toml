@@ -1,5 +1,8 @@
 monorepo_root = true
 
+[settings]
+experimental = true
+
 [monorepo]
 config_roots = ["apps/*", "shared/*"]
 
@@ -10,10 +13,14 @@ pnpm = "12"
 [vars]
 _.file = "configuration.json"
 
+[daemons]
+postgres = "18"
+
 [tasks.install]
 description = "Installs all necessary dependencies"
 run = "pnpm install"
 
 [tasks.start-dev]
+daemons = "postgres"
 description = "Starts dev servers in all apps"
 depends = ["//...:start-dev"]
