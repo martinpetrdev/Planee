@@ -1,0 +1,4 @@
+{
+  "cors.allowedOrigins": "localhost:4000",
+  "http.api.port": 4001
+}

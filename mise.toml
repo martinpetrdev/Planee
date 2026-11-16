@@ -1,11 +1,14 @@
 monorepo_root = true
 
 [monorepo]
-config_roots = ["apps/*"]
+config_roots = ["apps/*", "shared/*"]
 
 [tools]
 node = "26"
 pnpm = "12"
+
+[vars]
+_.file = "configuration.json"
 
 [tasks.install]
 description = "Installs all necessary dependencies"
@@ -13,4 +16,4 @@ run = "pnpm install"
 
 [tasks.start-dev]
 description = "Starts dev servers in all apps"
-depends = ["//apps/...:start-dev"]
+depends = ["//...:start-dev"]

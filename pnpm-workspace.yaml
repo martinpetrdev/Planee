@@ -1,2 +1,6 @@
 packages:
   - apps/*
+  - shared/*
+allowBuilds:
+  "@swc/core": true
+  esbuild: true
