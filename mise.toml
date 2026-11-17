@@ -24,3 +24,8 @@ run = "pnpm install"
 daemons = "postgres"
 description = "Starts dev servers in all apps"
 depends = ["//...:start-dev"]
+
+[tasks.prisma-migrate]
+daemons = "postgres"
+description = "Creates and applies a Prisma migration from schema changes"
+run = "pnpm --filter @repo-shared/database migrate"

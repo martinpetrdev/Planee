@@ -1,0 +1,16 @@
+model User {
+  id String @id
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notificationPushTokens    NotificationPushToken[]
+  tasks                     Task[]
+  quickNotes                QuickNote[]
+  timeBlocks                TimeBlock[]
+  timeEntries               TimeEntry[]
+  googleCalendarEvents      GoogleCalendarEvent[]
+  googleCalendarIntegration GoogleCalendarIntegration?
+  bakalariIntegration       BakalariIntegration?
+  schoolLessons             SchoolLesson[]
+}

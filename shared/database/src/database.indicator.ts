@@ -1,12 +1,11 @@
+// @ai/created(Claude Fable 5.2, Claude Opus 5.5): Wrote the Terminus health indicator that checks the database with SELECT 1.
+
 import { Dependencies, Injectable } from "@nestjs/common";
 // biome-ignore lint/style/useImportType: Nest needs non-type import
 import { HealthIndicatorService } from "@nestjs/terminus";
-import type { Contract } from "@prisma/orm-postgres/contract/types";
-import type { SqlStorage } from "@prisma/orm-postgres/family-contract/types";
-import type { PostgresClient } from "@prisma/orm-postgres/runtime";
+import type { Database } from "./database.module.ts";
 
-// Created by Claude Code (Claude Fable 5.2)
-// Explicit dependency list: this package runs from source via tsx, which emits no decorator metadata.
+// Explicit dependency list: the api dev server runs this package from source via tsx, which emits no decorator metadata.
 @Dependencies(HealthIndicatorService)
 @Injectable()
 export class DatabaseHealthIndicator {
@@ -14,19 +13,15 @@ export class DatabaseHealthIndicator {
 		private readonly healthIndicatorService: HealthIndicatorService,
 	) {}
 
-	isHealthy<TKey extends string, TContract extends Contract<SqlStorage>>(
+	isHealthy<TKey extends string>(
 		key: TKey,
-		database: PostgresClient<TContract>,
+		database: Database,
 		timeout = 1000,
 	) {
 		return this.healthIndicatorService
 			.check(key)
-			.attempt(async ({ signal }) => {
-				await database
-					.runtime()
-					.execute(database.raw.sql`SELECT 1`.affectedCount().build(), {
-						signal,
-					});
+			.attempt(async () => {
+				await database.$queryRaw`SELECT 1`;
 			})
 			.withTimeout(timeout);
 	}

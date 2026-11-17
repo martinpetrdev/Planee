@@ -1,0 +1,54 @@
+model GoogleCalendarEvent {
+  timeBlockId String  @id // one-to-one relation
+  userId      String
+  calendarId  String
+  eventId     String
+  etag        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  timeBlock TimeBlock @relation(fields: [timeBlockId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, calendarId, eventId])
+}
+
+model TimeBlock {
+  id     String   @id @default(ulid())
+  start  DateTime
+  end    DateTime
+  title  String?
+  taskId String?
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task Task? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  googleCalendarEvent GoogleCalendarEvent?
+  timeEntries         TimeEntry[]
+
+  @@index([userId, start])
+}
+
+model TimeEntry {
+  id          String    @id @default(ulid())
+  start       DateTime
+  end         DateTime? // null -> running
+  title       String?
+  userId      String
+  taskId      String?
+  timeBlockId String?
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task      Task?      @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  timeBlock TimeBlock? @relation(fields: [timeBlockId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, start])
+}

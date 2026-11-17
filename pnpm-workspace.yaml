@@ -2,6 +2,8 @@ packages:
   - apps/*
   - shared/*
 allowBuilds:
+  "@prisma/engines": true
+  prisma: true
   "@swc/core": true
   esbuild: true
   msgpackr-extract: true

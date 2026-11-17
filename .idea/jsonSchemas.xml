@@ -20,6 +20,9 @@
                   <Item>
                     <option name="path" value="apps/mobile/mise.toml" />
                   </Item>
+                  <Item>
+                    <option name="path" value="shared/database/mise.toml" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>

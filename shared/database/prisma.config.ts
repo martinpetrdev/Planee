@@ -1,9 +1,11 @@
-import { defineConfig } from "@prisma/orm-postgres/config";
-import { definePrismaConfig } from "prisma/config";
+// @ai/created(Claude Fable 5.2): Wrote the Prisma config pointing at the split schema folder and DATABASE_URL.
 
-export default definePrismaConfig({
-	orm: defineConfig({
-		contract: "./src/prisma/contract.prisma",
-		db: { connection: process.env.DATABASE_URL! },
-	}),
+import * as process from "node:process";
+import { defineConfig } from "prisma/config";
+
+export default defineConfig({
+	schema: "prisma/",
+	datasource: {
+		url: process.env.DATABASE_URL,
+	},
 });

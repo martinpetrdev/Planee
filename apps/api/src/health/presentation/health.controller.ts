@@ -1,15 +1,11 @@
-import { Controller, Get, Inject } from "@nestjs/common";
+import { Controller, Get } from "@nestjs/common";
 import {
   HealthCheck,
   HealthCheckService,
   MemoryHealthIndicator,
 } from "@nestjs/terminus";
 import { ApiVersion } from "@repo-shared/contracts";
-import {
-  Database,
-  type DatabaseClient,
-  DatabaseHealthIndicator,
-} from "@repo-shared/database";
+import { Database, DatabaseHealthIndicator } from "@repo-shared/database";
 
 @Controller({
   path: "/health",
@@ -20,7 +16,7 @@ export class HealthController {
     private readonly health: HealthCheckService,
     private readonly memoryIndicator: MemoryHealthIndicator,
     private readonly databaseIndicator: DatabaseHealthIndicator,
-    @Inject(Database) private readonly database: DatabaseClient,
+    private readonly database: Database,
   ) {}
 
   @Get()

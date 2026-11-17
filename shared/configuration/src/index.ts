@@ -7,6 +7,7 @@ const configurationSchema = z.object({
 	}),
 	http: z.object({
 		api: z.object({
+			// @ai/assisted(Claude Fable 5.2): Fixed port parsing by coercing the string from the env config to a number.
 			port: z.coerce.number().int().min(1024).max(65535),
 		}),
 	}),

@@ -1,14 +1,14 @@
+// @ai/created(Claude Fable 5.2, Claude Opus 5.5): Wrote the DatabaseModule.forRoot dynamic module and the injectable Database Prisma client class.
+
 import { Global, Module } from "@nestjs/common";
 import { TerminusModule } from "@nestjs/terminus";
-import postgres, { type PostgresClient } from "@prisma/orm-postgres/runtime";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { DatabaseHealthIndicator } from "./database.indicator.ts";
-import type { Contract } from "./prisma/contract.d.ts";
-import contractJson from "./prisma/contract.json" with { type: "json" };
+import { PrismaClient } from "./generated/client.ts";
 
-export const Database = Symbol("database");
-export type DatabaseClient = PostgresClient<Contract>;
+export class Database extends PrismaClient {}
 
-// biome-ignore lint/complexity/noStaticOnlyClass: No explanation
+// biome-ignore lint/complexity/noStaticOnlyClass: Nest dynamic modules are created by a static forRoot method
 export class DatabaseModule {
 	public static forRoot(url: string) {
 		@Global()
@@ -17,8 +17,10 @@ export class DatabaseModule {
 			providers: [
 				{
 					provide: Database,
-					// Lazy (the pool is opened only on the first call)
-					useValue: postgres<Contract>({ contractJson, url }),
+					// Lazy, connects on the first query
+					useValue: new Database({
+						adapter: new PrismaPg({ connectionString: url }),
+					}),
 				},
 				DatabaseHealthIndicator,
 			],

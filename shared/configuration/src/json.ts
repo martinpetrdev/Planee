@@ -1,5 +1,5 @@
 /**
- * Parses flattened json as object.
+ * Expands an object with dotted keys into a nested object.
  * ```json
  * {
  *   "a.b": "x",
@@ -20,9 +20,9 @@
  * }
  * ```
  *
- * @param flattenedObject
+ * @param flattenedObject object with dotted keys
  */
-export function parseFlatObject(flattenedObject: string) {
+export function parseFlatObject(flattenedObject: Record<string, unknown>) {
 	const out = {};
 
 	for (const [key, value] of Object.entries(flattenedObject)) {
