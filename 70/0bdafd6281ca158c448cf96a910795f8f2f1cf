@@ -1,0 +1,98 @@
+shared/database/src/database.indicator.ts
+  s_bfc04cfa4fb6d8::t_cb21e096ba3af7 2
+  s_bfc04cfa4fb6d8::t_f15d10a7c671df 1,6,8,16,18,23-24
+shared/database/src/database.module.ts
+  s_bfc04cfa4fb6d8::t_cb21e096ba3af7 2
+  s_bfc04cfa4fb6d8::t_f15d10a7c671df 1,5,7,9,11,20-23
+apps/api/src/health/presentation/health.controller.ts
+  s_bfc04cfa4fb6d8::t_f15d10a7c671df 1,8,19
+shared/configuration/src/json.ts
+  s_bfc04cfa4fb6d8::t_f15d10a7c671df 2,23,25
+mise.toml
+  s_bfc04cfa4fb6d8::t_f15d10a7c671df 27-31
+shared/configuration/src/index.ts
+  s_bfc04cfa4fb6d8::t_f15d10a7c671df 10
+shared/database/prisma.config.ts
+  s_bfc04cfa4fb6d8::t_f15d10a7c671df 1,3-10
+AGENTS.md
+  s_bfc04cfa4fb6d8::t_53a15ba3ce673d 44
+  s_bfc04cfa4fb6d8::t_a77ae85aba45a0 1-36,38-43,45-48
+  s_bfc04cfa4fb6d8::t_cb21e096ba3af7 37
+CLAUDE.md
+  s_bfc04cfa4fb6d8::t_75903a681d1783 1
+.idea/jsonSchemas.xml
+  s_b8854f51824cc9::t_88d4491e9b12f9 23-25
+pnpm-lock.yaml
+  s_b8854f51824cc9::t_f4391233ab5e57 24,126-132,134-136,138-139,261-262,265,267-268,270,272-273,876-877,879-882,1034-1035,1037-1038,1040-1042,1044-1050,1052-1053,1055-1056,1061-1077,1082-1083,1085-1087,1089-1091,1093-1095,1097-1101,1103-1104,1106,1109-1110,1112-1115,1117-1119,1122-1123,1125-1126,1128,1131-1132,1134-1137,1139-1141,1144-1145,1147-1148,1150,1153-1154,1156-1157,1159,1162-1163,1165-1166,1168,1419-1451,1464-1466,1473-1475,1482-1483,1494-1496,1629-1630,1632-1662,1796-1798,1919-1920,2032-2086,2100-2102,2110-2112,2142-2143,2145-2146,2154-2157,2162-2164,2239-2244,2252-2253,2303-2306,2347-2348,2449-2452,2476-2478,2632-2634,2639-2641,2745-2754,2938-2941,2954-2956,2963-2965,2967-2974,2983-2984,3005-3006,3008,3047-3050,3055-3056,3058-3059,3077-3080,3084-3085,3188-3190,3362-3363,3380-3381,3618-3619,3621,3623,3625,3627,3629,3631,3633-3635,3637,3639-3640,3642,3644-3645,3647,3650,3653,3656,3659,3662-3663,3665,3668-3669,3671-3672,3674-3675,3677-3678,3680-3681,3683-3684,3686-3687,3689-3690,3692-3693,3695-3696,3698-3699,3701-3702,4039,4045-4055,4148,4150-4153,4155-4157,4159,4161-4165,4167,4169-4172,4174,4177-4179,4183,4187,4189-4191,4194-4195,4202,4206,4208,4210-4226,4228,4230,4232-4234,4236-4239,4241,4243-4279,4281,4283-4285,4287,4289,4291,4293-4295,4297,4299,4301-4302,4304,4306,4308-4312,4314,4316,4318-4320,4322,4324,4326-4327,4329,4331,4333,4335,4373-4374,4376,4378-4381,4383-4384,4386-4387,4389,4391,4393,4395,4397,4517-4546,4564-4565,4570-4571,4578,4580,4584,4592-4595,4677-4679,4681,4683-4752,4948,5074,5158-5207,5216,5224-5227,5251,5254,5256,5262-5263,5266,5396,5398-5400,5406,5408,5467-5472,5510-5512,5627,5629,5631,5633,5635,5637,5647-5648,5755-5756,5759,5842-5868,6061-6062,6071,6075,6077-6092,6094,6096-6103,6107,6109-6110,6123,6146,6149,6183,6185,6187,6229-6232,6235,6345,6549,6559-6564,6642-6643
+pnpm-workspace.yaml
+  s_b8854f51824cc9::t_e147102e08000e 5-6
+shared/database/package.json
+  s_b8854f51824cc9::t_0b59bccd8bf7f5 11-15,23-25,28-30
+shared/database/prisma/calendar-event.prisma
+  s_b8854f51824cc9::t_29ff14931d3989 1-54
+shared/database/prisma/integration.prisma
+  s_b8854f51824cc9::t_3f58ab112c5d8a 1-55
+shared/database/prisma/migrations/20260914161401_add_user_model/migration.sql
+  s_b8854f51824cc9::t_75f0e6ee7c730c 1-8
+shared/database/prisma/migrations/20260917162620_add_notifications_push_token_model/migration.sql
+  s_b8854f51824cc9::t_a92b53cc324d8b 1-15
+shared/database/prisma/migrations/20260918170324_add_task_model/migration.sql
+  s_b8854f51824cc9::t_3adbe4274a60a8 1-22
+shared/database/prisma/migrations/20260921153020_add_completed_at_column_to_task_model/migration.sql
+  s_b8854f51824cc9::t_a086a55cca6cfe 1-2
+shared/database/prisma/migrations/20261006174415_add_early_access_program_invitiation_temporary_entity/migration.sql
+  s_b8854f51824cc9::t_e7c52217101fec 1-8
+shared/database/prisma/migrations/20261011083752_add_entities_for_quick_note_time_blocks_and_entries_and_integrations/migration.sql
+  s_b8854f51824cc9::t_a451fb24584f1e 1-158
+shared/database/prisma/migrations/20261016194845_add_autofill_column_to_quick_note/migration.sql
+  s_b8854f51824cc9::t_71cc0a5f5869b2 1-2
+shared/database/prisma/migrations/migration_lock.toml
+  s_b8854f51824cc9::t_eac8d10ce58f72 1-3
+shared/database/prisma/mobile-specific.prisma
+  s_b8854f51824cc9::t_3539b39998ea1a 1-11
+shared/database/prisma/quick-note.prisma
+  s_b8854f51824cc9::t_f3f5177bea2b3d 1-13
+shared/database/prisma/schema.prisma
+  s_b8854f51824cc9::t_2c98a916a5d182 1-9
+shared/database/prisma/task.prisma
+  s_b8854f51824cc9::t_b48c754e33df4c 1-25
+shared/database/prisma/temporary.prisma
+  s_b8854f51824cc9::t_a86fd61ae72c3f 1-7
+shared/database/prisma/user.prisma
+  s_b8854f51824cc9::t_56262ab8c29000 1-16
+shared/database/src/index.ts
+  s_b8854f51824cc9::t_c4d5cbf4a3592c 3
+shared/database/tsconfig.json
+  s_b8854f51824cc9::t_cdff4a8a12c0f3 10-12
+.idea/mise.xml
+  s_b8854f51824cc9::t_3bfa9feb6a0d81 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "700bdafd6281ca158c448cf96a910795f8f2f1cf",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_b8854f51824cc9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "489fe932-b7d5-42a1-95a8-8243bf9dc80c",
+        "model": "unknown"
+      },
+      "human_author": "Martin Petr <martinpetrnp@gmail.com>"
+    },
+    "s_bfc04cfa4fb6d8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8fd2c1a9-137a-4853-a041-002f444dbd8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
