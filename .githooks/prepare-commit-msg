@@ -1,0 +1,21 @@
+#!/bin/sh
+# @ai/created(Claude Opus 5.5): Wrote the hook that adds Co-Authored-By trailers for AI models recorded by git-ai.
+
+# ponytail: reads git-ai's whole working state, not only staged files; per-file filtering if partial commits mislabel
+command -v git-ai >/dev/null 2>&1 || exit 0
+command -v jq >/dev/null 2>&1 || exit 0
+
+git-ai status --json 2>/dev/null |
+  jq -r '.checkpoints[] | select(.additions > 0) | .tool_model | select(test("^[a-z-]+ [a-z0-9.-]+$")) | split(" ")[1]' |
+  sort -u |
+  while read -r model; do
+    case "$model" in
+      claude-*)
+        # claude-opus-5-5 -> Claude Opus 5.5
+        name=$(echo "$model" | sed -E 's/-([0-9]+)-([0-9]+)$/ \1.\2/; s/-/ /g; s/\b(.)/\u\1/g')
+        trailer="Co-Authored-By: $name <noreply@anthropic.com>" ;;
+      *)
+        trailer="Co-Authored-By: $model <noreply@usegitai.com>" ;;
+    esac
+    git interpret-trailers --in-place --if-exists addIfDifferent --trailer "$trailer" "$1"
+  done
