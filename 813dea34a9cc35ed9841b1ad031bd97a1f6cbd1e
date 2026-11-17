@@ -1,0 +1,24 @@
+shared/configuration/src/index.ts
+  s_45db37e0ebe6d2::t_d519da1701c039 10
+shared/database/prisma.config.ts
+  s_45db37e0ebe6d2::t_c735f288d22379 1-9
+shared/database/src/database.indicator.ts
+  s_45db37e0ebe6d2::t_c735f288d22379 1-33
+shared/database/src/database.module.ts
+  s_45db37e0ebe6d2::t_c735f288d22379 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "813dea34a9cc35ed9841b1ad031bd97a1f6cbd1e",
+  "prompts": {},
+  "sessions": {
+    "s_45db37e0ebe6d2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c6568cf8-dcc8-4a4a-a31a-6badfb92553b",
+        "model": "claude-fable-5-2"
+      }
+    }
+  }
+}
