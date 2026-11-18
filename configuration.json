@@ -1,4 +1,6 @@
 {
   "cors.allowedOrigins": "localhost:4000",
-  "http.api.port": 4001
+  "http.api.port": 4001,
+  "api.oidc.issuer": "https://kc.cloud.martinpetr.dev/realms/dev.martinpetr.planee",
+  "api.oidc.audience": "api"
 }

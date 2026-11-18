@@ -14,6 +14,12 @@ const configurationSchema = z.object({
 	database: z.object({
 		url: z.url(),
 	}),
+	api: z.object({
+		oidc: z.object({
+			issuer: z.url(),
+			audience: z.string(),
+		}),
+	}),
 });
 
 export type ConfigurationObject = z.infer<typeof configurationSchema>;

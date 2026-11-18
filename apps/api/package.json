@@ -27,6 +27,7 @@
     "@repo-shared/configuration": "workspace:*",
     "@repo-shared/contracts": "workspace:*",
     "@repo-shared/database": "workspace:*",
+    "@repo-shared/server-auth": "workspace:*",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

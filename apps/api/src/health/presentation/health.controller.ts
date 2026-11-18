@@ -6,6 +6,7 @@ import {
 } from "@nestjs/terminus";
 import { ApiVersion } from "@repo-shared/contracts";
 import { Database, DatabaseHealthIndicator } from "@repo-shared/database";
+import { SkipAuth } from "@repo-shared/server-auth";
 
 @Controller({
   path: "/health",
@@ -20,6 +21,7 @@ export class HealthController {
   ) {}
 
   @Get()
+  @SkipAuth()
   @HealthCheck()
   check() {
     return this.health.check([
