@@ -1,0 +1,70 @@
+shared/server-auth/src/auth/ports/jwt-verifier.port.ts
+  h_e494102df73193 1-5
+shared/server-auth/src/auth/ports/user-provisioner.port.ts
+  h_e494102df73193 1-5
+apps/api/package.json
+  h_e494102df73193 30
+shared/server-auth/package.json
+  s_ab871c98b69f1c::t_bbbc4b076ff472 11
+  h_e494102df73193 1-9,13-29
+  s_ab871c98b69f1c::t_e600815d9b23aa 10,12
+apps/api/src/app.module.ts
+  h_e494102df73193 3,7,14-17
+shared/server-auth/src/auth/presentation/decorators/user.ts
+  h_e494102df73193 1-23
+shared/server-auth/tsconfig.json
+  h_e494102df73193 1-20,22-26
+  s_ab871c98b69f1c::t_e600815d9b23aa 21
+apps/api/src/health/presentation/health.controller.ts
+  h_e494102df73193 9,24
+shared/server-auth/src/auth/presentation/decorators/skip-auth.decorator.ts
+  h_e494102df73193 1-18
+shared/configuration/src/index.ts
+  h_e494102df73193 17-22
+apps/api/src/users/users.module.ts
+  h_e494102df73193 1-16
+configuration.json
+  h_e494102df73193 3-5
+shared/server-auth/src/index.ts
+  h_e494102df73193 1-5
+shared/server-auth/src/auth/auth.module.ts
+  h_e494102df73193 1-34
+shared/server-auth/src/auth/infrastructure/keycloak.jwt-verifier.ts
+  h_e494102df73193 1-62
+shared/server-auth/src/auth/domain/user-role.ts
+  h_e494102df73193 1-4
+shared/server-auth/src/auth/presentation/guards/auth.guard.ts
+  s_ab871c98b69f1c::t_bbbc4b076ff472 9-10
+  h_e494102df73193 1-8,11-42
+apps/api/src/users/infrastructure/db-user.provisioner.ts
+  h_e494102df73193 1-25
+shared/server-auth/src/auth/domain/authenticated-user.ts
+  h_e494102df73193 1-39
+mise.toml
+  h_e494102df73193 26,32-35
+.idea/dataSources.xml
+  s_ab871c98b69f1c::t_c503700c340227 8
+pnpm-lock.yaml
+  s_ab871c98b69f1c::t_dc24f0a49e2126 15,18,21,24,34-36,46,55,58,88,126,129,147-165,2544-2546,3556,3978,3996,4002,4005,4015,4017,4026,4038,4040-4041,4043,4064,4066-4067,4073,4075-4076,4082,4084-4085,4088,4424,4428,4504,4506,4511,4513,4834,4836,4845,4848,4856,4858,4866,4868-4869,4878,4880-4881,4888,4890,4896,4898-4901,4909,4911-4912,4915,4932-4933,5004,5008,5233,5236-5237,5373,5376,5381,5386,5397-5399,5459,5461,5468,5470,5483,5485,5705-5706,6240,6242,6278,6280,6294,6299,6439,6443,6453,6457
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "7c9d367788fab19ead6deb6d2441e549269a1827",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_ab871c98b69f1c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e7d87ef9-6ef0-4799-9ee3-30a695f5a1f2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
