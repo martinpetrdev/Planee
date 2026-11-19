@@ -1,0 +1,56 @@
+libs/nestjs-scalar/src/NestjsScalar.ts
+  h_e494102df73193 1-79
+libs/nestjs-scalar/src/index.ts
+  h_e494102df73193 1-3
+apps/api/src/health/presentation/health.controller.ts
+  h_e494102df73193 7,16,28
+shared/contracts/src/api/schemas/codecs/dateTime.ts
+  s_6b5471a69d26fa::t_bf91774b6c5404 1-7
+pnpm-workspace.yaml
+  h_e494102df73193 4
+  s_6b5471a69d26fa::t_7ad546862f1d07 12
+mise.toml
+  h_e494102df73193 7
+libs/nestjs-scalar/package.json
+  h_e494102df73193 1-27
+shared/contracts/src/api/schemas/DetailedUserResponse.schema.ts
+  h_e494102df73193 3
+  s_6b5471a69d26fa::t_c8d7720f8663f9 10-11
+libs/nestjs-scalar/src/decorators/ApiAuthErrorResponses.ts
+  h_e494102df73193 1-22
+shared/database/src/database.indicator.ts
+  h_e494102df73193 24-26
+apps/api/src/users/presentation/users.controller.ts
+  h_e494102df73193 2-7,17,22-26,28-29
+  s_6b5471a69d26fa::t_972de2f54fb429 27
+apps/api/package.json
+  h_e494102df73193 31
+apps/api/src/main.ts
+  h_e494102df73193 3,36-37,41-61
+  s_6b5471a69d26fa::t_4cf2f053a2591e 62-63
+libs/nestjs-scalar/tsconfig.json
+  s_6b5471a69d26fa::t_a03b3658c694b0 1-45
+pnpm-lock.yaml
+  s_6b5471a69d26fa::t_542922f67af751 24-27,108-129,656-658,841-854,877-897,1366-1392,1898-1900,2306-2308,2652-2655,2891-2895,3402-3404,3409-3412,3473-3476,4021-4022,4152-4156,4193-4224,4231,4577-4606,5150-5151,5505-5506,5904-5907,6099-6100,6666-6669,6672-6673,6736-6739
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "818868beb3b9382d47f57656586d84cce73b6685",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_6b5471a69d26fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "df5ffb09-775d-4844-9a3a-c0a314b35a5c",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
