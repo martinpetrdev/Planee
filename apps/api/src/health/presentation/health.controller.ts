@@ -4,6 +4,7 @@ import {
   HealthCheckService,
   MemoryHealthIndicator,
 } from "@nestjs/terminus";
+import { ApiOperation, ApiTags } from "@repo-libs/nestjs-scalar";
 import { ApiVersion } from "@repo-shared/contracts";
 import { Database, DatabaseHealthIndicator } from "@repo-shared/database";
 import { SkipAuth } from "@repo-shared/server-auth";
@@ -12,6 +13,7 @@ import { SkipAuth } from "@repo-shared/server-auth";
   path: "/health",
   version: ApiVersion.v1,
 })
+@ApiTags("health")
 export class HealthController {
   constructor(
     private readonly health: HealthCheckService,
@@ -23,6 +25,7 @@ export class HealthController {
   @Get()
   @SkipAuth()
   @HealthCheck()
+  @ApiOperation({ summary: "Health Check" })
   check() {
     return this.health.check([
       () => this.memoryIndicator.checkHeap("memory_heap", 500 * 1024 * 1024),

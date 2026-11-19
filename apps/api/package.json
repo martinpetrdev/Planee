@@ -28,6 +28,7 @@
     "@repo-shared/contracts": "workspace:*",
     "@repo-shared/database": "workspace:*",
     "@repo-shared/server-auth": "workspace:*",
+    "@repo-libs/nestjs-scalar": "workspace:*",
     "reflect-metadata": "^0.2.2",
     "zod": "^4.6.7"
   },

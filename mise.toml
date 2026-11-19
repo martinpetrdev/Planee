@@ -4,7 +4,7 @@ monorepo_root = true
 experimental = true
 
 [monorepo]
-config_roots = ["apps/*", "shared/*"]
+config_roots = ["apps/*", "shared/*", "libs/*"]
 
 [tools]
 node = "26"

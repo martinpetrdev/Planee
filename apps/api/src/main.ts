@@ -1,5 +1,6 @@
 import { StandardSchemaValidationPipe, VersioningType } from "@nestjs/common";
 import { NestApplication, NestFactory } from "@nestjs/core";
+import { NestjsScalar } from "@repo-libs/nestjs-scalar";
 import { ConfigurationObject } from "@repo-shared/configuration";
 import { ApiVersion } from "@repo-shared/contracts";
 
@@ -32,7 +33,32 @@ export class Program {
       defaultVersion: ApiVersion.v1,
     });
 
+    Program.configureScalar();
+
     Program.app.useGlobalPipes(new StandardSchemaValidationPipe());
+  }
+
+  static configureScalar() {
+    new NestjsScalar(Program.app, {
+      title: "Planee internal API",
+      version: "1.0",
+      description:
+        "The official documentation of the internal Planee API. Public API is not yet available.",
+      tagGroups: {
+        "Users and auth": {
+          users: "Endpoints for managing user accounts",
+        },
+        "Monitoring, telemetry": {
+          health: "Endpoints for checking service health",
+        },
+      },
+      auth: {
+        type: "openIdConnect",
+        description:
+          "Visit https://admin.planee.martinpetr.dev/tools/oidc-token to obtain access token. Note that the token is only valid for a few minutes.",
+      },
+      path: "/docs",
+    });
   }
 
   static async bootstrap(): Promise<void> {

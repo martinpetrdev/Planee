@@ -21,7 +21,9 @@ export class DatabaseHealthIndicator {
 		return this.healthIndicatorService
 			.check(key)
 			.attempt(async () => {
-				await database.$queryRaw`SELECT 1`;
+				await database.$queryRaw`SELECT 1`.catch(() => {
+					throw new Error("Failed to connect to the database");
+				});
 			})
 			.withTimeout(timeout);
 	}

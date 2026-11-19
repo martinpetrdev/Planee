@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - shared/*
+  - libs/*
 allowBuilds:
   "@prisma/engines": true
   prisma: true
@@ -8,6 +9,7 @@ allowBuilds:
   esbuild: true
   msgpackr-extract: true
   workerd: true
+  '@scarf/scarf': true
 minimumReleaseAgeExclude:
   - "@nestjs/core@12.5.1"
   - "@nestjs/common@12.5.1"
