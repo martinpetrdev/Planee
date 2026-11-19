@@ -1,0 +1,47 @@
+apps/api/src/users/presentation/users.controller.ts
+  h_e494102df73193 1-24
+shared/server-auth/src/auth/domain/user-role.ts
+  h_e494102df73193 5-8
+apps/api/src/users/users.module.ts
+  h_e494102df73193 5-7,16-18,21
+  h_e494102df73193 19
+apps/api/src/users/domain/User.ts
+  h_e494102df73193 1-33
+shared/contracts/src/api/schemas/DetailedUserResponse.schema.ts
+  h_e494102df73193 1-13
+shared/contracts/src/api/schemas/_index.ts
+  h_e494102df73193 1
+shared/server-auth/src/auth/domain/authenticated-user.ts
+  h_e494102df73193 1,5,16,18,38-41,45-52
+  h_e494102df73193 53
+shared/contracts/src/api/index.ts
+  h_e494102df73193 1-2
+shared/contracts/package.json
+  h_e494102df73193 18-19
+apps/api/src/users/ports/user-repository.port.ts
+  h_e494102df73193 1-5
+apps/api/src/app.module.ts
+  h_e494102df73193 1-2,21-25
+  h_e494102df73193 26
+apps/api/package.json
+  h_e494102df73193 31-32
+apps/api/src/users/infrastructure/db-user.repository.ts
+  h_e494102df73193 1-27
+shared/server-auth/src/index.ts
+  h_e494102df73193 3
+shared/server-auth/src/auth/infrastructure/keycloak.jwt-verifier.ts
+  h_e494102df73193 14,54,60
+pnpm-lock.yaml
+  h_e494102df73193 40-42,117-119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "f8636e1ada4d2860ae08baf79e34c000a9a353ac",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
