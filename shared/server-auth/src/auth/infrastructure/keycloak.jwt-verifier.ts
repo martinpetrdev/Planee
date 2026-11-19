@@ -11,6 +11,7 @@ import { JwtVerifierPort } from "#auth/ports/jwt-verifier.port";
 
 interface IKeycloakTokenPayload extends JWTPayload {
 	email?: string;
+	name?: string;
 	realm_access?: { roles: string[] };
 }
 
@@ -50,12 +51,13 @@ export class KeycloakJwtVerifier extends JwtVerifierPort {
 		if (payload.typ !== "Bearer")
 			throw new UnauthorizedException("Invalid JWT type");
 
-		if (!payload.sub || !payload.email)
+		if (!payload.sub || !payload.email || !payload.name)
 			throw new UnauthorizedException("Missing JWT fields");
 
 		return AuthenticatedUser.create({
 			id: payload.sub,
 			email: payload.email,
+			name: payload.name,
 			roles: new Set((payload.realm_access?.roles as UserRole[]) ?? []),
 		});
 	}

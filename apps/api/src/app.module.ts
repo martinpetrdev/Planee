@@ -1,4 +1,5 @@
-import { Module } from "@nestjs/common";
+import { Module, StandardSchemaSerializerInterceptor } from "@nestjs/common";
+import { APP_INTERCEPTOR } from "@nestjs/core";
 import { DatabaseModule } from "@repo-shared/database";
 import { AuthModule } from "@repo-shared/server-auth";
 
@@ -16,6 +17,12 @@ const ApiModules = [HealthModule];
     }),
     UsersModule,
     ...ApiModules,
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: StandardSchemaSerializerInterceptor,
+    },
   ],
 })
 export class AppModule {}

@@ -1,7 +1,8 @@
-import type { UserRole } from "./user-role.ts";
+import { isUserRole, type UserRole } from "./user-role.ts";
 
 interface ICreateAuthenticatedUserData {
 	id: string;
+	name: string;
 	email: string;
 	roles: ReadonlySet<UserRole>;
 }
@@ -12,8 +13,9 @@ export class AuthenticatedUser {
 	private constructor(data: ICreateAuthenticatedUserData) {
 		this._data = {
 			id: data.id,
+			name: data.name,
 			email: data.email,
-			roles: new Set(data.roles),
+			roles: new Set([...data.roles].filter(isUserRole)),
 		};
 	}
 
@@ -33,7 +35,20 @@ export class AuthenticatedUser {
 		return this._data.roles.has(role);
 	}
 
+	public get name() {
+		return this._data.name;
+	}
+
 	static create(data: ICreateAuthenticatedUserData): AuthenticatedUser {
 		return new AuthenticatedUser(data);
+	}
+
+	public toObject() {
+		return {
+			id: this.id,
+			name: this.name,
+			email: this.email,
+			roles: [...this.roles],
+		};
 	}
 }

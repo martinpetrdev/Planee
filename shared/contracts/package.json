@@ -15,7 +15,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "zod": "^4.6.7"
+    "zod": "^4.6.7",
+    "@repo-shared/server-auth": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^7.0.2"
