@@ -53,6 +53,7 @@ export class Program {
         },
         Application: {
           'quick-notes': 'Endpoints for managing quick notes',
+          events: 'Endpoints for event streaming',
         },
       },
       auth: {

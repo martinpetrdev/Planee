@@ -1,4 +1,10 @@
 import { Controller, Sse } from '@nestjs/common';
+import {
+  ApiAuthErrorResponses,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@repo-libs/nestjs-scalar';
 import { ApiVersion } from '@repo-shared/contracts';
 import { User } from '@repo-shared/server-auth';
 
@@ -8,10 +14,16 @@ import { EventDispatcher } from '../application/event.dispatcher.ts';
   path: '/events',
   version: ApiVersion.v1,
 })
+@ApiTags('events')
 export class EventsController {
   constructor(private readonly dispatcher: EventDispatcher) {}
 
   @Sse('/stream')
+  @ApiOperation({
+    summary: 'Listen for events',
+  })
+  @ApiAuthErrorResponses()
+  @ApiOkResponse()
   stream(@User('id') userId: string) {
     return this.dispatcher.observeForUser(userId);
   }
