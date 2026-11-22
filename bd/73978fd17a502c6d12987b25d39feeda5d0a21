@@ -1,0 +1,25 @@
+apps/api/src/quick-notes/infrastructure/persistence/prisma-quick-note.repository.ts
+  h_e494102df73193 25-34
+apps/api/src/quick-notes/application/commands/list-quick-note.command.ts
+  h_e494102df73193 1-11
+apps/api/src/quick-notes/domain/models/existing.quick-note.ts
+  h_e494102df73193 12-21
+apps/api/src/quick-notes/ports/quick-note-repository.port.ts
+  h_e494102df73193 6
+apps/api/src/quick-notes/presentation/quick-note.controller.ts
+  h_e494102df73193 1,17,28-44,52
+  h_e494102df73193 45
+apps/api/src/quick-notes/application/handlers/quick-note.command-handler.ts
+  h_e494102df73193 6,20-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "bd73978fd17a502c6d12987b25d39feeda5d0a21",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
