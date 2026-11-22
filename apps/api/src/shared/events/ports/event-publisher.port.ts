@@ -1,8 +1,7 @@
-import { BaseEvent, IBaseEventData } from "../domain/models/base.event.ts";
+import { BaseEvent } from '../domain/models/base.event.ts';
 
 export abstract class EventPublisherPort {
-  abstract publish<
-    PayloadType extends {},
-    DataType extends IBaseEventData<PayloadType>,
-  >(event: BaseEvent<PayloadType, DataType>): Promise<void>;
+  abstract publish<PayloadType extends {}>(
+    event: BaseEvent<PayloadType>,
+  ): Promise<void>;
 }

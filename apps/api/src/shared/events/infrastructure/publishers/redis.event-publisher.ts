@@ -1,9 +1,9 @@
-import { Injectable, OnModuleDestroy } from "@nestjs/common";
-import { Redis } from "ioredis";
+import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Redis } from 'ioredis';
 
-import { ApplicationConfig } from "../../../../configuration.ts";
-import { BaseEvent } from "../../domain/models/base.event.ts";
-import { EventPublisherPort } from "../../ports/event-publisher.port.ts";
+import { ApplicationConfig } from '../../../../configuration.ts';
+import { BaseEvent } from '../../domain/models/base.event.ts';
+import { EventPublisherPort } from '../../ports/event-publisher.port.ts';
 
 @Injectable()
 export class RedisEventPublisher
@@ -26,7 +26,7 @@ export class RedisEventPublisher
     event: BaseEvent<PayloadType>,
   ): Promise<void> {
     await this.redisClient.publish(
-      "_global::events",
+      '_global::events',
       JSON.stringify(event.toObject()),
     );
   }
