@@ -1,0 +1,72 @@
+apps/api/src/shared/events/ports/event-publisher.port.ts
+  s_0ab0813adf8039::t_5134ee3d037850 1
+  s_0ab0813adf8039::t_f83fed3b61dbce 4-6
+apps/api/src/shared/events/infrastructure/publishers/redis.event-publisher.ts
+  h_e494102df73193 1-2,4-6,29
+apps/api/src/quick-notes/application/events/quick-note-deleted.event.ts
+  s_0ab0813adf8039::t_5134ee3d037850 4
+  s_0ab0813adf8039::t_3a86ca84f3e864 10
+  h_e494102df73193 1,3
+  s_0ab0813adf8039::t_f83fed3b61dbce 13-14
+apps/api/package.json
+  h_e494102df73193 34-35
+apps/api/src/quick-notes/application/events/quick-note-updated.event.ts
+  s_0ab0813adf8039::t_3a86ca84f3e864 10
+  s_0ab0813adf8039::t_5134ee3d037850 4
+  h_e494102df73193 1,3
+  s_0ab0813adf8039::t_f83fed3b61dbce 13
+apps/api/src/shared/events/presentation/events.controller.ts
+  h_e494102df73193 1-18
+apps/api/src/shared/events/events.module.ts
+  h_e494102df73193 1,3-6,10-11
+apps/api/src/quick-notes/application/events/quick-note-created.event.ts
+  h_e494102df73193 1,3
+  s_0ab0813adf8039::t_5134ee3d037850 4
+  s_0ab0813adf8039::t_3a86ca84f3e864 10
+  s_0ab0813adf8039::t_f83fed3b61dbce 13
+AGENTS.md
+  s_0ab0813adf8039::t_3a850946a705e9 12-58
+apps/api/src/shared/events/domain/models/base.event.ts
+  h_e494102df73193 1,3,11-14,35-41,47-48
+  s_0ab0813adf8039::t_82e3f51f2ac0e6 42-46
+.idea/prettier.xml
+  s_0ab0813adf8039::t_6f3abe2d40c5c4 5
+apps/api/src/shared/events/infrastructure/subscribers/redis.event-subscriber.ts
+  h_e494102df73193 1-5,10-36,39,41,43-59
+  s_0ab0813adf8039::t_f83fed3b61dbce 6-8,37-38
+  s_0ab0813adf8039::t_82e3f51f2ac0e6 9,40,42
+apps/api/src/shared/events/application/event.dispatcher.ts
+  h_e494102df73193 1-2,4-7,11-14,19,21-22,26-36
+  s_0ab0813adf8039::t_4d81de78effe83 20
+  s_0ab0813adf8039::t_f113d0c1b062bd 23-25
+apps/api/src/shared/events/domain/models/user.event.ts
+  s_0ab0813adf8039::t_82e3f51f2ac0e6 36-40
+  h_e494102df73193 1-2,4-5,10-14,29-35,41-42
+apps/api/src/shared/events/ports/event-subscriber.port.ts
+  s_0ab0813adf8039::t_f83fed3b61dbce 1,4-7,9-10,16-17
+  h_e494102df73193 2,11-15,18-27
+  s_0ab0813adf8039::t_82e3f51f2ac0e6 3,8
+pnpm-lock.yaml
+  s_0ab0813adf8039::t_c3d93673e8d22a 46-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "5c46eab5190b34e8270ec2b59e8842f40e925e49",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_0ab0813adf8039": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6fa723f2-cc9d-4f7c-b2a8-f4dd46f60c27",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
