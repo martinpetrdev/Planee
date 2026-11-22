@@ -20,10 +20,10 @@ export class EventDispatcher {
   // @ai/assisted(Claude Opus 5.5): Forwarded subscribed events into the SSE observable and made it return an Observable directly.
   observeForUser<PayloadType extends {}>(userId: string) {
     return new Observable<MessageEvent>((sub) => {
-      void this.redisSubscriber.subscribeAll<
+      void this.redisSubscriber.subscribeUser<
         PayloadType,
         UserEvent<PayloadType>
-      >(UserEvent, (event) => {
+      >(userId, UserEvent, (event) => {
         const eventObject = event.toObject();
 
         sub.next({
