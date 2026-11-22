@@ -15,13 +15,14 @@ _.file = "configuration.json"
 
 [daemons]
 postgres = "18"
+redis = "8"
 
 [tasks.install]
 description = "Installs all necessary dependencies"
 run = "pnpm install"
 
 [tasks.start-dev]
-daemons = "postgres"
+daemons = ["postgres", "redis"]
 description = "Starts dev servers in all apps"
 depends = ["prisma-generate", "//...:start-dev"]
 

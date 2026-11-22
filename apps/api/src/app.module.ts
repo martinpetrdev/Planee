@@ -6,6 +6,7 @@ import { AuthModule } from "@repo-shared/server-auth";
 import { ApplicationConfig } from "./configuration.ts";
 import { HealthModule } from "./health/health.module.ts";
 import { QuickNotesModule } from "./quick-notes/quick-notes.module.ts";
+import { EventsModule } from "./shared/events/events.module.ts";
 import { UsersModule } from "./users/users.module.ts";
 
 const ApiModules = [HealthModule, UsersModule, QuickNotesModule];
@@ -16,6 +17,7 @@ const ApiModules = [HealthModule, UsersModule, QuickNotesModule];
     AuthModule.forRoot({
       oidc: ApplicationConfig.api.oidc,
     }),
+    EventsModule,
     ...ApiModules,
   ],
   providers: [

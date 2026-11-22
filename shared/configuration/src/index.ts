@@ -20,6 +20,9 @@ const configurationSchema = z.object({
 			audience: z.string(),
 		}),
 	}),
+	redis: z.object({
+		url: z.url(),
+	}),
 });
 
 export type ConfigurationObject = z.infer<typeof configurationSchema>;

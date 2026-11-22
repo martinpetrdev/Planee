@@ -24,11 +24,12 @@
     "@nestjs/core": "^12.5.1",
     "@nestjs/platform-express": "^12.5.1",
     "@nestjs/terminus": "^12.2.0",
+    "@repo-libs/nestjs-scalar": "workspace:*",
     "@repo-shared/configuration": "workspace:*",
     "@repo-shared/contracts": "workspace:*",
     "@repo-shared/database": "workspace:*",
     "@repo-shared/server-auth": "workspace:*",
-    "@repo-libs/nestjs-scalar": "workspace:*",
+    "ioredis": "^6.0.0",
     "reflect-metadata": "^0.2.2",
     "zod": "^4.6.7"
   },
