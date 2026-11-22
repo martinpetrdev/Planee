@@ -5,6 +5,7 @@ import { NewQuickNote } from "../../domain/models/new.quick-note.ts";
 import { UpdatedQuickNote } from "../../domain/models/updated.quick-note.ts";
 import { QuickNoteRepositoryPort } from "../../ports/quick-note-repository.port.ts";
 import { CreateQuickNoteCommand } from "../commands/create-quick-note.command.ts";
+import { DeleteQuickNoteCommand } from "../commands/delete-quick-note.command.ts";
 import { ListQuickNoteCommand } from "../commands/list-quick-note.command.ts";
 import { UpdateQuickNoteCommand } from "../commands/update-quick-note.command.ts";
 
@@ -34,6 +35,17 @@ export class QuickNoteCommandHandler {
           text: command.text,
         }),
       )
+      .catch(() => {
+        throw new QuickNoteNotFoundException(command.id);
+      });
+  }
+
+  public async handleDelete(command: DeleteQuickNoteCommand) {
+    return await this.repository
+      .delete({
+        quickNoteId: command.id,
+        userId: command.userId,
+      })
       .catch(() => {
         throw new QuickNoteNotFoundException(command.id);
       });

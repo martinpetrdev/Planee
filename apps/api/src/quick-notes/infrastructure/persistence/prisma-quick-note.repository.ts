@@ -4,7 +4,10 @@ import { Database, QuickNote } from "@repo-shared/database";
 import { ExistingQuickNote } from "../../domain/models/existing.quick-note.ts";
 import { NewQuickNote } from "../../domain/models/new.quick-note.ts";
 import { UpdatedQuickNote } from "../../domain/models/updated.quick-note.ts";
-import { QuickNoteRepositoryPort } from "../../ports/quick-note-repository.port.ts";
+import {
+  IQuickNoteRepositoryDeletionSelectors,
+  QuickNoteRepositoryPort,
+} from "../../ports/quick-note-repository.port.ts";
 
 @Injectable()
 export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
@@ -45,6 +48,17 @@ export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
     });
 
     return this.prismaToDomainModel(updatedEntity);
+  }
+
+  async delete(
+    selectors: IQuickNoteRepositoryDeletionSelectors,
+  ): Promise<void> {
+    await this.db.quickNote.delete({
+      where: {
+        id: selectors.quickNoteId,
+        userId: selectors.userId,
+      },
+    });
   }
 
   private prismaToDomainModel(prismaModel: QuickNote): ExistingQuickNote {

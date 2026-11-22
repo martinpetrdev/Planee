@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -22,8 +23,10 @@ import {
   UpdateQuickNoteSchema,
 } from "@repo-shared/contracts";
 import { User } from "@repo-shared/server-auth";
+import { z } from "zod";
 
 import { CreateQuickNoteCommand } from "../application/commands/create-quick-note.command.ts";
+import { DeleteQuickNoteCommand } from "../application/commands/delete-quick-note.command.ts";
 import { ListQuickNoteCommand } from "../application/commands/list-quick-note.command.ts";
 import { UpdateQuickNoteCommand } from "../application/commands/update-quick-note.command.ts";
 import { QuickNoteCommandHandler } from "../application/handlers/quick-note.command-handler.ts";
@@ -88,6 +91,23 @@ export class QuickNoteController {
     return await this.handler.handleUpdate(
       new UpdateQuickNoteCommand({
         ...dto,
+        id: quickNoteId,
+        userId,
+      }),
+    );
+  }
+
+  @Delete("/:quickNoteId")
+  @ApiOperation({ summary: "Delete quick note" })
+  @ApiAuthErrorResponses()
+  @ApiOkResponse()
+  @SerializeOptions({ schema: z.void() })
+  public async delete(
+    @User("id") userId: string,
+    @Param("quickNoteId") quickNoteId: string,
+  ) {
+    return await this.handler.handleDelete(
+      new DeleteQuickNoteCommand({
         id: quickNoteId,
         userId,
       }),
