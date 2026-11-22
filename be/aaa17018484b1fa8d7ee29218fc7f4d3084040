@@ -1,0 +1,49 @@
+shared/configuration/src/index.ts
+  h_e494102df73193 23-25
+shared/contracts/src/api/index.ts
+  h_e494102df73193 2
+apps/api/src/quick-notes/application/events/quick-note-updated.event.ts
+  h_e494102df73193 1-17
+apps/api/src/quick-notes/application/events/quick-note-created.event.ts
+  h_e494102df73193 1-17
+apps/api/src/shared/events/domain/models/user.event.ts
+  h_e494102df73193 1-26
+apps/api/src/shared/events/domain/models/base.event.ts
+  h_e494102df73193 1-36
+apps/api/src/shared/events/application/event.dispatcher.ts
+  h_e494102df73193 1-13
+mise.toml
+  h_e494102df73193 18,25
+shared/contracts/src/api/Event.ts
+  h_e494102df73193 1-5
+apps/api/src/quick-notes/application/handlers/quick-note.command-handler.ts
+  h_e494102df73193 3,12-14,19-20,24,30-38,46,57-65,77-83
+  h_e494102df73193 18,21,69
+apps/api/src/quick-notes/application/events/quick-note-deleted.event.ts
+  h_e494102df73193 1-17
+apps/api/src/configuration.ts
+  h_e494102df73193 6
+apps/api/src/app.module.ts
+  h_e494102df73193 9,20
+apps/api/src/shared/events/ports/event-publisher.port.ts
+  h_e494102df73193 1-8
+apps/api/src/shared/events/infrastructure/publishers/redis.event-publisher.ts
+  h_e494102df73193 1-33
+apps/api/src/shared/events/events.module.ts
+  h_e494102df73193 1-11
+apps/api/package.json
+  h_e494102df73193 27,32
+pnpm-lock.yaml
+  h_e494102df73193 40-42,639-641,2085-2088,2248-2251,2591-2594,3176-3179,3353-3355,4031-4032,5349-5350,5479-5480,5888-5898,6433-6434,6623-6624
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "beaaa17018484b1fa8d7ee29218fc7f4d3084040",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
