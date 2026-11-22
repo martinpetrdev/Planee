@@ -1,0 +1,16 @@
+apps/api/src/shared/events/presentation/events.controller.ts
+  h_e494102df73193 2-7,17,22-26
+apps/api/src/main.ts
+  h_e494102df73193 56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "a274eb1cd36c667c56cc821a9ebd62b021c6162e",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
