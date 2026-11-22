@@ -1,4 +1,4 @@
-import { DomainException } from "./domain.exception.ts";
+import { DomainException } from './domain.exception.ts';
 
 export class ValidationException extends DomainException {
   constructor(fields: Record<string, string>) {

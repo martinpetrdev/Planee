@@ -7,13 +7,13 @@ import {
   Post,
   Put,
   SerializeOptions,
-} from "@nestjs/common";
+} from '@nestjs/common';
 import {
   ApiAuthErrorResponses,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-} from "@repo-libs/nestjs-scalar";
+} from '@repo-libs/nestjs-scalar';
 import {
   ApiVersion,
   type CreateQuickNote,
@@ -21,33 +21,33 @@ import {
   QuickNoteResponseSchema,
   type UpdateQuickNote,
   UpdateQuickNoteSchema,
-} from "@repo-shared/contracts";
-import { User } from "@repo-shared/server-auth";
-import { z } from "zod";
+} from '@repo-shared/contracts';
+import { User } from '@repo-shared/server-auth';
+import { z } from 'zod';
 
-import { CreateQuickNoteCommand } from "../application/commands/create-quick-note.command.ts";
-import { DeleteQuickNoteCommand } from "../application/commands/delete-quick-note.command.ts";
-import { ListQuickNoteCommand } from "../application/commands/list-quick-note.command.ts";
-import { UpdateQuickNoteCommand } from "../application/commands/update-quick-note.command.ts";
-import { QuickNoteCommandHandler } from "../application/handlers/quick-note.command-handler.ts";
+import { CreateQuickNoteCommand } from '../application/commands/create-quick-note.command.ts';
+import { DeleteQuickNoteCommand } from '../application/commands/delete-quick-note.command.ts';
+import { ListQuickNoteCommand } from '../application/commands/list-quick-note.command.ts';
+import { UpdateQuickNoteCommand } from '../application/commands/update-quick-note.command.ts';
+import { QuickNoteCommandHandler } from '../application/handlers/quick-note.command-handler.ts';
 
 @Controller({
-  path: "quick-notes",
+  path: 'quick-notes',
   version: ApiVersion.v1,
 })
-@ApiTags("quick-notes")
+@ApiTags('quick-notes')
 export class QuickNoteController {
   constructor(private readonly handler: QuickNoteCommandHandler) {}
 
   @Get()
-  @ApiOperation({ summary: "List quick notes" })
+  @ApiOperation({ summary: 'List quick notes' })
   @ApiAuthErrorResponses()
   @ApiOkResponse({
     standardSchema: QuickNoteResponseSchema,
     isArray: true,
   })
   @SerializeOptions({ schema: QuickNoteResponseSchema })
-  public async list(@User("id") userId: string) {
+  public async list(@User('id') userId: string) {
     const entities = await this.handler.handleList(
       new ListQuickNoteCommand({
         userId,
@@ -58,14 +58,14 @@ export class QuickNoteController {
   }
 
   @Post()
-  @ApiOperation({ summary: "Create quick note" })
+  @ApiOperation({ summary: 'Create quick note' })
   @ApiAuthErrorResponses()
   @ApiOkResponse({
     standardSchema: QuickNoteResponseSchema,
   })
   @SerializeOptions({ schema: QuickNoteResponseSchema })
   public async create(
-    @User("id") userId: string,
+    @User('id') userId: string,
     @Body({ schema: CreateQuickNoteSchema }) dto: CreateQuickNote,
   ) {
     return await this.handler.handleCreate(
@@ -76,16 +76,16 @@ export class QuickNoteController {
     );
   }
 
-  @Put("/:quickNoteId")
-  @ApiOperation({ summary: "Update quick note" })
+  @Put('/:quickNoteId')
+  @ApiOperation({ summary: 'Update quick note' })
   @ApiAuthErrorResponses()
   @ApiOkResponse({
     standardSchema: QuickNoteResponseSchema,
   })
   @SerializeOptions({ schema: QuickNoteResponseSchema })
   public async update(
-    @User("id") userId: string,
-    @Param("quickNoteId") quickNoteId: string,
+    @User('id') userId: string,
+    @Param('quickNoteId') quickNoteId: string,
     @Body({ schema: UpdateQuickNoteSchema }) dto: UpdateQuickNote,
   ) {
     return await this.handler.handleUpdate(
@@ -97,14 +97,14 @@ export class QuickNoteController {
     );
   }
 
-  @Delete("/:quickNoteId")
-  @ApiOperation({ summary: "Delete quick note" })
+  @Delete('/:quickNoteId')
+  @ApiOperation({ summary: 'Delete quick note' })
   @ApiAuthErrorResponses()
   @ApiOkResponse()
   @SerializeOptions({ schema: z.void() })
   public async delete(
-    @User("id") userId: string,
-    @Param("quickNoteId") quickNoteId: string,
+    @User('id') userId: string,
+    @Param('quickNoteId') quickNoteId: string,
   ) {
     return await this.handler.handleDelete(
       new DeleteQuickNoteCommand({

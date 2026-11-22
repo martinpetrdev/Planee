@@ -1,5 +1,5 @@
-import { QuickNoteValidator } from "../validation/quick-note.validator.ts";
-import { BaseQuickNote, IBaseQuickNoteData } from "./base.quick-note.ts";
+import { QuickNoteValidator } from '../validation/quick-note.validator.ts';
+import { BaseQuickNote, IBaseQuickNoteData } from './base.quick-note.ts';
 
 export interface INewQuickNoteData extends IBaseQuickNoteData {}
 

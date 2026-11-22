@@ -1,4 +1,4 @@
-import { BaseQuickNote, IBaseQuickNoteData } from "./base.quick-note.ts";
+import { BaseQuickNote, IBaseQuickNoteData } from './base.quick-note.ts';
 
 export interface IExistingQuickNoteData extends IBaseQuickNoteData {
   id: string;

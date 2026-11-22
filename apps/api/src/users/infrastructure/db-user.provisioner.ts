@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { Database } from "@repo-shared/database";
+import { Injectable } from '@nestjs/common';
+import { Database } from '@repo-shared/database';
 import {
   AuthenticatedUser,
   UserProvisionerPort,
-} from "@repo-shared/server-auth";
+} from '@repo-shared/server-auth';
 
 @Injectable()
 export class DbUserProvisioner extends UserProvisionerPort {

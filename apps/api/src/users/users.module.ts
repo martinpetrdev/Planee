@@ -1,10 +1,10 @@
-import { Global, Module } from "@nestjs/common";
-import { UserProvisionerPort } from "@repo-shared/server-auth";
+import { Global, Module } from '@nestjs/common';
+import { UserProvisionerPort } from '@repo-shared/server-auth';
 
-import { DbUserProvisioner } from "./infrastructure/db-user.provisioner.ts";
-import { DbUserRepository } from "./infrastructure/db-user.repository.ts";
-import { UserRepositoryPort } from "./ports/user-repository.port.ts";
-import { UsersController } from "./presentation/users.controller.ts";
+import { DbUserProvisioner } from './infrastructure/db-user.provisioner.ts';
+import { DbUserRepository } from './infrastructure/db-user.repository.ts';
+import { UserRepositoryPort } from './ports/user-repository.port.ts';
+import { UsersController } from './presentation/users.controller.ts';
 
 @Global()
 @Module({

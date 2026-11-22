@@ -1,4 +1,4 @@
-import { DomainException } from "../../../shared/exceptions/domain.exception.ts";
+import { DomainException } from '../../../shared/exceptions/domain.exception.ts';
 
 export class QuickNoteNotFoundException extends DomainException {
   constructor(quickNoteId: string) {

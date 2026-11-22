@@ -1,13 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import { Database, QuickNote } from "@repo-shared/database";
+import { Injectable } from '@nestjs/common';
+import { Database, QuickNote } from '@repo-shared/database';
 
-import { ExistingQuickNote } from "../../domain/models/existing.quick-note.ts";
-import { NewQuickNote } from "../../domain/models/new.quick-note.ts";
-import { UpdatedQuickNote } from "../../domain/models/updated.quick-note.ts";
+import { ExistingQuickNote } from '../../domain/models/existing.quick-note.ts';
+import { NewQuickNote } from '../../domain/models/new.quick-note.ts';
+import { UpdatedQuickNote } from '../../domain/models/updated.quick-note.ts';
 import {
   IQuickNoteRepositoryDeletionSelectors,
   QuickNoteRepositoryPort,
-} from "../../ports/quick-note-repository.port.ts";
+} from '../../ports/quick-note-repository.port.ts';
 
 @Injectable()
 export class DbQuickNoteRepository extends QuickNoteRepositoryPort {

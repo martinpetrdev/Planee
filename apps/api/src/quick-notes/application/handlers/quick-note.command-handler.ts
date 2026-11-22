@@ -1,17 +1,17 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 
-import { EventDispatcher } from "../../../shared/events/application/event.dispatcher.ts";
-import { QuickNoteNotFoundException } from "../../domain/exceptions/quick-note-not-found.exception.ts";
-import { NewQuickNote } from "../../domain/models/new.quick-note.ts";
-import { UpdatedQuickNote } from "../../domain/models/updated.quick-note.ts";
-import { QuickNoteRepositoryPort } from "../../ports/quick-note-repository.port.ts";
-import { CreateQuickNoteCommand } from "../commands/create-quick-note.command.ts";
-import { DeleteQuickNoteCommand } from "../commands/delete-quick-note.command.ts";
-import { ListQuickNoteCommand } from "../commands/list-quick-note.command.ts";
-import { UpdateQuickNoteCommand } from "../commands/update-quick-note.command.ts";
-import { QuickNoteCreatedEvent } from "../events/quick-note-created.event.ts";
-import { QuickNoteDeletedEvent } from "../events/quick-note-deleted.event.ts";
-import { QuickNoteUpdatedEvent } from "../events/quick-note-updated.event.ts";
+import { EventDispatcher } from '../../../shared/events/application/event.dispatcher.ts';
+import { QuickNoteNotFoundException } from '../../domain/exceptions/quick-note-not-found.exception.ts';
+import { NewQuickNote } from '../../domain/models/new.quick-note.ts';
+import { UpdatedQuickNote } from '../../domain/models/updated.quick-note.ts';
+import { QuickNoteRepositoryPort } from '../../ports/quick-note-repository.port.ts';
+import { CreateQuickNoteCommand } from '../commands/create-quick-note.command.ts';
+import { DeleteQuickNoteCommand } from '../commands/delete-quick-note.command.ts';
+import { ListQuickNoteCommand } from '../commands/list-quick-note.command.ts';
+import { UpdateQuickNoteCommand } from '../commands/update-quick-note.command.ts';
+import { QuickNoteCreatedEvent } from '../events/quick-note-created.event.ts';
+import { QuickNoteDeletedEvent } from '../events/quick-note-deleted.event.ts';
+import { QuickNoteUpdatedEvent } from '../events/quick-note-updated.event.ts';
 
 @Injectable()
 export class QuickNoteCommandHandler {

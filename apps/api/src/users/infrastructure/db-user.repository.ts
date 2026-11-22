@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { Database, User as DbUser } from "@repo-shared/database";
+import { Injectable } from '@nestjs/common';
+import { Database, User as DbUser } from '@repo-shared/database';
 
-import { User } from "../domain/User.ts";
-import { UserRepositoryPort } from "../ports/user-repository.port.ts";
+import { User } from '../domain/User.ts';
+import { UserRepositoryPort } from '../ports/user-repository.port.ts';
 
 @Injectable()
 export class DbUserRepository extends UserRepositoryPort {
@@ -16,7 +16,7 @@ export class DbUserRepository extends UserRepositoryPort {
         id: id,
       },
     });
-    if (!entity) throw new Error(""); // TODO: Custom error
+    if (!entity) throw new Error(''); // TODO: Custom error
 
     return this.entityToDomain(entity);
   }

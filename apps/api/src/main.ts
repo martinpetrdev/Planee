@@ -1,11 +1,11 @@
-import { StandardSchemaValidationPipe, VersioningType } from "@nestjs/common";
-import { NestApplication, NestFactory } from "@nestjs/core";
-import { NestjsScalar } from "@repo-libs/nestjs-scalar";
-import { ConfigurationObject } from "@repo-shared/configuration";
-import { ApiVersion } from "@repo-shared/contracts";
+import { StandardSchemaValidationPipe, VersioningType } from '@nestjs/common';
+import { NestApplication, NestFactory } from '@nestjs/core';
+import { NestjsScalar } from '@repo-libs/nestjs-scalar';
+import { ConfigurationObject } from '@repo-shared/configuration';
+import { ApiVersion } from '@repo-shared/contracts';
 
-import { AppModule } from "./app.module.ts";
-import { ApplicationConfig } from "./configuration.ts";
+import { AppModule } from './app.module.ts';
+import { ApplicationConfig } from './configuration.ts';
 
 export class Program {
   static readonly APP_MODULE = AppModule;
@@ -26,7 +26,7 @@ export class Program {
     Program.app.enableShutdownHooks();
 
     Program.app.enableCors({
-      origin: Program.config.cors.allowedOrigins.split(" "),
+      origin: Program.config.cors.allowedOrigins.split(' '),
     });
     Program.app.enableVersioning({
       type: VersioningType.URI,
@@ -40,27 +40,27 @@ export class Program {
 
   static configureScalar() {
     new NestjsScalar(Program.app, {
-      title: "Planee internal API",
-      version: "1.0",
+      title: 'Planee internal API',
+      version: '1.0',
       description:
-        "The official documentation of the internal Planee API. Public API is not yet available.",
+        'The official documentation of the internal Planee API. Public API is not yet available.',
       tagGroups: {
-        "Users and auth": {
-          users: "Endpoints for managing user accounts",
+        'Users and auth': {
+          users: 'Endpoints for managing user accounts',
         },
-        "Monitoring, telemetry": {
-          health: "Endpoints for checking service health",
+        'Monitoring, telemetry': {
+          health: 'Endpoints for checking service health',
         },
         Application: {
-          "quick-notes": "Endpoints for managing quick notes",
+          'quick-notes': 'Endpoints for managing quick notes',
         },
       },
       auth: {
-        type: "openIdConnect",
+        type: 'openIdConnect',
         description:
-          "Visit https://admin.planee.martinpetr.dev/tools/oidc-token to obtain access token. Note that the token is only valid for a few minutes.",
+          'Visit https://admin.planee.martinpetr.dev/tools/oidc-token to obtain access token. Note that the token is only valid for a few minutes.',
       },
-      path: "/docs",
+      path: '/docs',
     });
   }
 

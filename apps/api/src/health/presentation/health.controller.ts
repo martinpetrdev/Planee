@@ -1,19 +1,19 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get } from '@nestjs/common';
 import {
   HealthCheck,
   HealthCheckService,
   MemoryHealthIndicator,
-} from "@nestjs/terminus";
-import { ApiOperation, ApiTags } from "@repo-libs/nestjs-scalar";
-import { ApiVersion } from "@repo-shared/contracts";
-import { Database, DatabaseHealthIndicator } from "@repo-shared/database";
-import { SkipAuth } from "@repo-shared/server-auth";
+} from '@nestjs/terminus';
+import { ApiOperation, ApiTags } from '@repo-libs/nestjs-scalar';
+import { ApiVersion } from '@repo-shared/contracts';
+import { Database, DatabaseHealthIndicator } from '@repo-shared/database';
+import { SkipAuth } from '@repo-shared/server-auth';
 
 @Controller({
-  path: "/health",
+  path: '/health',
   version: ApiVersion.v1,
 })
-@ApiTags("health")
+@ApiTags('health')
 export class HealthController {
   constructor(
     private readonly health: HealthCheckService,
@@ -25,11 +25,11 @@ export class HealthController {
   @Get()
   @SkipAuth()
   @HealthCheck()
-  @ApiOperation({ summary: "Health Check" })
+  @ApiOperation({ summary: 'Health Check' })
   check() {
     return this.health.check([
-      () => this.memoryIndicator.checkHeap("memory_heap", 500 * 1024 * 1024),
-      () => this.databaseIndicator.isHealthy("database", this.database),
+      () => this.memoryIndicator.checkHeap('memory_heap', 500 * 1024 * 1024),
+      () => this.databaseIndicator.isHealthy('database', this.database),
     ]);
   }
 }
