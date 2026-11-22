@@ -2,9 +2,6 @@ export interface IBaseQuickNoteData {
   text: string;
 
   userId: string;
-
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export abstract class BaseQuickNote<IData extends IBaseQuickNoteData> {
@@ -16,13 +13,5 @@ export abstract class BaseQuickNote<IData extends IBaseQuickNoteData> {
 
   public get userId() {
     return this.data.userId;
-  }
-
-  public get createdAt() {
-    return new Date(this.data.createdAt);
-  }
-
-  public get updatedAt() {
-    return new Date(this.data.updatedAt);
   }
 }

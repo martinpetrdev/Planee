@@ -4,16 +4,12 @@ import { BaseQuickNote, IBaseQuickNoteData } from "./base.quick-note.ts";
 export interface INewQuickNoteData extends IBaseQuickNoteData {}
 
 export class NewQuickNote extends BaseQuickNote<INewQuickNoteData> {
-  public static create(
-    data: Omit<INewQuickNoteData, "createdAt" | "updatedAt">,
-  ) {
+  public static create(data: INewQuickNoteData) {
     QuickNoteValidator.validateText(data.text);
 
     return new NewQuickNote({
       text: data.text.trim(),
       userId: data.userId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
   }
 }

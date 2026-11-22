@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, SerializeOptions } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  SerializeOptions,
+} from "@nestjs/common";
 import {
   ApiAuthErrorResponses,
   ApiOkResponse,
@@ -10,11 +18,14 @@ import {
   type CreateQuickNote,
   CreateQuickNoteSchema,
   QuickNoteResponseSchema,
+  type UpdateQuickNote,
+  UpdateQuickNoteSchema,
 } from "@repo-shared/contracts";
 import { User } from "@repo-shared/server-auth";
 
 import { CreateQuickNoteCommand } from "../application/commands/create-quick-note.command.ts";
 import { ListQuickNoteCommand } from "../application/commands/list-quick-note.command.ts";
+import { UpdateQuickNoteCommand } from "../application/commands/update-quick-note.command.ts";
 import { QuickNoteCommandHandler } from "../application/handlers/quick-note.command-handler.ts";
 
 @Controller({
@@ -57,6 +68,27 @@ export class QuickNoteController {
     return await this.handler.handleCreate(
       new CreateQuickNoteCommand({
         ...dto,
+        userId,
+      }),
+    );
+  }
+
+  @Put("/:quickNoteId")
+  @ApiOperation({ summary: "Update quick note" })
+  @ApiAuthErrorResponses()
+  @ApiOkResponse({
+    standardSchema: QuickNoteResponseSchema,
+  })
+  @SerializeOptions({ schema: QuickNoteResponseSchema })
+  public async update(
+    @User("id") userId: string,
+    @Param("quickNoteId") quickNoteId: string,
+    @Body({ schema: UpdateQuickNoteSchema }) dto: UpdateQuickNote,
+  ) {
+    return await this.handler.handleUpdate(
+      new UpdateQuickNoteCommand({
+        ...dto,
+        id: quickNoteId,
         userId,
       }),
     );

@@ -3,6 +3,7 @@ import { Database, QuickNote } from "@repo-shared/database";
 
 import { ExistingQuickNote } from "../../domain/models/existing.quick-note.ts";
 import { NewQuickNote } from "../../domain/models/new.quick-note.ts";
+import { UpdatedQuickNote } from "../../domain/models/updated.quick-note.ts";
 import { QuickNoteRepositoryPort } from "../../ports/quick-note-repository.port.ts";
 
 @Injectable()
@@ -30,6 +31,20 @@ export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
     });
 
     return entities.map((entity) => this.prismaToDomainModel(entity));
+  }
+
+  async update(updatedQuickNote: UpdatedQuickNote): Promise<ExistingQuickNote> {
+    const updatedEntity = await this.db.quickNote.update({
+      data: {
+        text: updatedQuickNote.text,
+      },
+      where: {
+        id: updatedQuickNote.id,
+        userId: updatedQuickNote.userId,
+      },
+    });
+
+    return this.prismaToDomainModel(updatedEntity);
   }
 
   private prismaToDomainModel(prismaModel: QuickNote): ExistingQuickNote {
