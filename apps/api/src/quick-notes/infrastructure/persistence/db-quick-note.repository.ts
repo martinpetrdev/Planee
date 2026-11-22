@@ -10,7 +10,7 @@ import {
 } from "../../ports/quick-note-repository.port.ts";
 
 @Injectable()
-export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
+export class DbQuickNoteRepository extends QuickNoteRepositoryPort {
   constructor(private readonly db: Database) {
     super();
   }
