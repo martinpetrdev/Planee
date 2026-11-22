@@ -51,6 +51,9 @@ export class Program {
         "Monitoring, telemetry": {
           health: "Endpoints for checking service health",
         },
+        Application: {
+          "quick-notes": "Endpoints for managing quick notes",
+        },
       },
       auth: {
         type: "openIdConnect",

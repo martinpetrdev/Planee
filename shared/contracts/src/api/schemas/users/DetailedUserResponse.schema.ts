@@ -1,9 +1,10 @@
 import { UserRole } from "@repo-shared/server-auth";
 import z from "zod";
-import { dateTime } from "./codecs/dateTime.ts";
+import { dateTime } from "../codecs/dateTime.ts";
+import { userId } from "../shared.ts";
 
 export const DetailedUserResponseSchema = z.object({
-	id: z.uuidv4(),
+	id: userId,
 	name: z.string(),
 	email: z.email(),
 	roles: z.array(z.enum(UserRole)),
