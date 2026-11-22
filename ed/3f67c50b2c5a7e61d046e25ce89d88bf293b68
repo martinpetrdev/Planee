@@ -1,0 +1,14 @@
+apps/api/src/shared/events/application/event.dispatcher.ts
+  h_e494102df73193 23,26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "ed3f67c50b2c5a7e61d046e25ce89d88bf293b68",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
