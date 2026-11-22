@@ -1,0 +1,20 @@
+apps/api/src/shared/ports/unit-of-work.port.ts
+  h_e494102df73193 1-3
+apps/api/src/quick-notes/infrastructure/persistence/db-quick-note.repository.ts
+  h_e494102df73193 1-67
+apps/api/src/shared/infrastructure/db.unit-of-work.ts
+  h_e494102df73193 1-26
+apps/api/src/quick-notes/quick-notes.module.ts
+  h_e494102df73193 4,13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "67c2a12b486a3519d19662f299c7ffc1651e5032",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
