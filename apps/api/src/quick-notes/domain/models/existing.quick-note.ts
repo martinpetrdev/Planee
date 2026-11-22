@@ -9,6 +9,16 @@ export class ExistingQuickNote extends BaseQuickNote<IExistingQuickNoteData> {
     return this.data.id;
   }
 
+  public toObject() {
+    return {
+      id: this.data.id,
+      text: this.data.text,
+      userId: this.data.userId,
+      createdAt: this.data.createdAt,
+      updatedAt: this.data.updatedAt,
+    };
+  }
+
   public static fromPersistence(data: IExistingQuickNoteData) {
     return new ExistingQuickNote(data);
   }

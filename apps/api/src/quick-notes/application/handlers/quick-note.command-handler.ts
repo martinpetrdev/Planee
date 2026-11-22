@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { NewQuickNote } from "../../domain/models/new.quick-note.ts";
 import { QuickNoteRepositoryPort } from "../../ports/quick-note-repository.port.ts";
 import { CreateQuickNoteCommand } from "../commands/create-quick-note.command.ts";
+import { ListQuickNoteCommand } from "../commands/list-quick-note.command.ts";
 
 @Injectable()
 export class QuickNoteCommandHandler {
@@ -15,5 +16,9 @@ export class QuickNoteCommandHandler {
         userId: command.userId,
       }),
     );
+  }
+
+  public async handleList(command: ListQuickNoteCommand) {
+    return await this.repository.list(command.userId);
   }
 }

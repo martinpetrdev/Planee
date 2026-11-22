@@ -22,6 +22,16 @@ export class PrismaQuickNoteRepository extends QuickNoteRepositoryPort {
     return this.prismaToDomainModel(insertedEntity);
   }
 
+  async list(userId: string): Promise<ExistingQuickNote[]> {
+    const entities = await this.db.quickNote.findMany({
+      where: {
+        userId: userId,
+      },
+    });
+
+    return entities.map((entity) => this.prismaToDomainModel(entity));
+  }
+
   private prismaToDomainModel(prismaModel: QuickNote): ExistingQuickNote {
     return ExistingQuickNote.fromPersistence(prismaModel);
   }

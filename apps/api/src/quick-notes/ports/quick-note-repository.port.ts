@@ -3,4 +3,5 @@ import { NewQuickNote } from "../domain/models/new.quick-note.ts";
 
 export abstract class QuickNoteRepositoryPort {
   abstract insert(newQuickNote: NewQuickNote): Promise<ExistingQuickNote>;
+  abstract list(userId: string): Promise<ExistingQuickNote[]>;
 }
