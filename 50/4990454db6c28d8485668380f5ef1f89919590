@@ -1,0 +1,40 @@
+apps/api/src/quick-notes/presentation/quick-note.controller.ts
+  h_e494102df73193 2-9,21-22,28,75-95
+  h_e494102df73193 1
+apps/api/src/quick-notes/application/commands/update-quick-note.command.ts
+  h_e494102df73193 1-21
+apps/api/src/quick-notes/ports/quick-note-repository.port.ts
+  h_e494102df73193 3,8-10
+apps/api/src/quick-notes/domain/models/updated.quick-note.ts
+  h_e494102df73193 1-24
+apps/api/src/quick-notes/domain/models/existing.quick-note.ts
+  h_e494102df73193 5-7,15-20
+  h_e494102df73193 21-22
+apps/api/src/quick-notes/domain/models/new.quick-note.ts
+  h_e494102df73193 7
+apps/api/src/quick-notes/application/handlers/quick-note.command-handler.ts
+  h_e494102df73193 3,5,9,27-39
+  h_e494102df73193 40
+shared/contracts/src/api/schemas/quick-notes/UpdateQuickNote.schema.ts
+  h_e494102df73193 1-8
+apps/api/src/quick-notes/infrastructure/persistence/prisma-quick-note.repository.ts
+  h_e494102df73193 6,36-47
+  h_e494102df73193 48-49
+shared/contracts/src/api/schemas/_index.ts
+  h_e494102df73193 3
+apps/api/src/quick-notes/domain/exceptions/quick-note-not-found.exception.ts
+  h_e494102df73193 1-7
+apps/api/src/quick-notes/application/commands/list-quick-note.command.ts
+  h_e494102df73193 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "504990454db6c28d8485668380f5ef1f89919590",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
