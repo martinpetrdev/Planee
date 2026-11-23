@@ -1,0 +1,10 @@
+[env]
+APP_ENV = "development"
+
+[tasks.mobile-dev]
+description = "Starts a mobile in dev mode"
+run = "pnpm android"
+
+[tasks.mobile-prebuild]
+description = "Prebuild a mobile app"
+run = "pnpm prebuild"

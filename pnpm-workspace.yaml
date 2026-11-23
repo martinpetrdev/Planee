@@ -15,3 +15,5 @@ minimumReleaseAgeExclude:
   - "@nestjs/common@12.5.1"
   - "@nestjs/terminus@12.2.0"
   - "@nestjs/platform-express@12.5.1"
+  - "@tanstack/query-core@5.108.4"
+  - "@tanstack/react-query@5.108.4"

@@ -34,3 +34,9 @@ run = "pnpm --filter @repo-shared/database migrate"
 [tasks.prisma-generate]
 daemons = "postgres"
 run = "pnpm --filter @repo-shared/database generate"
+
+[tasks.mobile-dev]
+depends = ["start-dev", "//...:mobile-dev"]
+
+[tasks.mobile-prebuild]
+depends = ["//...:mobile-prebuild"]
