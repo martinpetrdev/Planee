@@ -1,0 +1,26 @@
+shared/api-client/src/primitives/connection.ts
+  h_e494102df73193 1-29
+shared/api-client/src/primitives/url.ts
+  h_e494102df73193 1-10
+shared/api-client/package.json
+  h_e494102df73193 1-28
+shared/api-client/src/types/Authorization.ts
+  h_e494102df73193 1
+shared/api-client/src/api.ts
+  h_e494102df73193 1-11
+shared/api-client/src/modules/users.ts
+  h_e494102df73193 1-19
+shared/api-client/tsconfig.json
+  h_e494102df73193 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "c59f42a7df5714445c9328859ed76056a0b5727e",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
