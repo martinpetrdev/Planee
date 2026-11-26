@@ -1,6 +1,8 @@
 import { Providers } from '@repo-shared/mobile-utils';
 import { Stack } from 'expo-router';
 
+import { QueryClientProvider } from '@/providers/QueryClientProvider.tsx';
+
 function RootNavigator() {
   return (
     <Stack screenOptions={{ animation: 'none', headerShown: false }}>
@@ -13,7 +15,7 @@ function RootNavigator() {
 
 export default function Layout() {
   return (
-    <Providers providers={[]}>
+    <Providers providers={[QueryClientProvider]}>
       <RootNavigator />
     </Providers>
   );
