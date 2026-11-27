@@ -1,9 +1,13 @@
-import { Controller, Get, HttpCode } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-
-import { ApiVersion } from '@repo/shared';
-
-import { Public } from '../../shared/auth/presentation/decorators/public.decorator.js';
+import { Controller, Get } from '@nestjs/common';
+import {
+  HealthCheck,
+  HealthCheckService,
+  MemoryHealthIndicator,
+} from '@nestjs/terminus';
+import { ApiOperation, ApiTags } from '@repo-libs/nestjs-scalar';
+import { ApiVersion } from '@repo-shared/contracts';
+import { Database, DatabaseHealthIndicator } from '@repo-shared/database';
+import { SkipAuth } from '@repo-shared/server-auth';
 
 @Controller({
   path: '/health',
@@ -11,18 +15,21 @@ import { Public } from '../../shared/auth/presentation/decorators/public.decorat
 })
 @ApiTags('health')
 export class HealthController {
-  @Get('/')
-  @Public()
-  @HttpCode(200)
-  @ApiOperation({
-    description:
-      'Endpoint for kubernetes health checks. Always returns 200 OK response.',
-  })
-  @ApiOkResponse({
-    description: 'No response',
-  })
-  /**
-   * Endpoint for kubernetes health checks. Returns 200 OK response.
-   */
-  getHealth() {}
+  constructor(
+    private readonly health: HealthCheckService,
+    private readonly memoryIndicator: MemoryHealthIndicator,
+    private readonly databaseIndicator: DatabaseHealthIndicator,
+    private readonly database: Database,
+  ) {}
+
+  @Get()
+  @SkipAuth()
+  @HealthCheck()
+  @ApiOperation({ summary: 'Health Check' })
+  check() {
+    return this.health.check([
+      () => this.memoryIndicator.checkHeap('memory_heap', 500 * 1024 * 1024),
+      () => this.databaseIndicator.isHealthy('database', this.database),
+    ]);
+  }
 }

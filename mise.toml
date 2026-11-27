@@ -1,0 +1,42 @@
+monorepo_root = true
+
+[settings]
+experimental = true
+
+[monorepo]
+config_roots = ["apps/*", "shared/*", "libs/*"]
+
+[tools]
+node = "26"
+pnpm = "12"
+
+[vars]
+_.file = "configuration.json"
+
+[daemons]
+postgres = "18"
+redis = "8"
+
+[tasks.install]
+description = "Installs all necessary dependencies"
+run = "pnpm install"
+
+[tasks.start-dev]
+daemons = ["postgres", "redis"]
+description = "Starts dev servers in all apps"
+depends = ["prisma-generate", "//...:start-dev"]
+
+[tasks.prisma-migrate]
+daemons = "postgres"
+description = "Creates and applies a Prisma migration from schema changes"
+run = "pnpm --filter @repo-shared/database migrate"
+
+[tasks.prisma-generate]
+daemons = "postgres"
+run = "pnpm --filter @repo-shared/database generate"
+
+[tasks.mobile-dev]
+depends = ["start-dev", "//...:mobile-dev"]
+
+[tasks.mobile-prebuild]
+depends = ["//...:mobile-prebuild"]

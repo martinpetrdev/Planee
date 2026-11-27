@@ -1,0 +1,6 @@
+[env]
+APPLICATION_CONFIG = "{{ vars | json_encode }}"
+
+[tasks.start-dev]
+description = "Starts a dev server"
+run = "pnpm run dev"

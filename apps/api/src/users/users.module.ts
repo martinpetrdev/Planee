@@ -1,34 +1,24 @@
-import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Global, Module } from '@nestjs/common';
+import { UserProvisionerPort } from '@repo-shared/server-auth';
 
-import { ProgramsModule } from '../admin/programs/programs.module.js';
-import { UsersService } from './application/users.service.js';
-import { UserManagerPort } from './domain/ports/user-manager.port.js';
-import { UserProvisioningPort } from './domain/ports/user-provisioning.port.js';
-import { KeycloakUserManager } from './infrastructure/keycloak.user-manager.js';
-import { PrismaUserRepository } from './infrastructure/persistence/prisma-user.repository.js';
-import { UsersController } from './presentation/users.controller.js';
+import { DbUserProvisioner } from './infrastructure/db-user.provisioner.ts';
+import { DbUserRepository } from './infrastructure/db-user.repository.ts';
+import { UserRepositoryPort } from './ports/user-repository.port.ts';
+import { UsersController } from './presentation/users.controller.ts';
 
+@Global()
 @Module({
-  imports: [ProgramsModule],
-  controllers: [UsersController],
   providers: [
     {
-      provide: UserProvisioningPort,
-      useClass: PrismaUserRepository,
+      provide: UserProvisionerPort,
+      useClass: DbUserProvisioner,
     },
     {
-      provide: UserManagerPort,
-      useFactory: (config: ConfigService) =>
-        new KeycloakUserManager(
-          config.getOrThrow('auth.oidc.issuer'),
-          config.getOrThrow('auth.oidc.clientId'),
-          config.getOrThrow('auth.oidc.clientSecret'),
-        ),
-      inject: [ConfigService],
+      provide: UserRepositoryPort,
+      useClass: DbUserRepository,
     },
-    UsersService,
   ],
-  exports: [UserProvisioningPort],
+  controllers: [UsersController],
+  exports: [UserProvisionerPort],
 })
 export class UsersModule {}

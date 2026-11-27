@@ -1,140 +1,77 @@
-import { VersioningType } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { apiReference } from '@scalar/nestjs-api-reference';
-import helmet from 'helmet';
+import { StandardSchemaValidationPipe, VersioningType } from '@nestjs/common';
+import { NestApplication, NestFactory } from '@nestjs/core';
+import { NestjsScalar } from '@repo-libs/nestjs-scalar';
+import { ConfigurationObject } from '@repo-shared/configuration';
+import { ApiVersion } from '@repo-shared/contracts';
 
-import { ApiVersion } from '@repo/shared';
+import { AppModule } from './app.module.ts';
+import { ApplicationConfig } from './configuration.ts';
 
-import { AppModule } from './app.module.js';
-import {
-  getServiceCorsAllowedOrigins,
-  getServicePort,
-} from './config/http.config.js';
+export class Program {
+  static readonly APP_MODULE = AppModule;
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    // This is required to prevent hanging process
-    forceCloseConnections: true,
-  });
+  static app: NestApplication;
+  static config: ConfigurationObject;
 
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: [`'self'`],
-          styleSrc: [`'self'`, `'unsafe-inline'`],
-          fontSrc: [`'self'`, 'fonts.scalar.com'],
-          imgSrc: [`'self'`, 'data:'],
-          scriptSrc: [`'self'`, `https: 'unsafe-inline'`, `'unsafe-eval'`],
+  static async init(): Promise<void> {
+    Program.config = ApplicationConfig;
+
+    Program.app = await NestFactory.create(Program.APP_MODULE, {
+      // Prevent hanging processes
+      forceCloseConnections: true,
+    });
+  }
+
+  static async configure(): Promise<void> {
+    Program.app.enableShutdownHooks();
+
+    Program.app.enableCors({
+      origin: Program.config.cors.allowedOrigins.split(' '),
+    });
+    Program.app.enableVersioning({
+      type: VersioningType.URI,
+      defaultVersion: ApiVersion.v1,
+    });
+
+    Program.configureScalar();
+
+    Program.app.useGlobalPipes(new StandardSchemaValidationPipe());
+  }
+
+  static configureScalar() {
+    new NestjsScalar(Program.app, {
+      title: 'Planee internal API',
+      version: '1.0',
+      description:
+        'The official documentation of the internal Planee API. Public API is not yet available.',
+      tagGroups: {
+        'Users and auth': {
+          users: 'Endpoints for managing user accounts',
+        },
+        'Monitoring, telemetry': {
+          health: 'Endpoints for checking service health',
+        },
+        Application: {
+          'quick-notes': 'Endpoints for managing quick notes',
+          events: 'Endpoints for event streaming',
+          keys: 'Endpoint for key management',
         },
       },
-    }),
-  );
+      auth: {
+        type: 'openIdConnect',
+        description:
+          'Visit https://admin.planee.martinpetr.dev/tools/oidc-token to obtain access token. Note that the token is only valid for a few minutes.',
+      },
+      path: '/docs',
+    });
+  }
 
-  app.enableShutdownHooks();
-  app.enableCors({
-    origin: getServiceCorsAllowedOrigins(),
-  });
-  app.enableVersioning({
-    type: VersioningType.URI,
-    defaultVersion: ApiVersion.v1,
-  });
+  static async bootstrap(): Promise<void> {
+    await Program.init();
+    await Program.configure();
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Planee API')
-    .setVersion('1.0')
-    .setDescription(
-      'The official documentation of the internal Planee API. Public API is not yet available.',
-    )
-    .addTag(
-      'admin/programs',
-      'Group of endpoints that allow interactions with different programs',
-    )
-    .addTag(
-      'admin',
-      'Group of endpoints that allow administrative actions, requires Admin role.',
-    )
-    .addTag(
-      'health',
-      'Group of endpoints that provide health status of the service',
-    )
-    .addTag(
-      'notifications',
-      'Group of endpoints that allow to manage push notification tokens',
-    )
-    .addTag(
-      'events',
-      'Group of endpoints that allow interacting with the event bus',
-    )
-    .addTag(
-      'flags',
-      'Group of endpoints that allow obtaining state of feature flags',
-    )
-    .addTag('tasks', 'Group of endpoints that allow to manage tasks')
-    .addTag(
-      'quick-notes',
-      'Group of endpoints that allow to manage quick notes',
-    )
-    .addTag('users', 'Group of endpoints for managing user accounts')
-    .addBearerAuth({
-      type: 'openIdConnect',
-      description:
-        'To obtain the access token, visit https://admin.planee.martinpetr.dev/tools/oidc-token. Note that the token is only valid to 2 minutes.',
-    })
-    .build();
-
-  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-
-  // Group swagger tags (scalar extension)
-  // Suggested by Claude Code (Claude Opus 5.5)
-  Object.assign(swaggerDocument, {
-    'x-tagGroups': [
-      {
-        name: 'Administration',
-        tags: ['admin', 'admin/programs'],
-      },
-      {
-        name: 'Application',
-        tags: ['tasks', 'quick-notes'],
-      },
-      {
-        name: 'Mobile-specific',
-        tags: ['notifications'],
-      },
-      {
-        name: 'Accounts & auth',
-        tags: ['users'],
-      },
-      {
-        name: 'Event bus',
-        tags: ['events'],
-      },
-      {
-        name: 'Flags, A/B, telemetry',
-        tags: ['flags'],
-      },
-      {
-        name: 'Monitoring & integrity',
-        tags: ['health'],
-      },
-    ],
-  });
-
-  app.use(
-    '/docs',
-    apiReference({
-      content: swaggerDocument,
-      showDeveloperTools: 'never',
-      agent: {
-        disabled: true,
-      },
-      mcp: {
-        disabled: true,
-      },
-    }),
-  );
-
-  await app.listen(getServicePort());
+    await Program.app.listen(Program.config.http.api.port);
+  }
 }
-void bootstrap();
+
+void Program.bootstrap();

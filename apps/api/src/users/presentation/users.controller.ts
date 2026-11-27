@@ -1,11 +1,14 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, SerializeOptions } from '@nestjs/common';
+import {
+  ApiAuthErrorResponses,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@repo-libs/nestjs-scalar';
+import { ApiVersion, DetailedUserResponseSchema } from '@repo-shared/contracts';
+import { AuthenticatedUser, User } from '@repo-shared/server-auth';
 
-import { ApiVersion } from '@repo/shared';
-
-import { Public } from '../../shared/auth/presentation/decorators/public.decorator.js';
-import { UsersService } from '../application/users.service.js';
-import { EapJoinDto } from './dto/eapJoin.dto.js';
+import { UserRepositoryPort } from '../ports/user-repository.port.ts';
 
 @Controller({
   path: '/users',
@@ -13,18 +16,24 @@ import { EapJoinDto } from './dto/eapJoin.dto.js';
 })
 @ApiTags('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly repository: UserRepositoryPort) {}
 
-  @Post('/join/early-access')
-  @Public()
+  @Get('/me')
   @ApiOperation({
-    description:
-      "Sends invite to the IdP tenant for early access based on the user's generated invite id",
+    summary: 'Get me',
+    description: 'Returns info about currently signed-in user',
   })
-  @ApiCreatedResponse({
-    description: 'No response - invite sent successfully',
+  @ApiOkResponse({
+    standardSchema: DetailedUserResponseSchema,
   })
-  joinEap(@Body() body: EapJoinDto) {
-    return this.usersService.joinEap(body);
+  @ApiAuthErrorResponses()
+  @SerializeOptions({ schema: DetailedUserResponseSchema })
+  async getMe(@User() user: AuthenticatedUser) {
+    const dbUser = await this.repository.findById(user.id);
+
+    return {
+      ...user.toObject(),
+      ...dbUser.toObject(),
+    };
   }
 }

@@ -1,28 +1,20 @@
 import { Module } from '@nestjs/common';
 
-import { QuickNotesService } from './application/quick-notes.service.js';
-import { QuickNoteAutofillPort } from './domain/ports/quick-note-autofill.port.js';
-import { QuickNoteRepositoryPort } from './domain/ports/quick-note-repository.port.js';
-import { PrismaQuickNoteRepository } from './infrastructure/persistence/prisma-quick-note.repository.js';
-import { WorkerQuickNoteAutofill } from './infrastructure/worker-quick-note.autofill.js';
-import { QuickNotesController } from './presentation/quick-notes.controller.js';
-import {QuickNotesMcp} from "./presentation/quick-notes.mcp.ts";
+import { QuickNoteCommandHandler } from './application/handlers/quick-note.command-handler.ts';
+import { DbQuickNoteRepository } from './infrastructure/persistence/db-quick-note.repository.ts';
+import { QuickNoteRepositoryPort } from './ports/quick-note-repository.port.ts';
+import { QuickNoteController } from './presentation/quick-note.controller.ts';
+import { QuickNoteMcp } from './presentation/quick-note.mcp.ts';
 
 @Module({
-  imports: [],
-  controllers: [QuickNotesController],
   providers: [
+    QuickNoteCommandHandler,
     {
       provide: QuickNoteRepositoryPort,
-      useClass: PrismaQuickNoteRepository,
+      useClass: DbQuickNoteRepository,
     },
-    {
-      provide: QuickNoteAutofillPort,
-      useClass: WorkerQuickNoteAutofill,
-    },
-    QuickNotesService,
-    QuickNotesMcp
+    QuickNoteMcp,
   ],
-  exports: [QuickNoteRepositoryPort],
+  controllers: [QuickNoteController],
 })
 export class QuickNotesModule {}

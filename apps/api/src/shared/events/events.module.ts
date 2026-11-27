@@ -1,21 +1,14 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
-import { EventBusPort } from './domain/ports/event-bus.port.js';
-import { RedisEventBus } from './infrastructure/redis.event-bus.js';
-import { EventsController } from './presentation/events.controller.js';
+import { EventDispatcher } from './application/event.dispatcher.ts';
+import { RedisEventPublisher } from './infrastructure/publishers/redis.event-publisher.ts';
+import { RedisEventSubscriber } from './infrastructure/subscribers/redis.event-subscriber.ts';
+import { EventsController } from './presentation/events.controller.ts';
 
 @Global()
 @Module({
-  providers: [
-    {
-      provide: EventBusPort,
-      useFactory: (config: ConfigService) =>
-        new RedisEventBus(config.getOrThrow('redis.url')),
-      inject: [ConfigService],
-    },
-  ],
   controllers: [EventsController],
-  exports: [EventBusPort],
+  providers: [RedisEventPublisher, RedisEventSubscriber, EventDispatcher],
+  exports: [EventDispatcher],
 })
 export class EventsModule {}

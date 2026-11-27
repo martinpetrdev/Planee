@@ -8,6 +8,7 @@ node_modules/
 # Environment files
 .env
 .env.*
+configuration.json
 
 # EAS build tool
 /.eas-build/

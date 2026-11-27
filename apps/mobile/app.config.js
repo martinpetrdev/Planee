@@ -103,7 +103,6 @@ export default {
         },
       ],
       'expo-localization',
-      '@repo/nothing-glyph',
     ],
     experiments: {
       typedRoutes: true,

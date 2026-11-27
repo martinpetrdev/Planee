@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JsonSchemaMappingsProjectConfiguration">
+    <state>
+      <map>
+        <entry key="EAS config">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="EAS config" />
+              <option name="relativePathToSchema" value="https://raw.githubusercontent.com/expo/eas-cli/main/packages/eas-json/schema/eas.schema.json" />
+              <option name="applicationDefined" value="true" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="apps/mobile/eas.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="mise">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="mise" />
+              <option name="relativePathToSchema" value="https://mise.jdx.dev/schema/mise.json" />
+              <option name="applicationDefined" value="true" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="mise.toml" />
+                  </Item>
+                  <Item>
+                    <option name="path" value="apps/api/mise.toml" />
+                  </Item>
+                  <Item>
+                    <option name="path" value="apps/mobile/mise.toml" />
+                  </Item>
+                  <Item>
+                    <option name="path" value="shared/database/mise.toml" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+      </map>
+    </state>
+  </component>
+</project>

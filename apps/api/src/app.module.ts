@@ -1,101 +1,48 @@
-import { Module, ValidationPipe, VERSION_NEUTRAL } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { Module, StandardSchemaSerializerInterceptor } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { McpModule } from '@nestjs/mcp';
+import { DatabaseModule } from '@repo-shared/database';
+import { AuthModule, SkipAuth } from '@repo-shared/server-auth';
 
-import { AdminModule } from './admin/admin.module.js';
-import { ConfigModule } from './config/config.module.js';
-import { HealthModule } from './health/health.module.js';
-import { NotificationsModule } from './notifications/notifications.module.js';
-import { QuickNotesModule } from './quick-notes/quick-notes.module.js';
-import { AuthModule } from './shared/auth/auth.module.js';
-import { TokenVerifierPort } from './shared/auth/domain/ports/token-verifier.port.js';
-import { McpKeycloakVerifier } from './shared/auth/infrastructure/mcp-keycloak.verifier.js';
-import { Public } from './shared/auth/presentation/decorators/public.decorator.js';
-import { PrismaModule } from './shared/database/prisma.module.js';
-import { ValidationError } from './shared/domain/validation.error.js';
-import { EventsModule } from './shared/events/events.module.js';
-import { FlagsModule } from './shared/flags/flags.module.js';
-import { DomainExceptionFilter } from './shared/presentation/filters/domain-exception.filter.js';
-import { ValidationExceptionFilter } from './shared/presentation/filters/validation-exception.filter.js';
-import { WorkerModule } from './shared/worker/worker.module.js';
-import { TasksModule } from './tasks/tasks.module.js';
-import { UserProvisioningPort } from './users/domain/ports/user-provisioning.port.js';
-import { UsersModule } from './users/users.module.js';
+import { ApplicationConfig } from './configuration.ts';
+import { HealthModule } from './health/health.module.ts';
+import {
+  MCP_RESOURCE,
+  McpTokenVerifierAdapter,
+} from './keys/application/mcp-token.verifier.ts';
+import { KeysModule } from './keys/keys.module.ts';
+import { QuickNotesModule } from './quick-notes/quick-notes.module.ts';
+import { CryptoModule } from './shared/crypto/crypto.module.ts';
+import { EventsModule } from './shared/events/events.module.ts';
+import { UsersModule } from './users/users.module.ts';
 
-const DomainModules = [
-  HealthModule,
-  NotificationsModule,
-  TasksModule,
-  QuickNotesModule,
-  AdminModule,
-];
+const ApiModules = [HealthModule, UsersModule, QuickNotesModule, KeysModule];
 
 @Module({
   imports: [
-    ConfigModule,
-    PrismaModule,
+    DatabaseModule.forRoot(ApplicationConfig.database.url),
+    AuthModule.forRoot({
+      oidc: ApplicationConfig.api.oidc,
+    }),
     EventsModule,
-    AuthModule,
-    FlagsModule,
-    WorkerModule,
-    McpModule.forRootAsync({
-      imports: [AuthModule, UsersModule],
-      endpointVersion: VERSION_NEUTRAL,
-      // Needs to be public (has its own auth method)
-      decorators: [Public()],
-      // Setup custom auth for the MCP
-      inject: [ConfigService, TokenVerifierPort, UserProvisioningPort],
-      useFactory: (
-        config: ConfigService,
-        verifier: TokenVerifierPort,
-        provisioning: UserProvisioningPort,
-      ) => {
-        const resource = config.getOrThrow<string>('auth.mcp.resource');
-
-        return {
-          name: 'planee',
-          version: '1.0.0',
-          instructions: '',
-          auth: {
-            verifier: new McpKeycloakVerifier(verifier, provisioning, resource),
-            resource,
-            // The API itself (McpOAuthController) to work around client_id needing to be provided by keycloak
-            authorizationServers: [new URL(resource).origin],
-            scopesSupported: ['offline_access'],
-            resourceName: 'Planee',
-          },
-        };
+    CryptoModule,
+    // @ai/assisted(Claude Opus 5.5): Wired MCP key auth through the token verifier adapter and exempted the endpoint from the global JWT guard.
+    McpModule.forRoot({
+      name: 'planee',
+      version: '1.0.0',
+      decorators: [SkipAuth()],
+      auth: {
+        verifier: McpTokenVerifierAdapter,
+        resource: MCP_RESOURCE,
+        authorizationServers: [ApplicationConfig.api.oidc.issuer],
       },
     }),
-    ...DomainModules,
+    ...ApiModules,
   ],
   providers: [
     {
-      provide: APP_PIPE,
-      useFactory: () =>
-        new ValidationPipe({
-          whitelist: true,
-          forbidNonWhitelisted: true,
-          transform: true,
-          exceptionFactory: (errors) =>
-            new ValidationError(
-              Object.fromEntries(
-                errors.map((e) => [
-                  e.property,
-                  Object.values(e.constraints ?? {})[0],
-                ]),
-              ),
-            ),
-        }),
-    },
-    {
-      provide: APP_FILTER,
-      useClass: DomainExceptionFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: ValidationExceptionFilter,
+      provide: APP_INTERCEPTOR,
+      useClass: StandardSchemaSerializerInterceptor,
     },
   ],
 })

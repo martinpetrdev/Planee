@@ -1,58 +1,30 @@
-import { Controller, MessageEvent, Sse } from '@nestjs/common';
+import { Controller, Sse } from '@nestjs/common';
 import {
-  ApiBearerAuth,
+  ApiAuthErrorResponses,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-} from '@nestjs/swagger';
-import { interval, map, merge, Observable } from 'rxjs';
+} from '@repo-libs/nestjs-scalar';
+import { ApiVersion } from '@repo-shared/contracts';
+import { User } from '@repo-shared/server-auth';
 
-import { ApiVersion } from '@repo/shared';
-
-import { ApiAuthResponses } from '../../../utils/swagger/decorators.js';
-import { User } from '../../auth/presentation/decorators/user.decorator.js';
-import { FeatureFlag } from '../../flags/domain/flag.js';
-import { Flags } from '../../flags/presentation/decorators/flags.decorator.js';
-import { EventBusPort } from '../domain/ports/event-bus.port.js';
+import { EventDispatcher } from '../application/event.dispatcher.ts';
 
 @Controller({
   path: '/events',
   version: ApiVersion.v1,
 })
-@ApiBearerAuth()
 @ApiTags('events')
-@Flags(FeatureFlag.AccessEnabled)
 export class EventsController {
-  constructor(private readonly bus: EventBusPort) {}
+  constructor(private readonly dispatcher: EventDispatcher) {}
 
-  @Sse('/')
+  @Sse('/stream')
   @ApiOperation({
-    description:
-      'Endpoint for SSE streaming of the event bus messages. Sends `ping` event every 25s to keep the connection alive.',
+    summary: 'Listen for events',
   })
-  @ApiAuthResponses()
-  @ApiOkResponse({
-    description: 'SSE stream of events',
-  })
-  stream(@User('id') userId: string): Observable<MessageEvent> {
-    const events = new Observable<MessageEvent>((sub) =>
-      this.bus.listen((event) => {
-        if (event.userId !== userId) return;
-
-        sub.next({
-          id: event.id,
-          type: event.type,
-          data: event.data as Record<string, unknown>,
-        });
-      }),
-    );
-
-    // Ignored by clients, but required to keep the connection alive,
-    // as some load balancers and proxies close idle connection
-    const heartbeat = interval(25_000).pipe(
-      map(() => ({ type: 'ping', data: '' })),
-    );
-
-    return merge(events, heartbeat);
+  @ApiAuthErrorResponses()
+  @ApiOkResponse()
+  stream(@User('id') userId: string) {
+    return this.dispatcher.observeForUser(userId);
   }
 }

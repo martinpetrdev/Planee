@@ -8,7 +8,12 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!dist", "!android", "!.expo"]
+    "includes": [
+      "**",
+      "!dist",
+      "!android",
+      "!.expo"
+    ]
   },
   "formatter": {
     "indentStyle": "space",
@@ -52,7 +57,10 @@
           "level": "on",
           "options": {
             "groups": [
-              [":PACKAGE:", "!@repo/**"],
+              [
+                ":PACKAGE:",
+                "!@repo/**"
+              ],
               ":BLANK_LINE:",
               "@repo/**",
               ":BLANK_LINE:",

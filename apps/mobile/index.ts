@@ -1,5 +1,4 @@
-import 'expo-router/entry';
+import "expo-router/entry";
+import { ApplicationStartupHandler } from "@/startup/ApplicationStartupHandler.ts";
 
-import { onApplicationStartup } from './src/startup';
-
-void onApplicationStartup();
+ApplicationStartupHandler.onStartup();
