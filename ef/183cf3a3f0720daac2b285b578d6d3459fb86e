@@ -1,0 +1,15 @@
+apps/api/src/quick-notes/presentation/quick-note.mcp.ts
+  h_e494102df73193 1,4-8,13-14,16,19-23,32,43-97
+  h_e494102df73193 3,9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "ef183cf3a3f0720daac2b285b578d6d3459fb86e",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
