@@ -1,0 +1,102 @@
+shared/database/prisma/key.prisma
+  h_e494102df73193 1-11
+shared/server-auth/src/auth/presentation/decorators/user.ts
+  h_e494102df73193 10
+  s_0a358d4730a0f4::t_7daa9b1c300fd2 9
+apps/api/src/main.ts
+  h_e494102df73193 57
+apps/api/src/keys/domain/validation/mcp-key.validator.ts
+  h_e494102df73193 1-10
+apps/api/src/keys/infrastructure/persistence/db-mcp-key.repository.ts
+  h_e494102df73193 1-52
+shared/contracts/src/api/schemas/keys/McpKeyResponse.schema.ts
+  h_e494102df73193 1-13
+shared/server-auth/src/auth/presentation/guards/auth.guard.ts
+  h_e494102df73193 13-14,26
+apps/api/src/shared/crypto/crypto.module.ts
+  h_e494102df73193 1-16
+apps/api/src/keys/application/commands/create-mcp-key.command.ts
+  h_e494102df73193 1-16
+apps/api/src/shared/crypto/ports/crypto-service.port.ts
+  h_e494102df73193 1-4
+apps/api/src/keys/domain/models/base.mcp-key.ts
+  h_e494102df73193 1-16
+apps/api/src/quick-notes/presentation/quick-note.mcp.ts
+  s_0a358d4730a0f4::t_379628dd382435 17-23
+  h_e494102df73193 1-16,24-34
+shared/contracts/src/api/schemas/keys/CreatedMcpKeyResponse.schema.ts
+  h_e494102df73193 1-8
+shared/database/prisma/user.prisma
+  h_e494102df73193 16
+apps/api/src/keys/presentation/keys.controller.ts
+  h_e494102df73193 1-67
+apps/api/src/app.module.ts
+  s_0a358d4730a0f4::t_0c3fb1e17c80b0 5,9-12,29,33,35-37
+  h_e494102df73193 3,13,15,19,28,30-32,34,38-39
+apps/api/src/keys/keys.module.ts
+  h_e494102df73193 1-26
+apps/api/src/keys/domain/models/new.mcp-key.ts
+  h_e494102df73193 1-22
+apps/api/src/keys/application/handlers/mcp-key.command-handler.ts
+  h_e494102df73193 1-47
+apps/api/src/quick-notes/quick-notes.module.ts
+  h_e494102df73193 7,16
+apps/api/src/keys/application/commands/list-mcp-key.command.ts
+  h_e494102df73193 1-11
+apps/api/src/keys/domain/models/existing.mcp-key.ts
+  h_e494102df73193 1-42
+shared/contracts/src/api/schemas/keys/CreateMcpKey.schema.ts
+  h_e494102df73193 1-7
+apps/api/src/keys/ports/mcp-key-repository.port.ts
+  h_e494102df73193 1-10
+apps/api/src/keys/application/commands/verify-mcp-key.command.ts
+  h_e494102df73193 1-11
+apps/api/src/keys/application/mcp-key.verifier.ts
+  h_e494102df73193 1-37
+apps/api/src/keys/domain/models/created.mcp-key.ts
+  h_e494102df73193 1-28
+shared/server-auth/src/auth/ports/mcp-key-verifier.port.ts
+  h_e494102df73193 1-5
+shared/server-auth/src/index.ts
+  h_e494102df73193 4
+apps/api/src/keys/application/mcp-token.verifier.ts
+  h_e494102df73193 8
+  s_0a358d4730a0f4::t_b2fdf22c669ba9 1-7,9-30
+shared/contracts/src/api/schemas/_index.ts
+  h_e494102df73193 1-3
+apps/api/src/keys/domain/exceptions/mcp-key-not-found.exception.ts
+  h_e494102df73193 1-7
+apps/api/src/shared/crypto/application/crypto.service.ts
+  h_e494102df73193 1-15
+apps/api/package.json
+  s_0a358d4730a0f4::t_42c8a9aadce6b2 23,26,36-37
+pnpm-lock.yaml
+  s_0a358d4730a0f4::t_085e50f4104596 13-15,22-24,1525-1532,1734-1747,8317-8325,8470-8477
+shared/database/prisma/migrations/20261126223200_add_mcp_key_model/migration.sql
+  s_0a358d4730a0f4::t_4520229f217ee6 1-14
+shared/database/prisma/migrations/20261126223619_switch_mcp_key_secrets_to_hashes_only/migration.sql
+  s_0a358d4730a0f4::t_bc3cde47b3c617 1-14
+shared/database/prisma/migrations/20261127073420_switch_mcp_key_secret_hash_to_binary_format/migration.sql
+  s_0a358d4730a0f4::t_e76ce1b4de15b8 1-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "d8b1eda8ef11b4300592044738c2af669be90860",
+  "prompts": {},
+  "humans": {
+    "h_e494102df73193": {
+      "author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_0a358d4730a0f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "86af13b5-8873-4b62-b710-9c399127896a",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Martin Petr <martinpetrnp@gmail.com>"
+    }
+  }
+}
