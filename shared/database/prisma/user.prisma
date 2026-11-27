@@ -13,4 +13,5 @@ model User {
   googleCalendarIntegration GoogleCalendarIntegration?
   bakalariIntegration       BakalariIntegration?
   schoolLessons             SchoolLesson[]
+  mcpKeys                   McpKey[]
 }

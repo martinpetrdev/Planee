@@ -6,7 +6,8 @@ import {
 import type { AuthenticatedUser } from "#auth/domain/authenticated-user";
 
 export function getUser(context: ExecutionContext): AuthenticatedUser | null {
-	if (context.getType<string>() === "mcp") return null; // TODO: Implement
+	if (context.getType<string>() === "mcp")
+		return (context as any).args?.[1].authInfo?.extra?.user;
 
 	return context.switchToHttp().getRequest().user ?? null;
 }

@@ -10,6 +10,8 @@ import { JwtVerifierPort } from "#auth/ports/jwt-verifier.port";
 import { UserProvisionerPort } from "#auth/ports/user-provisioner.port";
 import { isSkipAuthDecorated } from "#auth/presentation/decorators/skip-auth.decorator";
 
+// TODO: This and actual implementation + port are split between this package and api package, improve this
+
 @Dependencies(Reflector, JwtVerifierPort, UserProvisionerPort)
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -21,7 +23,7 @@ export class AuthGuard implements CanActivate {
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		if (isSkipAuthDecorated(this.reflector, context)) return true;
-		if (context.getType<string>() === "mcp") return false; // TODO: Implement
+		if (context.getType<string>() === "mcp") return true; // MCP calls are always authenticated when they reach this guard
 
 		const request = context.switchToHttp().getRequest();
 

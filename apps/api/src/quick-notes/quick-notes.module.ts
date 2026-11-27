@@ -4,6 +4,7 @@ import { QuickNoteCommandHandler } from './application/handlers/quick-note.comma
 import { DbQuickNoteRepository } from './infrastructure/persistence/db-quick-note.repository.ts';
 import { QuickNoteRepositoryPort } from './ports/quick-note-repository.port.ts';
 import { QuickNoteController } from './presentation/quick-note.controller.ts';
+import { QuickNoteMcp } from './presentation/quick-note.mcp.ts';
 
 @Module({
   providers: [
@@ -12,6 +13,7 @@ import { QuickNoteController } from './presentation/quick-note.controller.ts';
       provide: QuickNoteRepositoryPort,
       useClass: DbQuickNoteRepository,
     },
+    QuickNoteMcp,
   ],
   controllers: [QuickNoteController],
 })
